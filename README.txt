@@ -1,4 +1,14 @@
-Majdata Mac 0.3.10 — macOS 26+ 原生开发版
+Majdata Mac 1.0.0 — macOS 26+ 首个正式版（Apple silicon）
+
+下载与安装
+  https://github.com/wzk112/MajdataMac/releases/latest
+  打开 DMG，将 Majdata Mac.app 拖入 Applications。升级前先保存并退出旧版。
+  本版采用 ad-hoc 完整性签名，没有 Developer ID 分发签名，也未经过 Apple 公证。
+  首次打开如果出现“无法验证开发者／无法验证是否包含恶意软件”，关闭提示后，
+  到「系统设置 → 隐私与安全性 → 仍要打开」，认证并确认打开。
+  必须先尝试启动，设置里才会出现放行项；受管理设备可能不允许单独放行。
+  若显示“已损坏”，请重新从上述仓库下载并核对 SHA256SUMS.txt，然后反馈。
+  不需要关闭 Gatekeeper 或运行删除隔离属性的脚本。详见 Documentation/Install.md。
 
 构建后打开 dist/Majdata Mac.app，或复制到「应用程序」。本地构建支持 Apple silicon。
 ⌘O 打开 maidata.txt 或谱面文件夹，会自动加载同目录音乐、图片和 PV。

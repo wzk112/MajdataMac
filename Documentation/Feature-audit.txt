@@ -1,4 +1,4 @@
-原版功能核对 — Majdata Mac 0.3.10 — 2026-10-09
+原版功能核对 — Majdata Mac 1.0.0 — 2026-10-09
 
 审查范围
   MajdataView / MajdataEdit 的完整源码用于本地核对；固定提交见 NOTICE.txt。

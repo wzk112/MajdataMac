@@ -4,7 +4,20 @@
 
 面向 macOS 26 及以上的原生 simai 谱面编辑器与预览工具。界面使用 SwiftUI，渲染使用 Canvas / Metal，音频使用 AVAudioEngine。基于 MajdataView / MajdataEdit 的资源、几何和行为移植，独立维护，与 SEGA 或 TeamMajdata 无隶属关系。
 
-当前版本 **0.3.10，开发版**。已在 Apple silicon、macOS 27.0.1 上构建和测试；尚未在 macOS 26 实机和 Intel Mac 上复测。它仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
+当前正式版 **1.0.0**，支持 **macOS 26+、Apple silicon（M 系列）**。已在 macOS 27.0.1 上构建和测试；macOS 26 实机尚未复测。本次不提供 Intel 安装包。仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
+
+## 下载与安装
+
+**[下载最新正式版](https://github.com/wzk112/MajdataMac/releases/latest)** · [v1.0.0 发布说明](https://github.com/wzk112/MajdataMac/releases/tag/v1.0.0)
+
+1. 下载 `MajdataMac-1.0.0-macOS-arm64.dmg`，打开后将 **Majdata Mac.app** 拖入 **Applications（应用程序）**。升级前先保存谱面并退出旧版。
+2. 从「应用程序」双击启动。如果提示“Apple 无法验证此 App 是否包含恶意软件”或“无法验证开发者”，先关闭提示。
+3. 打开 **系统设置 → 隐私与安全性**，向下找到 Majdata Mac，点击 **仍要打开（Open Anyway）**，按系统要求认证，再确认打开。必须先尝试启动，设置中才会出现这一项。
+4. 首次确认后，通常可以直接双击启动。ZIP 包解压后同样将 App 拖入「应用程序」。GitHub 自动生成的 `Source code` 是源码，不是安装包。
+
+**签名说明：** 本版使用完整性校验用的 ad-hoc 签名，**没有 Developer ID 分发签名，也未经过 Apple 公证**。上述步骤使用 macOS 提供的单个 App 放行入口；安装包没有关闭 Gatekeeper、删除隔离属性或修改系统安全设置的脚本。不同 macOS 版本或受管理电脑的提示可能不同，不能把本地启动成功当作所有机器都已验证。
+
+若提示“已损坏”，不要将其当成正常安装提示：重新从本仓库下载，对照 Release 的 `SHA256SUMS.txt` 校验，并提交系统版本、提示截图和校验结果。**不要关闭系统安全检查，也无需运行来源不明的修复命令。** 详细说明见[安装说明](Documentation/Install.md)和 [Apple 的官方打开步骤](https://support.apple.com/zh-cn/102445)。
 
 ## 功能
 
@@ -16,7 +29,7 @@
 - 导出支持 720/1080/1440/2160 方形和 720p/1080p/1440p/4K 16:9，均为 60 fps；默认 HEVC 硬件编码，也可选择 H.264；宽屏可包含谱面信息。
 - 九路音量、主音量、静音/独奏、电平及默认音量；WAV/MP4 导出使用相同混音设置。系统输出切换后自动重连并保留播放位置。
 - 默认 Classic 自动播放，直接给出最高判定。另提供实验区域输入模拟：34 块触屏区域、8 个独立外键，模拟显示、计分和音效共用记录。
-- 对比全内屏、Tap/Hold 全外键、内外配合。报告实际触发来源及提前量，不把模拟低判直接等同于无理谱。
+- 检测可能存在的无理／撞尾与输入冲突，对比全内屏、Tap/Hold 全外键、内外配合，定位时间与源码并报告触发来源和提前量；结果是风险提示，不把模拟低判直接等同于无理谱。
 - 代码/舞台之间、时间轴上边缘、侧栏和设置栏均可拖动调整尺寸。
 - 时间轴支持固定坐标拖动、平移、缩放、分音吸附、小节/拍/分音网格。青色实线是播放位置，紫色虚线是源码光标位置。
 - 源码青色光标和背景标记当前播放单元，紫色保留编辑光标，橙色背景标记仍在持续的 Hold/Slide。
@@ -36,7 +49,9 @@
 swift test -c release
 ```
 
-应用位于 `dist/Majdata Mac.app`，可复制到「应用程序」。脚本使用本地临时签名，未提供 Developer ID 公证。缺少 Metal 编译器时，通过 Xcode 安装组件，或运行 `xcodebuild -downloadComponent MetalToolchain`。
+应用位于 `dist/Majdata Mac.app`，可复制到「应用程序」。脚本默认使用 ad-hoc 签名并验证资源完整性，不包含 Apple 公证。可通过 `CODESIGN_IDENTITY` 指定自己的签名身份；公开分发应使用 Developer ID Application 证书并完成公证，不要使用 Apple Development 证书代替分发证书。缺少 Metal 编译器时，通过 Xcode 安装组件，或运行 `xcodebuild -downloadComponent MetalToolchain`。
+
+运行 `./Scripts/package-release.sh` 生成 DMG、ZIP、安装说明和 SHA-256 校验文件。发布流程见[发布说明](Documentation/Releasing.md)。
 
 构建也会生成 SwiftPM 资源包，请通过打包后的 `.app` 使用。`Package.swift` 可直接在 Xcode 中打开。自动播放测试关闭扬声器输出，保留实际引擎和采样时钟。
 

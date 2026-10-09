@@ -2,6 +2,7 @@
 set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 CONFIGURATION="${1:-release}"
+CODESIGN_IDENTITY="${CODESIGN_IDENTITY:--}"
 "$PROJECT_DIR/Scripts/build-shaders.sh"
 swift build --package-path "$PROJECT_DIR" -c "$CONFIGURATION"
 BIN_DIR="$(swift build --package-path "$PROJECT_DIR" -c "$CONFIGURATION" --show-bin-path)"
@@ -29,15 +30,25 @@ cat > "$APP_PATH/Contents/Info.plist" <<'PLIST'
 <key>CFBundleDisplayName</key><string>Majdata Mac</string>
 <key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.3.10</string>
-<key>CFBundleVersion</key><string>14</string>
+<key>CFBundleShortVersionString</key><string>1.0.0</string>
+<key>CFBundleVersion</key><string>15</string>
 <key>LSMinimumSystemVersion</key><string>26.0</string>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSHumanReadableCopyright</key><string>Based on Majdata by bbben and contributors. GPL-3.0.</string>
 <key>CFBundleDocumentTypes</key><array><dict><key>CFBundleTypeName</key><string>Simai Chart</string><key>CFBundleTypeRole</key><string>Editor</string><key>LSItemContentTypes</key><array><string>public.plain-text</string></array><key>LSHandlerRank</key><string>Alternate</string></dict></array>
 </dict></plist>
 PLIST
-codesign --force --deep --sign - "$APP_PATH"
+# Finish all resource copies before sealing the bundle. A copied signature must
+# never be kept after editing Info.plist or bundled documentation.
+# Only remove extended metadata from this newly assembled build, never from an
+# installed or downloaded app. This is not an end-user Gatekeeper workaround.
+xattr -cr "$APP_PATH"
+if [[ "$CODESIGN_IDENTITY" == "-" ]]; then
+    codesign --force --sign - --options runtime "$APP_PATH"
+else
+    codesign --force --sign "$CODESIGN_IDENTITY" --options runtime --timestamp "$APP_PATH"
+fi
+codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 mkdir -p "$PROJECT_DIR/dist"
 if [[ -e "$DESTINATION" ]]; then mv "$DESTINATION" "$PACKAGE_DIR/previous.app"; fi
 mv "$APP_PATH" "$DESTINATION"

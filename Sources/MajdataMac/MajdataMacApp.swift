@@ -55,7 +55,7 @@ import MajdataCore
                 Section("画面特效 · 播放与导出") { StageEffectsControls(model: model) }
                 Section("资源") { Button("选择自定义皮肤…") { model.chooseSkin() }; Button("恢复默认皮肤") { model.loadSkin(nil) } }
                 Section("编码工具") { TextField("FFmpeg 路径", text: $model.ffmpegPath).onChange(of: model.ffmpegPath) { _, value in UserDefaults.standard.set(value, forKey: "ffmpegPath") } }
-                Section { Text("Majdata Mac · 原生移植开发版\n基于 MajdataView / MajdataEdit · GPL-3.0").font(.caption).foregroundStyle(.secondary) }
+                Section { Text("Majdata Mac · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "本地构建")\n基于 MajdataView / MajdataEdit · GPL-3.0").font(.caption).foregroundStyle(.secondary) }
             }.formStyle(.grouped).frame(width: 480, height: 510)
         }
     }
