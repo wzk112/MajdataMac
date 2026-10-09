@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import Darwin
 import MajdataCore
 
 enum AudioChannel: String, Codable, CaseIterable, Identifiable, Sendable {
@@ -115,6 +116,7 @@ private final class AudioLevels: @unchecked Sendable {
     private let levels = AudioLevels()
     private var offset = 0.0
     private var pausedTime = 0.0
+    private var lastClockPosition = 0.0
     private var running = false
     private var configurationObserver: NSObjectProtocol?
     var onConfigurationChange: (() -> Void)?
@@ -125,8 +127,14 @@ private final class AudioLevels: @unchecked Sendable {
     var reference: AVAudioPlayerNode { channels[.bgm]! }
     var currentTime: Double {
         guard running, engine.isRunning, let render = reference.lastRenderTime, let player = reference.playerTime(forNodeTime: render) else { return pausedTime }
-        // All stems use one graph, one time-pitch unit and one sample clock.
-        return min(duration, offset + max(0, Double(player.sampleTime) / player.sampleRate))
+        // Smooth the block-stepped audio timestamp without replacing the audio master clock.
+        let position = AudioPresentationClock.position(offset: offset, sampleTime: player.sampleTime, sampleRate: player.sampleRate,
+            renderHostSeconds: render.isHostTimeValid ? AVAudioTime.seconds(forHostTime: render.hostTime) : nil,
+            hostSeconds: AVAudioTime.seconds(forHostTime: mach_absolute_time()), rate: Double(rate), duration: duration)
+        // Rate changes can briefly leave one block from the previous rate in the graph.
+        // Re-anchor to audio as it catches up without ever moving the visible playhead backwards.
+        lastClockPosition = max(lastClockPosition, position)
+        return lastClockPosition
     }
     var isPlaying: Bool { running && currentTime < duration - 1.0 / AudioRenderer.rate }
     var rate: Float = 1 { didSet { pitch.rate = rate } }
@@ -179,7 +187,7 @@ private final class AudioLevels: @unchecked Sendable {
         for (channel, node) in channels { node.volume = settings.gain(channel) * headroom }
     }
     func play(at time: Double) throws {
-        pause(); offset = min(duration, max(0, time)); pausedTime = offset
+        pause(); offset = min(duration, max(0, time)); pausedTime = offset; lastClockPosition = offset
         if !engine.isRunning { try engine.start() }
         let startFrame = AVAudioFramePosition((offset * AudioRenderer.rate).rounded())
         for (channel, node) in channels {

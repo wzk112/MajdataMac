@@ -1,6 +1,14 @@
 import SwiftUI
 import QuartzCore
 
+enum DisplayRefreshPolicy {
+    static func range(requested: Int, screenMaximum: Int) -> CAFrameRateRange {
+        let maximum = Float(max(1, screenMaximum))
+        let rate = requested == 0 ? maximum : min(maximum, Float(max(1, requested)))
+        return CAFrameRateRange(minimum: requested == 0 ? min(30, rate) : rate, maximum: rate, preferred: rate)
+    }
+}
+
 @MainActor @Observable final class StageFrameClock {
     var time = 0.0
     var fps = 0.0
@@ -111,10 +119,10 @@ private struct DisplayLinkSurface: NSViewRepresentable {
     }
     func configure() {
         guard let link else { return }
-        let maximum = Float(window?.screen?.maximumFramesPerSecond ?? 60)
-        let rate = requestedRate == 0 ? maximum : min(maximum, Float(requestedRate))
-        if link.preferredFrameRateRange.preferred != rate {
-            link.preferredFrameRateRange = CAFrameRateRange(minimum: min(30, rate), maximum: rate, preferred: rate)
+        let range = DisplayRefreshPolicy.range(requested: requestedRate, screenMaximum: window?.screen?.maximumFramesPerSecond ?? 60)
+        let current = link.preferredFrameRateRange
+        if current.minimum != range.minimum || current.maximum != range.maximum || current.preferred != range.preferred {
+            link.preferredFrameRateRange = range
         }
         let paused = !running || window == nil
         if link.isPaused != paused { link.isPaused = paused }

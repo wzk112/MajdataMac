@@ -86,8 +86,12 @@ enum ExportFailure: LocalizedError {
                 let (audio, recording) = try await withTaskCancellationHandler { try await job.value } onCancel: { job.cancel() }
                 var style = style; style.recording = recording
                 let silent = workspace.appendingPathComponent("silent.mp4")
+                let renderStarted = ProcessInfo.processInfo.systemUptime
                 try await VideoExporter.render(chart: snapshot, audio: audio, video: video, style: style, width: width, height: height, destination: silent, info: info) { progress in
-                    self.exportProgress = progress * 0.9; self.exportStatus = "渲染 \(width) × \(height) · \(Int(progress * 100))%"
+                    self.exportProgress = progress * 0.9
+                    let elapsed = ProcessInfo.processInfo.systemUptime - renderStarted
+                    let speed = elapsed > 0 ? Int(progress * ceil(audio.duration * 60) / elapsed) : 0
+                    self.exportStatus = "渲染 \(width) × \(height) · \(Int(progress * 100))%" + (elapsed > 1 ? " · \(speed) 帧/秒" : "")
                 }
                 try Task.checkCancellation(); exportStatus = "合并立体声音轨…"; exportProgress = 0.92
                 let encodedAudio = workspace.appendingPathComponent("mix.m4a")
@@ -106,57 +110,81 @@ enum ExportFailure: LocalizedError {
         }
     }
 }
+struct VideoRenderMetrics {
+    var frames = 0
+    var elapsed = 0.0
+    var background = 0.0
+    var drawing = 0.0
+    var copying = 0.0
+    var encoding = 0.0
+    var waiting = 0.0
+    var finishing = 0.0
+    var framesPerSecond: Double { Double(frames) / max(0.001, elapsed) }
+}
 @MainActor enum VideoExporter {
-    static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, info: StageChartInfo? = nil, progress: (Double) -> Void) async throws {
+    @discardableResult static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, info: StageChartInfo? = nil, progress: (Double) -> Void) async throws -> VideoRenderMetrics {
+        let started = ProcessInfo.processInfo.systemUptime
+        var metrics = VideoRenderMetrics()
         guard width > 0, height > 0, width <= 4096, height <= 4096, width % 2 == 0, height % 2 == 0 else { throw ExportFailure.failure("导出宽高必须为 2–4096 之间的偶数") }
+        guard audio.duration.isFinite, audio.duration > 0, audio.duration <= 1800, audio.startTime.isFinite else { throw ExportFailure.failure("无效的视频导出时长") }
+        let background: ExportVideoFrames?
+        if let video {
+            background = try await ExportVideoFrames(url: video, startTime: audio.startTime, maximumSize: CGSize(width: width, height: height))
+        } else { background = nil }
         let writer = try AVAssetWriter(outputURL: destination, fileType: .mp4)
         let bitrate = min(50_000_000, max(8_000_000, Int(Double(width * height) / (1920 * 1080) * 12_000_000)))
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height, AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: bitrate, AVVideoExpectedSourceFrameRateKey: 60]])
         input.expectsMediaDataInRealTime = false
-        let attributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB, kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height, kCVPixelBufferCGImageCompatibilityKey as String: true, kCVPixelBufferCGBitmapContextCompatibilityKey as String: true]
+        let attributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferIOSurfacePropertiesKey as String: [:], kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height, kCVPixelBufferCGImageCompatibilityKey as String: true, kCVPixelBufferCGBitmapContextCompatibilityKey as String: true]
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: attributes)
         guard writer.canAdd(input) else { throw ExportFailure.failure("编码器不支持该视频设置") }
         writer.add(input)
         guard writer.startWriting() else { throw writer.error ?? ExportFailure.failure("视频写入失败") }
         writer.startSession(atSourceTime: .zero)
-        var generator: AVAssetImageGenerator?
-        if let video {
-            generator = AVAssetImageGenerator(asset: AVURLAsset(url: video)); generator?.appliesPreferredTrackTransform = true
-            generator?.maximumSize = CGSize(width: width, height: height)
-            generator?.requestedTimeToleranceBefore = CMTime(value: 1, timescale: 60); generator?.requestedTimeToleranceAfter = CMTime(value: 1, timescale: 60)
-        }
         let statistics = info == nil ? nil : StageStatisticsTimeline.prepared(chart, recording: style.recording)
         let count = Int(ceil(audio.duration * 60))
+        let renderer = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height)
         do {
             for frame in 0..<count {
                 try Task.checkCancellation()
+                var measured = ProcessInfo.processInfo.systemUptime
                 while !input.isReadyForMoreMediaData {
-                    if writer.status == .failed { throw writer.error ?? ExportFailure.failure("视频编码器退出") }
+                    if writer.status != .writing { throw writer.error ?? ExportFailure.failure("视频编码器退出") }
                     try await Task.sleep(for: .milliseconds(2))
                 }
+                metrics.waiting += ProcessInfo.processInfo.systemUptime - measured
                 let time = audio.startTime + Double(frame) / 60
                 var frameStyle = style
-                if let generator, time >= 0, let image = try? await generator.image(at: CMTime(seconds: time, preferredTimescale: 60000)).image { frameStyle.background = NSImage(cgImage: image, size: .zero) }
+                measured = ProcessInfo.processInfo.systemUptime
+                if let background, let image = try await background.frame(at: time) { frameStyle.background = NSImage(cgImage: image, size: .zero) }
+                metrics.background += ProcessInfo.processInfo.systemUptime - measured
                 try autoreleasepool {
-                    let view = StagePresentation(info: info, cover: style.background, statistics: statistics, time: time) {
-                        StageView(chart: chart, time: time, style: frameStyle)
-                    }.frame(width: Double(width), height: Double(height))
-                    let renderer = ImageRenderer(content: view); renderer.scale = 1; renderer.isOpaque = true
-                    guard let cgImage = renderer.cgImage else { throw ExportFailure.failure("无法渲染谱面帧") }
+                    measured = ProcessInfo.processInfo.systemUptime
                     var buffer: CVPixelBuffer?
                     guard let pool = adaptor.pixelBufferPool, CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer) == kCVReturnSuccess, let buffer else { throw ExportFailure.failure("无法分配视频帧") }
                     CVPixelBufferLockBaseAddress(buffer, [])
                     defer { CVPixelBufferUnlockBaseAddress(buffer, []) }
-                    guard let context = CGContext(data: CVPixelBufferGetBaseAddress(buffer), width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(buffer), space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else { throw ExportFailure.failure("无法创建离屏画布") }
-                    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+                    guard let context = CGContext(data: CVPixelBufferGetBaseAddress(buffer), width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(buffer), space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.noneSkipFirst.rawValue) else { throw ExportFailure.failure("无法创建离屏画布") }
+                    metrics.copying += ProcessInfo.processInfo.systemUptime - measured
+                    measured = ProcessInfo.processInfo.systemUptime
+                    try renderer.draw(time: time, style: frameStyle, into: context)
+                    metrics.drawing += ProcessInfo.processInfo.systemUptime - measured
+                    measured = ProcessInfo.processInfo.systemUptime
                     guard adaptor.append(buffer, withPresentationTime: CMTime(value: Int64(frame), timescale: 60)) else { throw writer.error ?? ExportFailure.failure("无法写入视频帧") }
+                    metrics.encoding += ProcessInfo.processInfo.systemUptime - measured
                 }
                 if frame % 12 == 0 { progress(Double(frame) / Double(count)); await Task.yield() }
             }
+            let finishing = ProcessInfo.processInfo.systemUptime
             input.markAsFinished(); await writer.finishWriting()
+            metrics.finishing = ProcessInfo.processInfo.systemUptime - finishing
             guard writer.status == .completed else { throw writer.error ?? ExportFailure.failure("视频没有完整写入") }
+            await background?.cancel()
             progress(1)
-        } catch { writer.cancelWriting(); throw error }
+            metrics.frames = count
+            metrics.elapsed = ProcessInfo.processInfo.systemUptime - started
+            return metrics
+        } catch { writer.cancelWriting(); await background?.cancel(); throw error }
     }
     static func mux(video: URL, audio: URL, output: URL) async throws {
         let videoAsset = AVURLAsset(url: video), audioAsset = AVURLAsset(url: audio)

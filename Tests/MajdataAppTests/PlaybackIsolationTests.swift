@@ -6,6 +6,16 @@ import MajdataCore
 @testable import MajdataMac
 
 @Suite(.serialized) struct PlaybackIsolationTests {
+    @Test func explicitFrameRateDoesNotAllowAdaptiveThirtyHz() {
+        for requested in [20, 30, 60, 120] {
+            let range = DisplayRefreshPolicy.range(requested: requested, screenMaximum: 120)
+            #expect(range.minimum == Float(requested) && range.maximum == Float(requested) && range.preferred == Float(requested))
+        }
+        let capped = DisplayRefreshPolicy.range(requested: 120, screenMaximum: 60)
+        #expect(capped.minimum == 60 && capped.maximum == 60)
+        let automatic = DisplayRefreshPolicy.range(requested: 0, screenMaximum: 120)
+        #expect(automatic.minimum == 30 && automatic.maximum == 120)
+    }
     @Test @MainActor func stageAnimationPreservesSizeAndIdentityAcrossClockUpdates() async throws {
         let model = StudioModel(audioOutputEnabled: false)
         model.chart = SimaiParser.parse("(120){4},,1/Ch[4:4],E")

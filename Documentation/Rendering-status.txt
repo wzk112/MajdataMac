@@ -1,4 +1,4 @@
-Majdata Mac 0.3.5 验证记录（包含历史验证） — 2026-10-09
+Majdata Mac 0.3.7 验证记录（包含历史验证） — 2026-10-09
 
 实现
   原 Skin/SFX、42 组轨道、12 组动画曲线、Hold 粒子和 Metal 烟花；统一 Canvas。
@@ -156,3 +156,45 @@ Majdata Mac 0.3.5 验证记录（包含历史验证） — 2026-10-09
 
   参考：Apple Understanding and improving SwiftUI performance
   https://developer.apple.com/documentation/xcode/understanding-and-improving-swiftui-performance
+
+0.3.6 音频时钟连续性
+  AVAudioPlayerNode 的时间戳按音频块更新，直接用于 120 Hz 画面会产生相同时间的
+  重复帧。现在在同一 host clock 内插值，每个音频块重新校准；未来 host time 保留
+  负时间差，正确处理预定播放、暂停、回拖、结束和变速，不用墙上时钟累计漂移。
+  实际静音引擎测试中，120 次读取有 87 次底层样本时间相同，插值时间在这 87 次
+  均继续推进。三项时钟测试和固定刷新范围测试通过；共 76 项。
+  0.3.6 用户正常播放的宽屏窗口在 01:13.822 读到 120 Hz / 0 次超时；这是单个窗口
+  读数，且用户已选 Classic、关闭按压高亮，不能与上面的区域模拟实验作严格对照。
+
+0.3.7 导出路径
+  导出复用 ImageRenderer 视图图谱；CGImage 输出保持 Canvas GPU 绘制。实测直接
+  render(rasterizationScale:renderer:) 到 CGContext 会明显变慢，因此没有采用该路径。
+  PV 使用 AVAssetReaderTrackOutput 连续解码，alwaysCopiesSampleData=false，NV12
+  输入经 Metal-backed CIContext 转换/缩放；按源时间戳复用帧，修正 track transform
+  与 Core Image 坐标方向差异。输出维持原 H.264/AAC、60 fps、像素尺寸和码率。
+  编码缓冲池为 IOSurface-backed BGRA；仍需将 SwiftUI 图像送入编码缓冲区，尚未
+  实现整个舞台的独立 Metal 渲染或纹理直通编码，不能称为全流程零拷贝。
+
+  同机短片对照：[DX] 系ぎて Re:MASTER 55–57 秒，120 帧，所有特效、区域显示、
+  宽屏统计开启，无采样器。计时不包含音频混合/AAC/最终封装。
+    原路径 1280×720：无 PV 0.904 秒，PV 2.225 秒。
+    新路径 1280×720：无 PV 0.368 秒，PV 0.551 秒。
+    原路径 1920×1080：无 PV 0.909 秒，PV 2.388 秒。
+    新路径 1920×1080：无 PV 0.490 秒，PV 0.656 秒。
+    1080p PV 取帧耗时 1.408 → 0.109 秒。一次短片实验约 3.6 倍，非所有曲目的保证。
+  四个覆盖音符、烟花、长押、区域和完整侧栏的对照帧像素完全一致；PV 色彩转换
+  和旋转测试平均通道差约 1.8–1.95 / 255，属于不同解码/颜色转换路径的小幅差异。
+  81 项自动测试通过，包括八种输出尺寸、导出取消、音频/视频轨道和时钟回归。
+
+  Apple API 参考：
+  https://developer.apple.com/documentation/avfoundation/avassetreadertrackoutput
+  https://developer.apple.com/documentation/swiftui/imagerenderer/render(rasterizationscale:renderer:)
+
+  完整视频验证：[DX] Xaleid◆scopiX Re:MASTER，2,222 音符，Classic；
+  1920×1080 / 60 fps，PV、区域与三项特效、两侧完整统计开启。
+  时长 261.165954 秒：渲染 68.322 秒（约 229 帧/秒），含混音/AAC/封装总计 72.828 秒。
+  实际读回解码 15,670 帧，逐帧检查 1/60 秒时间戳；音频轨存在、尺寸/时长正确。
+  最终封装视频已完整读回解码，旋转/PV/像素/取消验证均通过；日志
+  validation-0.3.7-export-log.txt。上述耗时不包含之后的读回验证，也不是旧版全曲对照。
+  H.264 原始压缩样本包含 edit-boundary 标记和 B 帧时间偏移；完整验证使用解码后
+  的图像样本和 outputPresentationTimeStamp，避免把元数据标记误计为视频帧。

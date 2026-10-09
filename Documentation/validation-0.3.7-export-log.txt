@@ -1,0 +1,32 @@
+Building for production...
+[1 / 1]
+[2 / 4] MajdataAppTests-product
+[4 / 6] MajdataAppTests-product
+[8 / 12] MajdataAppTests-product
+[10 / 12] MajdataAppTests-product
+Build complete! (6.27 sec.)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite VideoExportTests started.
+◇ Test cancelStopsExportAndReleasesWriter() started.
+✔ Test cancelStopsExportAndReleasesWriter() passed after 0.179 seconds.
+◇ Test fullRealChartMovie() started.
+FULL EXPORT notes=2222 duration=261.16595374380563 total=72.82807916667662 metrics=VideoRenderMetrics(frames: 15670, elapsed: 68.32163912500255, background: 11.167612958292011, drawing: 51.24310370767489, copying: 5.196468458569143, encoding: 0.46521599998231977, waiting: 0.005365416320273653, finishing: 0.017951499990886077)
+✔ Test fullRealChartMovie() passed after 79.372 seconds.
+◇ Test sequentialPVMatchesTimestampsRotationAndEnd() started.
+PV PIXELS time=0.0 mean=1.7835286458333333
+PV PIXELS time=0.1 mean=1.94580078125
+PV PIXELS time=0.3 mean=1.9302571614583333
+PV PIXELS time=0.8 mean=1.8586018880208333
+✔ Test sequentialPVMatchesTimestampsRotationAndEnd() passed after 0.094 seconds.
+◇ Test reusedFramesMatchImageRendererAndUpdateEveryFrame() started.
+EXPORT PIXELS time=0.8 mean=0.0 max=0
+EXPORT PIXELS time=1.22 mean=0.0 max=0
+EXPORT PIXELS time=1.7 mean=0.0 max=0
+EXPORT PIXELS time=2.6 mean=0.0 max=0
+✔ Test reusedFramesMatchImageRendererAndUpdateEveryFrame() passed after 0.421 seconds.
+◇ Test measuredRealChartExport() started.
+✔ Test measuredRealChartExport() passed after 0.001 seconds.
+✔ Suite VideoExportTests passed after 80.069 seconds.
+✔ Test run with 5 tests in 1 suite passed after 80.069 seconds.
