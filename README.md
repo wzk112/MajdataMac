@@ -4,7 +4,7 @@
 
 面向 macOS 26 及以上的原生 simai 谱面编辑器与预览工具。界面使用 SwiftUI，渲染使用 Canvas / Metal，音频使用 AVAudioEngine。基于 MajdataView / MajdataEdit 的资源、几何和行为移植，独立维护，与 SEGA 或 TeamMajdata 无隶属关系。
 
-当前版本 **0.3.9，开发版**。已在 Apple silicon、macOS 27.0.1 上构建和测试；尚未在 macOS 26 实机和 Intel Mac 上复测。它仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
+当前版本 **0.3.10，开发版**。已在 Apple silicon、macOS 27.0.1 上构建和测试；尚未在 macOS 26 实机和 Intel Mac 上复测。它仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
 
 ## 功能
 
@@ -73,7 +73,7 @@ Tap/Hold 可使用外键或触屏 A 区；Touch 只能使用触屏，Slide 读�
 
 尚未实现手动游玩/实体控制器输入、普通播放的 OP 模式及 AP 结尾、全部原版设置与外部服务，也未完成与 Windows Unity 的逐帧像素对比。模拟全 Critical 不能证明真人可打。
 
-虚拟声卡录音需让系统输出流经虚拟设备或多输出设备，并让录屏软件采集对应输入。仅安装虚拟驱动不会自动捕获扬声器声音。声音设置显示当前系统输出，并提供重新连接按钮。
+虚拟声卡录音需让系统输出流经虚拟设备或多输出设备，并让录屏软件采集对应输入。仅安装虚拟驱动不会自动捕获扬声器声音。声音设置支持“跟随系统”或指定输出设备，并显示音频引擎实际连接的设备。0.3.10 显式绑定设备并读回核对，监听虚拟设备创建/移除，设备就绪延迟时重试；iShot 实际采集效果待用户验证。
 
 ## 项目结构
 

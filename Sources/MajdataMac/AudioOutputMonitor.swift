@@ -1,32 +1,35 @@
 import CoreAudio
 import Foundation
 
-/// Follow the system media output, including virtual and multi-output devices.
-@MainActor final class AudioOutputMonitor {
-    private var listener: AudioObjectPropertyListenerBlock?
-    private var address = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice,
-        mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
+enum AudioOutputChange: Sendable { case devices, serviceRestart, verify }
 
-    init(onChange: @escaping @MainActor () -> Void) {
-        let block: AudioObjectPropertyListenerBlock = { _, _ in
-            Task { @MainActor in onChange() }
+/// Observe default routes and aggregate-device creation/removal. The low-frequency
+/// check also catches a missed notification or an output unit staying on the old device.
+@MainActor final class AudioOutputMonitor {
+    private var listeners: [(AudioObjectPropertyAddress, AudioObjectPropertyListenerBlock)] = []
+    private var timer: Timer?
+
+    init(onChange: @escaping @MainActor (AudioOutputChange) -> Void) {
+        for selector in [kAudioHardwarePropertyDefaultOutputDevice, kAudioHardwarePropertyDevices,
+                         kAudioHardwarePropertyServiceRestarted] {
+            var address = AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal,
+                                                     mElement: kAudioObjectPropertyElementMain)
+            let block: AudioObjectPropertyListenerBlock = { _, _ in
+                Task { @MainActor in onChange(selector == kAudioHardwarePropertyServiceRestarted ? .serviceRestart : .devices) }
+            }
+            if AudioObjectAddPropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, block) == noErr {
+                listeners.append((address, block))
+            }
         }
-        if AudioObjectAddPropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, block) == noErr {
-            listener = block
+        let check = Timer(timeInterval: 1, repeats: true) { _ in
+            MainActor.assumeIsolated { onChange(.verify) }
         }
+        RunLoop.main.add(check, forMode: .common); timer = check
     }
     isolated deinit {
-        if let listener { AudioObjectRemovePropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, listener) }
-    }
-    static var deviceName: String {
-        var address = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice,
-            mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
-        var device = AudioDeviceID(0), size = UInt32(MemoryLayout<AudioDeviceID>.size)
-        guard AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &size, &device) == noErr, device != 0 else { return "无可用输出" }
-        address.mSelector = kAudioObjectPropertyName
-        var name: CFString = "" as CFString
-        size = UInt32(MemoryLayout<CFString>.size)
-        let result = withUnsafeMutablePointer(to: &name) { AudioObjectGetPropertyData(device, &address, 0, nil, &size, $0) }
-        return result == noErr ? name as String : "系统默认设备"
+        timer?.invalidate()
+        for (var address, listener) in listeners {
+            AudioObjectRemovePropertyListenerBlock(AudioObjectID(kAudioObjectSystemObject), &address, .main, listener)
+        }
     }
 }

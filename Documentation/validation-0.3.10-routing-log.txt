@@ -1,0 +1,27 @@
+Building for production...
+[Planning 163 / 240]
+[Planning deferred tasks]
+[10 / 21] MajdataCore
+[12 / 23] MajdataCore
+[21 / 37] MajdataCoreTests-product
+[26 / 40] MajdataCoreTests-product
+[29 / 43] MajdataCoreTests-product
+[32 / 45] MajdataCoreTests-product
+[32 / 53] MajdataMac-product
+[40 / 56] MajdataMac-product
+[41 / 56] MajdataMac-product
+[44 / 54] MajdataAppTests-product
+[46 / 55] MajdataAppTests-product
+[51 / 55] MajdataAppTests-product
+[53 / 55] MajdataAppTests-product
+Build complete! (24.10 sec.)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite AudioOutputRoutingTests started.
+◇ Test setsEngineRouteAndVerifiesActualDevice() started.
+◇ Test followsDefaultAndRestoresRecreatedVirtualDevice() started.
+✔ Test followsDefaultAndRestoresRecreatedVirtualDevice() passed after 0.001 seconds.
+✔ Test setsEngineRouteAndVerifiesActualDevice() passed after 0.001 seconds.
+✔ Suite AudioOutputRoutingTests passed after 0.001 seconds.
+✔ Test run with 2 tests in 1 suite passed after 0.001 seconds.

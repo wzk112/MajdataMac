@@ -128,9 +128,15 @@ private final class AudioLevels: @unchecked Sendable {
     let headroom: Float
     var outputVolume: Float { engine.mainMixerNode.outputVolume }
     var engineIsRunning: Bool { engine.isRunning }
+    var outputDeviceID: UInt32? { engine.outputNode.audioUnit.flatMap(AudioOutputRouting.currentID) }
+    var outputDevice: AudioOutputDevice? {
+        outputDeviceID.flatMap(AudioOutputRouting.device)
+    }
     var reference: AVAudioPlayerNode { channels[.bgm]! }
     var currentTime: Double {
-        guard running, engine.isRunning, let render = reference.lastRenderTime, let player = reference.playerTime(forNodeTime: render) else { return pausedTime }
+        guard running, engine.isRunning, let render = reference.lastRenderTime, let player = reference.playerTime(forNodeTime: render) else {
+            return running ? lastClockPosition : pausedTime
+        }
         // Smooth the block-stepped audio timestamp without replacing the audio master clock.
         let position = AudioPresentationClock.position(offset: offset, sampleTime: player.sampleTime, sampleRate: player.sampleRate,
             renderHostSeconds: render.isHostTimeValid ? AVAudioTime.seconds(forHostTime: render.hostTime) : nil,
@@ -149,8 +155,13 @@ private final class AudioLevels: @unchecked Sendable {
             return Double(time.sampleTime) / time.sampleRate
         }
     }
-    init(_ audio: PreparedAudio, settings: AudioMixSettings, audioOutputEnabled: Bool = true) throws {
+    init(_ audio: PreparedAudio, settings: AudioMixSettings, audioOutputEnabled: Bool = true, outputUID: String = "") throws {
         duration = audio.duration; headroom = audio.headroom
+        guard let device = AudioOutputRouting.resolve(preferredUID: outputUID, devices: AudioOutputRouting.devices,
+                                                      defaultID: AudioOutputRouting.defaultID),
+              let output = engine.outputNode.audioUnit else { throw AudioOutputRouting.Failure.unavailable }
+        // Bind this engine only; never change the user's global Core Audio defaults.
+        try AudioOutputRouting.bind(output, to: device.id)
         let format = AVAudioFormat(standardFormatWithSampleRate: AudioRenderer.rate, channels: 2)!
         engine.attach(mixer); engine.attach(pitch)
         engine.connect(mixer, to: pitch, format: format)
@@ -172,7 +183,9 @@ private final class AudioLevels: @unchecked Sendable {
                 levels.set(channel, peak)
             }
         }
-        engine.prepare(); try engine.start(); apply(settings)
+        engine.prepare(); try engine.start()
+        guard AudioOutputRouting.currentID(output) == device.id else { engine.stop(); throw AudioOutputRouting.Failure.wrongDevice }
+        apply(settings)
         configurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
             Task { @MainActor in self?.onConfigurationChange?() }
         }

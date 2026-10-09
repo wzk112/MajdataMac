@@ -1,4 +1,4 @@
-Majdata Mac 0.3.9 — source and asset notices
+Majdata Mac 0.3.10 — source and asset notices
 
 This Swift/SwiftUI port and its GPL-derived data are distributed under GNU GPL v3.
 See LICENSE. This distribution includes editable source, resources, importer

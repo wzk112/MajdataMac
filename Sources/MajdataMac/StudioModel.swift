@@ -79,7 +79,16 @@ enum PreviewJudgementMode: String, CaseIterable {
     var recording: RegionRecording?
     var prepared: PreparedAudio?
     @ObservationIgnored var playback: AudioPlayback?
-    var audioOutputName = AudioOutputMonitor.deviceName
+    var audioOutputName = "尚未连接"
+    var audioOutputDevices = AudioOutputRouting.devices
+    var audioOutputUID = UserDefaults.standard.string(forKey: "audioOutputUID") ?? "" {
+        didSet {
+            UserDefaults.standard.set(audioOutputUID, forKey: "audioOutputUID")
+            refreshAudioOutput(.devices, force: true)
+        }
+    }
+    var audioOutputUnavailable: Bool { !audioOutputUID.isEmpty && !audioOutputDevices.contains { $0.uid == audioOutputUID } }
+    @ObservationIgnored private var audioTargetID: UInt32 = 0
     @ObservationIgnored private var outputMonitor: AudioOutputMonitor?
     var errorMessage: String?
     var status = "打开谱面文件夹，或试试内置示例"
@@ -128,7 +137,7 @@ enum PreviewJudgementMode: String, CaseIterable {
         source = document.chart(difficulty)
         chart = SimaiParser.parse(source)
         loadSkin(nil)
-        outputMonitor = AudioOutputMonitor { [weak self] in self?.reconnectAudioOutput() }
+        outputMonitor = AudioOutputMonitor { [weak self] change in self?.refreshAudioOutput(change) }
         let updates = Timer(timeInterval: 1.0 / 20, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.tick() }
         }
@@ -180,6 +189,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     func metadataChanged() { markDirty(); parse() }
     func invalidateAudio() {
         pause(); prepareTask?.cancel(); isPreparing = false; playWhenReady = false; playback?.shutdown(); playback = nil
+        audioOutputName = "尚未连接"
         if let prepared {
             try? FileManager.default.removeItem(at: prepared.url)
             try? FileManager.default.removeItem(at: prepared.url.deletingPathExtension().appendingPathExtension("stems"))
@@ -305,7 +315,7 @@ enum PreviewJudgementMode: String, CaseIterable {
                     try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems")); return
                 }
                 // Publish a complete playable state only after the graph is ready.
-                let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled)
+                let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled, outputUID: audioOutputUID)
                 prepared = audio; recording = result; waveform = audio.waveform; connect(player)
                 playback?.rate = Float(rate); isPreparing = false
                 status = "音频已就绪 · 48 kHz · " + (regions ? "区域模拟（实验）" : "Classic 自动播放")
@@ -319,18 +329,33 @@ enum PreviewJudgementMode: String, CaseIterable {
         }
     }
     private func connect(_ player: AudioPlayback) {
-        playback = player; audioOutputName = AudioOutputMonitor.deviceName
+        playback = player; audioOutputName = player.outputDevice?.name ?? "无法读取实际输出"
+        audioTargetID = player.outputDeviceID ?? 0
         player.onConfigurationChange = { [weak self, weak player] in
             guard let self, let player, self.playback === player else { return }
             self.reconnectAudioOutput()
         }
     }
+    private func refreshAudioOutput(_ change: AudioOutputChange, force: Bool = false) {
+        let defaultID = AudioOutputRouting.defaultID
+        if change != .verify || !audioOutputDevices.contains(where: { $0.id == defaultID }) || audioOutputUnavailable {
+            let devices = AudioOutputRouting.devices
+            if audioOutputDevices != devices { audioOutputDevices = devices }
+        }
+        let target = AudioOutputRouting.resolve(preferredUID: audioOutputUID, devices: audioOutputDevices,
+                                                defaultID: defaultID)?.id ?? 0
+        let changed = target != audioTargetID
+        audioTargetID = target
+        guard prepared != nil, !isPreparing || force else { return }
+        let staleEngine = playback.map { $0.outputDeviceID != target || !$0.engineIsRunning } ?? false
+        if force || change == .serviceRestart || changed || staleEngine { reconnectAudioOutput() }
+    }
     func reconnectAudioOutput() {
-        audioOutputName = AudioOutputMonitor.deviceName
         guard let audio = prepared else { return }
         let resume = isPlaying || playWhenReady
-        let position = playbackTime
+        let position = playback?.engineIsRunning == true ? playbackTime : currentTime
         pause(); playback?.shutdown(); playback = nil
+        audioOutputName = "正在连接…"
         currentTime = position
         prepareTask?.cancel(); isPreparing = true; playWhenReady = resume
         status = "正在连接音频输出…"
@@ -340,7 +365,20 @@ enum PreviewJudgementMode: String, CaseIterable {
                 // Coalesce device and graph notifications while CoreAudio changes format.
                 try await Task.sleep(for: .milliseconds(200))
                 guard !Task.isCancelled, expectedRevision == revision else { return }
-                let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled)
+                // Aggregate devices may be announced before their output stream is ready.
+                var replacement: AudioPlayback?
+                for attempt in 0..<4 {
+                    try Task.checkCancellation()
+                    do {
+                        replacement = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled, outputUID: audioOutputUID)
+                        break
+                    } catch {
+                        if attempt == 3 { throw error }
+                        try await Task.sleep(for: .milliseconds(250 * (attempt + 1)))
+                    }
+                }
+                guard let player = replacement else { throw AudioOutputRouting.Failure.unavailable }
+                try Task.checkCancellation()
                 connect(player); player.rate = Float(rate); isPreparing = false
                 let requested = playWhenReady; playWhenReady = false
                 status = "输出已连接 · " + audioOutputName
@@ -348,7 +386,7 @@ enum PreviewJudgementMode: String, CaseIterable {
                 else { try player.seek(currentTime - audio.startTime, playing: false) }
             } catch {
                 guard !Task.isCancelled else { return }
-                isPreparing = false; playWhenReady = false; report(error)
+                isPreparing = false; playWhenReady = false; audioOutputName = "连接失败"; report(error)
             }
         }
     }
@@ -369,6 +407,10 @@ enum PreviewJudgementMode: String, CaseIterable {
     }
     func play() {
         guard let playback, let audio = prepared else { return }
+        guard let target = AudioOutputRouting.resolve(preferredUID: audioOutputUID, devices: AudioOutputRouting.devices,
+                                                      defaultID: AudioOutputRouting.defaultID), playback.outputDeviceID == target.id else {
+            playWhenReady = true; reconnectAudioOutput(); return
+        }
         if currentTime >= rangeEnd - 0.02 { currentTime = rangeStart }
         playback.rate = Float(rate)
         do { try playback.play(at: currentTime - audio.startTime); isPlaying = true }

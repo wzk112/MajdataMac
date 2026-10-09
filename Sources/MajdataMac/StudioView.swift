@@ -281,7 +281,13 @@ struct InspectorView: View {
                 Text("立即应用于预览，视频导出使用相同设置。音效音量在混音器中单独调整。").font(.caption).foregroundStyle(.secondary)
             }
             Section("声音") {
-                Text("输出：跟随系统 · " + model.audioOutputName).font(.caption).foregroundStyle(.secondary)
+                Picker("输出设备", selection: $model.audioOutputUID) {
+                    Text("跟随系统").tag("")
+                    ForEach(model.audioOutputDevices) { device in Text(device.name).tag(device.uid) }
+                    if model.audioOutputUnavailable { Text("已断开的设备").tag(model.audioOutputUID) }
+                }
+                Text("实际输出：" + model.audioOutputName).font(.caption).foregroundStyle(.secondary)
+                if model.audioOutputUnavailable { Text("所选设备已断开，暂时跟随系统输出。").font(.caption).foregroundStyle(.orange) }
                 Button("重新连接音频输出") { model.reconnectAudioOutput() }.disabled(model.prepared == nil)
                 Text(model.musicURL?.lastPathComponent ?? "未加载音乐").font(.caption).foregroundStyle(.secondary)
                 Button("选择音乐…") { model.importMusic() }
