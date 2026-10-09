@@ -10,6 +10,7 @@ struct StageChartInfo {
     var notes: Int
     var breaks: Int
     var mode = "Classic"
+    var showJudgementBreakdown = false
     var difficultyName: String { ChartDocument.difficultyNames[min(6, max(0, difficulty))] }
     var color: Color { [.gray, .green, .yellow, .red, .purple, .pink, .cyan][min(6, max(0, difficulty))] }
 }
@@ -146,12 +147,14 @@ private struct StageResultsPanel: View {
                 row("SCORE", score.classicScore.formatted(), .white)
                 row("DX SCORE", "\(score.dx) / \(info.notes * 3)", .cyan)
             }
-            Rectangle().fill(.white.opacity(0.18)).frame(height: 1)
-            VStack(spacing: 11 * scale) {
-                ForEach(0..<labels.count, id: \.self) { index in row(labels[index], String(score.grades[index]), colors[index]) }
-                Divider().overlay(.white.opacity(0.18)).padding(.vertical, 4 * scale)
-                row("FAST", String(score.fast), .cyan)
-                row("LATE", String(score.late), .pink)
+            if info.showJudgementBreakdown {
+                Rectangle().fill(.white.opacity(0.18)).frame(height: 1)
+                VStack(spacing: 11 * scale) {
+                    ForEach(0..<labels.count, id: \.self) { index in row(labels[index], String(score.grades[index]), colors[index]) }
+                    Divider().overlay(.white.opacity(0.18)).padding(.vertical, 4 * scale)
+                    row("FAST", String(score.fast), .cyan)
+                    row("LATE", String(score.late), .pink)
+                }
             }
             VStack(alignment: .leading, spacing: 8 * scale) {
                 Text("MODE · " + info.mode).font(.system(size: 16 * scale, weight: .semibold)).foregroundStyle(.white.opacity(0.7))
@@ -194,6 +197,6 @@ enum VideoResolution: String, CaseIterable {
 @MainActor extension StudioModel {
     var stageInfo: StageChartInfo {
         StageChartInfo(title: title, artist: document.artist, designer: document.designer(difficulty),
-                       difficulty: difficulty, level: document.level(difficulty), notes: chart.notes.count, breaks: chart.breakCount, mode: regionJudgement ? "区域模拟（实验）" : "Classic")
+                       difficulty: difficulty, level: document.level(difficulty), notes: chart.notes.count, breaks: chart.breakCount, mode: regionJudgement ? "区域模拟（实验）" : "Classic", showJudgementBreakdown: regionJudgement)
     }
 }

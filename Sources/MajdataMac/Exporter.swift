@@ -3,6 +3,7 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 import MajdataCore
+import VideoToolbox
 
 enum ExportFailure: LocalizedError {
     case failure(String)
@@ -47,30 +48,40 @@ enum ExportFailure: LocalizedError {
         let resolution = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 320, height: 28))
         resolution.addItems(withTitles: VideoResolution.allCases.map(\.title))
         resolution.selectItem(at: VideoResolution.allCases.firstIndex(of: videoResolution) ?? 1)
+        let codecChoice = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 320, height: 28))
+        codecChoice.addItems(withTitles: VideoCodec.allCases.map(\.title))
+        codecChoice.selectItem(at: VideoCodec.allCases.firstIndex(of: videoCodec) ?? 0)
         let infoSwitch = NSButton(checkboxWithTitle: "16:9 导出包含谱面信息", target: nil, action: nil)
         infoSwitch.state = exportChartInfo ? .on : .off
+        let introSwitch = NSButton(checkboxWithTitle: "录制开场（5 秒谱面信息及音效）", target: nil, action: nil)
+        introSwitch.state = exportRecordingIntro ? .on : .off
         let fireworks = NSButton(checkboxWithTitle: "烟花特效", target: nil, action: nil)
         let hits = NSButton(checkboxWithTitle: "击打光效", target: nil, action: nil)
         let particles = NSButton(checkboxWithTitle: "长押粒子", target: nil, action: nil)
         fireworks.state = showFireworks ? .on : .off
         hits.state = showHitEffects ? .on : .off
         particles.state = showHoldParticles ? .on : .off
-        let options = NSStackView(views: [NSTextField(labelWithString: "视频分辨率 · 60 fps"), resolution, infoSwitch,
+        let options = NSStackView(views: [NSTextField(labelWithString: "视频分辨率 · 60 fps"), resolution, codecChoice, introSwitch, infoSwitch,
                                         NSTextField(labelWithString: "画面特效 · 与播放共用"), fireworks, hits, particles])
         options.orientation = .vertical; options.alignment = .leading; options.spacing = 8
-        options.frame = NSRect(x: 0, y: 0, width: 340, height: 200)
+        options.frame = NSRect(x: 0, y: 0, width: 340, height: 270)
         panel.accessoryView = options
         guard panel.runModal() == .OK, let destination = panel.url else { return }
         videoResolution = VideoResolution.allCases[max(0, resolution.indexOfSelectedItem)]
+        videoCodec = VideoCodec.allCases[max(0, codecChoice.indexOfSelectedItem)]
+        exportRecordingIntro = introSwitch.state == .on
         exportChartInfo = infoSwitch.state == .on
         showFireworks = fireworks.state == .on
         showHitEffects = hits.state == .on
         showHoldParticles = particles.state == .on
         let (width, height) = videoResolution.dimensions
+        let codec = videoCodec
         pause()
         let snapshot = chart, music = musicURL, settings = mix, resources = Self.resourceURL, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
         let style = stageStyle
         let info = exportChartInfo ? stageInfo : nil
+        let opening = exportRecordingIntro ? RecordingOpening(chart: snapshot, clockCount: document["clock_count"]) : nil
+        let intro = opening.map { RecordingIntro(opening: $0, info: stageInfo) }
         let video = videoURL, workspace = cacheDirectory.appendingPathComponent("Export-" + UUID().uuidString)
         exportProgress = 0; exportStatus = "准备音频…"
         exportTask = Task {
@@ -80,18 +91,18 @@ enum ExportFailure: LocalizedError {
                 let wav = workspace.appendingPathComponent("mix.wav")
                 let job = Task.detached {
                     let recording = regions ? try RegionRecording.simulate(snapshot, inputMode: inputMode) : nil
-                    let audio = try AudioRenderer.render(chart: snapshot, music: music, resources: resources, destination: wav, settings: settings, ffmpeg: ffmpeg, recording: recording)
+                    let audio = try AudioRenderer.render(chart: snapshot, music: music, resources: resources, destination: wav, settings: settings, ffmpeg: ffmpeg, recording: recording, opening: opening)
                     return (audio, recording)
                 }
                 let (audio, recording) = try await withTaskCancellationHandler { try await job.value } onCancel: { job.cancel() }
                 var style = style; style.recording = recording
                 let silent = workspace.appendingPathComponent("silent.mp4")
                 let renderStarted = ProcessInfo.processInfo.systemUptime
-                try await VideoExporter.render(chart: snapshot, audio: audio, video: video, style: style, width: width, height: height, destination: silent, info: info) { progress in
+                try await VideoExporter.render(chart: snapshot, audio: audio, video: video, style: style, width: width, height: height, destination: silent, info: info, intro: intro, codec: codec) { progress in
                     self.exportProgress = progress * 0.9
                     let elapsed = ProcessInfo.processInfo.systemUptime - renderStarted
                     let speed = elapsed > 0 ? Int(progress * ceil(audio.duration * 60) / elapsed) : 0
-                    self.exportStatus = "渲染 \(width) × \(height) · \(Int(progress * 100))%" + (elapsed > 1 ? " · \(speed) 帧/秒" : "")
+                    self.exportStatus = "渲染 \(width) × \(height) · \(codec.name) · \(Int(progress * 100))%" + (elapsed > 1 ? " · \(speed) 帧/秒" : "")
                 }
                 try Task.checkCancellation(); exportStatus = "合并立体声音轨…"; exportProgress = 0.92
                 let encodedAudio = workspace.appendingPathComponent("mix.m4a")
@@ -104,13 +115,13 @@ enum ExportFailure: LocalizedError {
                 try Task.checkCancellation()
                 // Replace only after the complete movie exists. Existing exports survive cancellation/failure.
                 try Data(contentsOf: final, options: .mappedIfSafe).write(to: destination, options: .atomic)
-                status = "视频导出完成 · \(width) × \(height)"; NSWorkspace.shared.activateFileViewerSelecting([destination])
+                status = "视频导出完成 · \(width) × \(height) · \(codec.name)"; NSWorkspace.shared.activateFileViewerSelecting([destination])
             } catch is CancellationError { status = "导出已取消" }
             catch { report(error) }
         }
     }
 }
-struct VideoRenderMetrics {
+struct VideoRenderMetrics: Sendable {
     var frames = 0
     var elapsed = 0.0
     var background = 0.0
@@ -122,7 +133,7 @@ struct VideoRenderMetrics {
     var framesPerSecond: Double { Double(frames) / max(0.001, elapsed) }
 }
 @MainActor enum VideoExporter {
-    @discardableResult static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, info: StageChartInfo? = nil, progress: (Double) -> Void) async throws -> VideoRenderMetrics {
+    @discardableResult static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, info: StageChartInfo? = nil, intro: RecordingIntro? = nil, useMetalTransfer: Bool = true, codec: VideoCodec = .h264, progress: @escaping @MainActor (Double) -> Void) async throws -> VideoRenderMetrics {
         let started = ProcessInfo.processInfo.systemUptime
         var metrics = VideoRenderMetrics()
         guard width > 0, height > 0, width <= 4096, height <= 4096, width % 2 == 0, height % 2 == 0 else { throw ExportFailure.failure("导出宽高必须为 2–4096 之间的偶数") }
@@ -133,17 +144,20 @@ struct VideoRenderMetrics {
         } else { background = nil }
         let writer = try AVAssetWriter(outputURL: destination, fileType: .mp4)
         let bitrate = min(50_000_000, max(8_000_000, Int(Double(width * height) / (1920 * 1080) * 12_000_000)))
-        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height, AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: bitrate, AVVideoExpectedSourceFrameRateKey: 60]])
+        let compression: [String: Any] = [AVVideoAverageBitRateKey: bitrate, AVVideoExpectedSourceFrameRateKey: 60]
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: codec.avCodec, AVVideoWidthKey: width, AVVideoHeightKey: height,
+            AVVideoEncoderSpecificationKey: [kVTVideoEncoderSpecification_EnableHardwareAcceleratedVideoEncoder: true], AVVideoCompressionPropertiesKey: compression])
         input.expectsMediaDataInRealTime = false
-        let attributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferIOSurfacePropertiesKey as String: [:], kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height, kCVPixelBufferCGImageCompatibilityKey as String: true, kCVPixelBufferCGBitmapContextCompatibilityKey as String: true]
+        let attributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA, kCVPixelBufferIOSurfacePropertiesKey as String: [:], kCVPixelBufferMetalCompatibilityKey as String: true, kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height, kCVPixelBufferCGImageCompatibilityKey as String: true, kCVPixelBufferCGBitmapContextCompatibilityKey as String: true]
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: attributes)
         guard writer.canAdd(input) else { throw ExportFailure.failure("编码器不支持该视频设置") }
         writer.add(input)
         guard writer.startWriting() else { throw writer.error ?? ExportFailure.failure("视频写入失败") }
         writer.startSession(atSourceTime: .zero)
         let statistics = info == nil ? nil : StageStatisticsTimeline.prepared(chart, recording: style.recording)
+        let transfer = ExportPixelTransfer(useMetal: useMetalTransfer)
         let count = Int(ceil(audio.duration * 60))
-        let renderer = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height)
+        let renderer = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height, intro: intro)
         do {
             for frame in 0..<count {
                 try Task.checkCancellation()
@@ -162,12 +176,10 @@ struct VideoRenderMetrics {
                     measured = ProcessInfo.processInfo.systemUptime
                     var buffer: CVPixelBuffer?
                     guard let pool = adaptor.pixelBufferPool, CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer) == kCVReturnSuccess, let buffer else { throw ExportFailure.failure("无法分配视频帧") }
-                    CVPixelBufferLockBaseAddress(buffer, [])
-                    defer { CVPixelBufferUnlockBaseAddress(buffer, []) }
-                    guard let context = CGContext(data: CVPixelBufferGetBaseAddress(buffer), width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(buffer), space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.noneSkipFirst.rawValue) else { throw ExportFailure.failure("无法创建离屏画布") }
                     metrics.copying += ProcessInfo.processInfo.systemUptime - measured
                     measured = ProcessInfo.processInfo.systemUptime
-                    try renderer.draw(time: time, style: frameStyle, into: context)
+                    let image = try renderer.image(time: time, style: frameStyle)
+                    try transfer.copy(image, to: buffer)
                     metrics.drawing += ProcessInfo.processInfo.systemUptime - measured
                     measured = ProcessInfo.processInfo.systemUptime
                     guard adaptor.append(buffer, withPresentationTime: CMTime(value: Int64(frame), timescale: 60)) else { throw writer.error ?? ExportFailure.failure("无法写入视频帧") }

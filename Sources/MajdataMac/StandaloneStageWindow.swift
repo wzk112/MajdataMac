@@ -17,6 +17,10 @@ struct StandaloneStageWindow: View {
                     Picker("分辨率", selection: $model.videoResolution) {
                         ForEach(VideoResolution.allCases, id: \.self) { Text($0.title).tag($0) }
                     }
+                    Toggle("录制开场（5 秒，含音效）", isOn: $model.exportRecordingIntro)
+                    Picker("视频编码", selection: $model.videoCodec) {
+                        ForEach(VideoCodec.allCases, id: \.self) { Text($0.title).tag($0) }
+                    }
                     Toggle("宽屏导出谱面信息", isOn: $model.exportChartInfo)
                     Divider()
                     Button("导出视频…") { model.exportVideo() }

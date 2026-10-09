@@ -62,6 +62,12 @@ enum PreviewJudgementMode: String, CaseIterable {
     var videoResolution = VideoResolution(rawValue: UserDefaults.standard.string(forKey: "videoResolution") ?? "") ?? .square1080 {
         didSet { UserDefaults.standard.set(videoResolution.rawValue, forKey: "videoResolution") }
     }
+    var videoCodec = VideoCodec(rawValue: UserDefaults.standard.string(forKey: "videoCodec") ?? "") ?? .hevc {
+        didSet { UserDefaults.standard.set(videoCodec.rawValue, forKey: "videoCodec") }
+    }
+    var exportRecordingIntro = UserDefaults.standard.object(forKey: "exportRecordingIntro") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(exportRecordingIntro, forKey: "exportRecordingIntro") }
+    }
     var exportChartInfo = UserDefaults.standard.object(forKey: "exportChartInfo") as? Bool ?? true {
         didSet { UserDefaults.standard.set(exportChartInfo, forKey: "exportChartInfo") }
     }

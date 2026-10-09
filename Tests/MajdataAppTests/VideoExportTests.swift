@@ -22,20 +22,23 @@ import MajdataCore
         let env = ProcessInfo.processInfo.environment
         guard let path = env["MAJDATA_EXPORT_FULL_CHART"], let destination = env["MAJDATA_EXPORT_FULL_OUTPUT"] else { return }
         let root = URL(fileURLWithPath: path), final = URL(fileURLWithPath: destination)
+        let (width, height) = env["MAJDATA_BENCH_SIZE"] == "4k" ? (3840, 2160) : (1920, 1080)
+        let codec: VideoCodec = env["MAJDATA_EXPORT_HEVC"] == "1" ? .hevc : .h264
         let scratch = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: scratch, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: scratch) }
         let document = ChartDocument(text: try String(contentsOf: root.appendingPathComponent("maidata.txt"), encoding: .utf8))
         let chart = SimaiParser.parse(document.chart(5), offset: document.offset)
         let began = ProcessInfo.processInfo.systemUptime
+        let opening = env["MAJDATA_EXPORT_INTRO"] == "1" ? RecordingOpening(chart: chart, clockCount: document["clock_count"]) : nil
         let audio = try AudioRenderer.render(chart: chart, music: root.appendingPathComponent("track.mp3"), resources: StudioModel.resourceURL,
-                                             destination: scratch.appendingPathComponent("mix.wav"), settings: AudioMixSettings())
+                                             destination: scratch.appendingPathComponent("mix.wav"), settings: AudioMixSettings(), opening: opening)
         let info = StageChartInfo(title: document.title, artist: document.artist, designer: document.designer(5), difficulty: 5,
                                   level: document.level(5), notes: chart.notes.count, breaks: chart.breakCount)
         let style = StageStyle(background: NSImage(contentsOf: root.appendingPathComponent("bg.png")), showSensors: true)
         let silent = scratch.appendingPathComponent("silent.mp4")
         let metrics = try await VideoExporter.render(chart: chart, audio: audio, video: root.appendingPathComponent("pv.mp4"), style: style,
-                                                      width: 1920, height: 1080, destination: silent, info: info) { _ in }
+                                                      width: width, height: height, destination: silent, info: info, intro: opening.map { RecordingIntro(opening: $0, info: info) }, codec: codec) { _ in }
         let aac = scratch.appendingPathComponent("mix.m4a")
         let encoder = try #require(AVAssetExportSession(asset: AVURLAsset(url: audio.url), presetName: AVAssetExportPresetAppleM4A))
         try await encoder.export(to: aac, as: .m4a)
@@ -43,7 +46,8 @@ import MajdataCore
         let wall = ProcessInfo.processInfo.systemUptime - began
         let asset = AVURLAsset(url: final)
         let track = try #require(try await asset.loadTracks(withMediaType: .video).first)
-        #expect(try await track.load(.naturalSize) == CGSize(width: 1920, height: 1080))
+        #expect(try await track.load(.naturalSize) == CGSize(width: width, height: height))
+        #expect(try await track.load(.nominalFrameRate) == 60)
         #expect(try await asset.loadTracks(withMediaType: .audio).count == 1)
         #expect(abs(try await asset.load(.duration).seconds - audio.duration) < 1.0 / 60)
         let reader = try AVAssetReader(asset: asset)
@@ -60,7 +64,7 @@ import MajdataCore
         // Decode to apply edit lists and exclude non-image edit-boundary markers.
         let maximumError = times.enumerated().map { abs($0.element - Double($0.offset) / 60) }.max() ?? .infinity
         #expect(maximumError < 0.0001)
-        print("FULL EXPORT notes=\(chart.notes.count) duration=\(audio.duration) total=\(wall) metrics=\(metrics)")
+        print("FULL EXPORT \(width)x\(height) \(codec.name) notes=\(chart.notes.count) duration=\(audio.duration) total=\(wall) metrics=\(metrics)")
     }
     @Test @MainActor func sequentialPVMatchesTimestampsRotationAndEnd() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("Majdata-PV-" + UUID().uuidString)
@@ -170,16 +174,17 @@ import MajdataCore
         let output = FileManager.default.temporaryDirectory.appendingPathComponent("Majdata-Export-Benchmark-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: output) }
-        let audio = PreparedAudio(url: output.appendingPathComponent("unused.wav"), waveform: [], startTime: 55, duration: 2)
+        let audio = PreparedAudio(url: output.appendingPathComponent("unused.wav"), waveform: [], startTime: 55, duration: Double(env["MAJDATA_BENCH_SECONDS"] ?? "2") ?? 2)
+        // Keep the original full side panel for comparable performance measurements.
         let info = StageChartInfo(title: document.title, artist: document.artist, designer: document.designer(5), difficulty: 5,
-                                  level: document.level(5), notes: chart.notes.count, breaks: chart.breakCount)
+                                  level: document.level(5), notes: chart.notes.count, breaks: chart.breakCount, showJudgementBreakdown: true)
         let style = StageStyle(background: NSImage(contentsOf: root.appendingPathComponent("bg.png")), showSensors: true)
-        for size in [(1280, 720), (1920, 1080)] {
+        for size in (env["MAJDATA_BENCH_SIZE"] == "4k" ? [(3840,2160)] : [(1920, 1080), (3840, 2160)]) {
             for pv in [false, true] {
                 let result = try await VideoExporter.render(chart: chart, audio: audio, video: pv ? root.appendingPathComponent("pv.mp4") : nil,
-                    style: style, width: size.0, height: size.1, destination: output.appendingPathComponent(UUID().uuidString + ".mp4"), info: info) { _ in }
+                    style: style, width: size.0, height: size.1, destination: output.appendingPathComponent(UUID().uuidString + ".mp4"), info: info, useMetalTransfer: env["MAJDATA_EXPORT_METAL"] == "1", codec: env["MAJDATA_EXPORT_HEVC"] == "1" ? .hevc : .h264) { _ in }
                 print("EXPORT BENCHMARK \(size.0)x\(size.1) PV=\(pv) \(result)")
-                #expect(result.frames == 120)
+                #expect(result.frames == Int(ceil(audio.duration * 60)))
             }
         }
     }

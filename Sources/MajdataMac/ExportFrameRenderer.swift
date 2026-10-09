@@ -6,6 +6,7 @@ private struct ExportFrame: View {
     let info: StageChartInfo?
     let statistics: StageStatisticsTimeline?
     let cover: NSImage?
+    let intro: RecordingIntro?
     let width: Int
     let height: Int
     var time: Double
@@ -14,6 +15,11 @@ private struct ExportFrame: View {
     var body: some View {
         StagePresentation(info: info, cover: cover, statistics: statistics, time: time) {
             StageView(chart: chart, time: time, style: style)
+                .overlay {
+                    if let intro, time >= intro.opening.startTime, time < intro.opening.endTime {
+                        RecordingIntroView(intro: intro, cover: cover, time: time)
+                    }
+                }
         }.frame(width: Double(width), height: Double(height))
     }
 }
@@ -22,18 +28,22 @@ private struct ExportFrame: View {
 /// Rendering this graph into a CGContext with render(rasterizationScale:renderer:) measured slower.
 @MainActor final class ExportFrameRenderer {
     private let renderer: ImageRenderer<ExportFrame>
-    init(chart: ParsedChart, style: StageStyle, info: StageChartInfo?, statistics: StageStatisticsTimeline?, width: Int, height: Int) {
-        renderer = ImageRenderer(content: ExportFrame(chart: chart, info: info, statistics: statistics, cover: style.background,
+    init(chart: ParsedChart, style: StageStyle, info: StageChartInfo?, statistics: StageStatisticsTimeline?, width: Int, height: Int, intro: RecordingIntro? = nil) {
+        renderer = ImageRenderer(content: ExportFrame(chart: chart, info: info, statistics: statistics, cover: style.background, intro: intro,
                                                      width: width, height: height, time: 0, style: style))
         renderer.scale = 1
         renderer.isOpaque = true
     }
     func draw(time: Double, style: StageStyle, into context: CGContext) throws {
+        let image = try image(time: time, style: style)
+        context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+    }
+    func image(time: Double, style: StageStyle) throws -> CGImage {
         var content = renderer.content
         content.time = time
         content.style = style
         renderer.content = content
         guard let image = renderer.cgImage else { throw ExportFailure.failure("无法渲染谱面帧") }
-        context.draw(image, in: CGRect(x: 0, y: 0, width: content.width, height: content.height))
+        return image
     }
 }

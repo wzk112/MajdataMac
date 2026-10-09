@@ -67,8 +67,8 @@ enum AudioRenderer {
         return (0..<2).map { Array(UnsafeBufferPointer(start: channels[$0], count: Int(converted.frameLength))) }
     }
     static func render(chart: ParsedChart, music: URL?, resources: URL, destination: URL, settings: AudioMixSettings,
-                       retainStems: Bool = false, ffmpeg: String? = nil, recording: RegionRecording? = nil) throws -> PreparedAudio {
-        let start = min(0, (chart.notes.first?.time ?? 0) - 1)
+                       retainStems: Bool = false, ffmpeg: String? = nil, recording: RegionRecording? = nil, opening: RecordingOpening? = nil) throws -> PreparedAudio {
+        let start = opening?.startTime ?? min(0, (chart.notes.first?.time ?? 0) - 1)
         let duration = max(2, chart.duration + 2 - start)
         guard duration <= 1800 else { throw AudioRenderError.tooLong }
         let frames = Int(ceil(duration * rate))
@@ -76,7 +76,7 @@ enum AudioRenderer {
         try FileManager.default.createDirectory(at: stemDirectory, withIntermediateDirectories: true)
         var completed = false
         defer { if !retainStems || !completed { try? FileManager.default.removeItem(at: stemDirectory) } }
-        let schedule = SoundSchedule.events(chart, metronome: settings.metronome, recording: recording)
+        let schedule = SoundSchedule.events(chart, metronome: settings.metronome, recording: recording, opening: opening)
         var mixed = [[Float]](repeating: [Float](repeating: 0, count: frames), count: 2)
         var bound = mixed
         var stems: [AudioChannel: URL] = [:]

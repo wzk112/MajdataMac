@@ -1,4 +1,4 @@
-Majdata Mac 0.3.2 — source and asset notices
+Majdata Mac 0.3.9 — source and asset notices
 
 This Swift/SwiftUI port and its GPL-derived data are distributed under GNU GPL v3.
 See LICENSE. This distribution includes editable source, resources, importer
@@ -10,6 +10,11 @@ Source commit: 5786452b45647eb15229ad601dab959288c0d88a
 Original Skin/SFX from the Majdata 4.4.0 release; slide prefab geometry, animation
 curves, timing, note/sensor logic and shader calculations ported from the source.
 Reproduction: Scripts/import-unity-art.py. GPL-3.0.
+Recording intro: CanvasSongDetail from SampleScene.unity, Entry/Showing/Exit
+AnimationClips, UIs/color.png, 1080Circle_Shaped.png, JacketInfo.png, bg_dummy.jpg,
+and Minimoon.ttf are copied/derived from the same source distribution.
+Reproduction: Scripts/import-recording-intro.py. Intro audio: release track_start.wav
+and clock.wav; scheduling reference: MajdataEdit MainWindowCore.cs / SoundEffect.cs.
 
 MajdataEdit — bbben and contributors
 https://github.com/LingFeng-bbben/MajdataEdit

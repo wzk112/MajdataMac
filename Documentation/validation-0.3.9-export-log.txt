@@ -1,0 +1,27 @@
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite VideoExportTests started.
+◇ Test fullRealChartMovie() started.
+FULL EXPORT 3840x2160 HEVC notes=2222 duration=266.16595374380563 total=134.4088724166504 metrics=VideoRenderMetrics(frames: 15970, elapsed: 129.9351807916537, background: 14.347115500480868, drawing: 63.06651712371968, copying: 2.4767638768826146, encoding: 0.4347291263984516, waiting: 49.18906925004558, finishing: 0.1536107916617766)
+✔ Test fullRealChartMovie() passed after 155.986 seconds.
+✔ Suite VideoExportTests passed after 155.986 seconds.
+✔ Test run with 1 test in 1 suite passed after 155.986 seconds.
+
+4K H.264 CPU baseline 10s
+EXPORT BENCHMARK 3840x2160 PV=false VideoRenderMetrics(frames: 600, elapsed: 8.38923608334153, background: 3.274981281720102e-05, drawing: 4.409417791554006, copying: 0.15092254118644632, encoding: 0.02348754182457924, waiting: 3.4776129582023714, finishing: 0.24262316667591222)
+EXPORT BENCHMARK 3840x2160 PV=true VideoRenderMetrics(frames: 600, elapsed: 8.318497666681651, background: 0.6145951665239409, drawing: 4.440350416698493, copying: 0.10888070819783024, encoding: 0.02355825010454282, waiting: 2.848687374702422, finishing: 0.24273129165521823)
+✔ Test measuredRealChartExport() passed after 16.744 seconds.
+✔ Suite VideoExportTests passed after 16.744 seconds.
+✔ Test run with 1 test in 1 suite passed after 16.744 seconds.
+
+4K HEVC Metal 10s
+EXPORT BENCHMARK 3840x2160 PV=false VideoRenderMetrics(frames: 600, elapsed: 5.093992166657699, background: 3.9542472222819924e-05, drawing: 2.3939510415366385, copying: 0.2414032912638504, encoding: 0.017883459280710667, waiting: 2.181990875658812, finishing: 0.15134366665733978)
+EXPORT BENCHMARK 3840x2160 PV=true VideoRenderMetrics(frames: 600, elapsed: 5.029868458339479, background: 0.6111548336339183, drawing: 2.275298749562353, copying: 0.1130852916976437, encoding: 0.016449125221697614, waiting: 1.8190059164480772, finishing: 0.15025066665839404)
+✔ Test measuredRealChartExport() passed after 10.172 seconds.
+✔ Suite VideoExportTests passed after 10.172 seconds.
+✔ Test run with 1 test in 1 suite passed after 10.172 seconds.
+
+Installed app final black surround and Classic layout export
+MOVIE duration=266.1666666666667 size=(3840.0, 2160.0) fps=60.0 codec=1752589105 audio=1
+DECODED frames=15970 maximumTimestampError=0.0

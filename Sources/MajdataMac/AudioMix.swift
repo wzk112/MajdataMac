@@ -49,7 +49,7 @@ struct SoundEvent: Equatable, Sendable {
 
 enum SoundSchedule {
     /// Mirrors MajdataEdit/SoundEffect.cs, including releases and separate slide launch/completion sounds.
-    static func events(_ chart: ParsedChart, metronome: Bool, recording: RegionRecording? = nil) -> [SoundEvent] {
+    static func events(_ chart: ParsedChart, metronome: Bool, recording: RegionRecording? = nil, opening: RecordingOpening? = nil) -> [SoundEvent] {
         var result: [SoundEvent] = []
         func add(_ sound: String, _ channel: AudioChannel, _ time: Double, duration: Double? = nil) {
             result.append(SoundEvent(sound: sound, channel: channel, time: time, duration: duration))
@@ -90,6 +90,10 @@ enum SoundSchedule {
                 var time = tempo.0
                 while time < end - 0.000001 { add("clock", .bgm, time); time += 60 / tempo.1 }
             }
+        }
+        if let opening {
+            add("track_start", .bgm, opening.startTime, duration: 5)
+            for time in opening.clockTimes { add("clock", .bgm, time) }
         }
         // One upstream stream per sample. Simultaneous EACH notes trigger it only once.
         var last: [String: Double] = [:]
