@@ -97,6 +97,8 @@ private struct TimelineSurface: NSViewRepresentable {
     private var dragX = 0.0
     private var resumeAfterDrag = false
     private var displayTime: Double = 0
+    private let cursorText = TimelineText(size: 10, bold: true)
+    private let gridText = TimelineText(size: 9)
     private struct CacheKey: Equatable {
         var revision: UUID; var audio: URL?; var viewport: TimelineViewport
         var size: CGSize; var meter: Int; var dark: Bool; var loop: Bool; var a: Double; var b: Double
@@ -200,7 +202,7 @@ private struct TimelineSurface: NSViewRepresentable {
         model.timelineFollow = false; needsDisplay = true
     }
     override func draw(_ dirtyRect: NSRect) {
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard bounds.width.isFinite, bounds.height.isFinite, bounds.width > 0, bounds.height > 0 else { return }
         let view = viewport
         let key = CacheKey(revision: chartRevision, audio: model.prepared?.url, viewport: view, size: bounds.size,
             meter: model.timelineBeatsPerBar, dark: effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua,
@@ -215,8 +217,9 @@ private struct TimelineSurface: NSViewRepresentable {
         cursor(model.isPlaying ? displayTime : model.currentTime, viewport: view, color: .systemCyan, dashed: false)
     }
     private func cursor(_ time: Double, viewport: TimelineViewport, color: NSColor, dashed: Bool) {
+        guard time.isFinite else { return }
         let px = viewport.x(at: time, width: bounds.width)
-        guard px >= 0, px <= bounds.width else { return }
+        guard px.isFinite, px >= 0, px <= bounds.width else { return }
         color.setStroke(); color.setFill()
         if !dashed {
             color.withAlphaComponent(0.16).setFill()
@@ -227,13 +230,11 @@ private struct TimelineSurface: NSViewRepresentable {
         let cap = NSBezierPath()
         let y = dashed ? bounds.height : 0, direction = dashed ? -1.0 : 1.0
         cap.move(to: CGPoint(x: px - 5, y: y)); cap.line(to: CGPoint(x: px + 5, y: y)); cap.line(to: CGPoint(x: px, y: y + 7 * direction)); cap.close(); cap.fill()
-        if !dashed {
-            let text = StudioModel.timeLabel(time) as NSString
-            let attrs: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedSystemFont(ofSize: 10, weight: .semibold), .foregroundColor: NSColor.white]
-            let size = text.size(withAttributes: attrs)
-            let rect = NSRect(x: min(bounds.width - size.width - 8, max(0, px + 6)), y: 2, width: size.width + 8, height: 16)
+        if !dashed, let context = NSGraphicsContext.current?.cgContext {
+            let text = cursorText.layout(StudioModel.timeLabel(time))
+            let rect = NSRect(x: max(0, min(bounds.width - text.width - 8, px + 6)), y: 2, width: text.width + 8, height: 16)
             NSColor.systemTeal.setFill(); NSBezierPath(roundedRect: rect, xRadius: 3, yRadius: 3).fill()
-            text.draw(at: CGPoint(x: rect.minX + 4, y: 3), withAttributes: attrs)
+            cursorText.draw(text, at: CGPoint(x: rect.minX + 4, y: 3), color: .white, in: context)
         }
     }
     private func drawBackground(_ view: TimelineViewport) {
@@ -249,7 +250,8 @@ private struct TimelineSurface: NSViewRepresentable {
             color.setStroke(); let p = NSBezierPath(); p.move(to: CGPoint(x: px, y: y1)); p.line(to: CGPoint(x: px, y: y2)); p.lineWidth = thickness; p.stroke()
         }
         func label(_ text: String, _ px: Double, _ y: Double, _ color: NSColor = .secondaryLabelColor) {
-            (text as NSString).draw(at: CGPoint(x: px, y: y), withAttributes: [.font: NSFont.monospacedSystemFont(ofSize: 9, weight: .regular), .foregroundColor: color])
+            guard let context = NSGraphicsContext.current?.cgContext else { return }
+            gridText.draw(gridText.layout(text), at: CGPoint(x: px, y: y), color: color, in: context)
         }
         if model.loopEnabled && model.loopEnd > model.loopStart {
             NSColor.systemOrange.withAlphaComponent(0.08).setFill()

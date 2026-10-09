@@ -4,7 +4,7 @@
 
 面向 macOS 26 及以上的原生 simai 谱面编辑器与预览工具。界面使用 SwiftUI，渲染使用 Canvas / Metal，音频使用 AVAudioEngine。基于 MajdataView / MajdataEdit 的资源、几何和行为移植，独立维护，与 SEGA 或 TeamMajdata 无隶属关系。
 
-当前版本 **0.3.7，开发版**。已在 Apple silicon、macOS 27.0.1 上构建和测试；尚未在 macOS 26 实机和 Intel Mac 上复测。它仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
+当前版本 **0.3.8，开发版**。已在 Apple silicon、macOS 27.0.1 上构建和测试；尚未在 macOS 26 实机和 Intel Mac 上复测。它仍有未移植功能，见[功能核对](Documentation/Feature-audit.txt)。
 
 ## 功能
 
@@ -23,6 +23,8 @@
 0.3.5–0.3.7 将高频舞台更新与 App/Scene、窗口布局、静态控件分离，并缓存重复计分文字。所有谱面信息、判定数据和特效保留。当前仍是 Canvas 渲染与 Metal 烟花着色器，并非独立 MTKView 引擎；音频采样间按主机时钟插值；导出复用渲染图并连续解码 PV，Core Image 使用 Metal 做背景帧颜色转换。实际刷新验证与限制见 [渲染记录](Documentation/Rendering-status.txt)。
 
 实测 Xaleid Re:MASTER 全曲 261 秒、1080p60，包含 PV、全部特效与侧栏，导出耗时约 73 秒。此为本机结果；逐帧时间戳与音轨检查通过。
+
+0.3.8 修复了打开独立舞台时报告的时间轴文字绘制崩溃；保留全部时间和网格标记，并加入连续重绘验证。
 
 ## 构建与运行
 

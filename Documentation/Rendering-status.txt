@@ -1,4 +1,4 @@
-Majdata Mac 0.3.7 验证记录（包含历史验证） — 2026-10-09
+Majdata Mac 0.3.8 验证记录（包含历史验证） — 2026-10-09
 
 实现
   原 Skin/SFX、42 组轨道、12 组动画曲线、Hold 粒子和 Metal 烟花；统一 Canvas。
@@ -198,3 +198,27 @@ Majdata Mac 0.3.7 验证记录（包含历史验证） — 2026-10-09
   validation-0.3.7-export-log.txt。上述耗时不包含之后的读回验证，也不是旧版全曲对照。
   H.264 原始压缩样本包含 edit-boundary 标记和 B 帧时间偏移；完整验证使用解码后
   的图像样本和 outputPresentationTimeStamp，避免把元数据标记误计为视频帧。
+
+0.3.8 时间轴文字崩溃修复
+  用户在 0.3.7 build 11 打开独立宽屏舞台时崩溃。报告指向主线程
+  TimelineCanvas.cursor -> NSString.size(withAttributes:) -> CoreText TAttributes::ApplyFont，
+  字典复制抛出 NSInvalidArgumentException（nil object）；不是 Metal/视频导出调用栈。
+  不能仅凭调用栈确定系统内部哪一个字体属性变为 nil，也没有稳定复现原版异常。
+  现在移除时间轴全部 NSString 属性测量/绘制调用，使用初始化时建立的具体 Menlo
+  Regular/Bold CTFont、预缓存字形与 advance，直接 CTFontDrawGlyphs。原有信息保留。
+  时间轴播放时间和坐标加入 finite 检查，避免异常值进入 Int 格式化和 Core Graphics。
+  60,000 次原生 draw/cacheDisplay，切换明暗主题、720/420 宽度、4×/1×缩放、3/4 拍
+  和源码位置，通过；300 次背景重建，播放光标持续更新。另检查 NaN/Infinity 时间。
+  14 组文字度量与 Core Text 标准行布局一致、绘制像素一致（含 U+2212 负号）。
+  83 项回归通过，日志 validation-0.3.8-log.txt 与 validation-0.3.8-timeline-log.txt。
+  这属于针对已定位崩溃入口的修复，压力测试不能证明今后不会出现其他偶发问题。
+
+  Core Text 字形绘制参考：
+  https://developer.apple.com/documentation/coretext/ctfontdrawglyphs(_:_:_:_:_:)
+
+  0.3.8 build 12 已安装，签名与构建二进制校验通过。实机 [DX] 系ぎて Re:MASTER
+  由 55 秒静音播放至 115.360 秒：连续三次在播放中打开独立舞台，切换最大化/还原、
+  关闭返回主界面，并在时间轴放大后再次打开，均未崩溃。主窗口时间轴继续绘制。
+  宽屏包含全套统计；本轮一次读到舞台 119 Hz / 1 次超时，主界面 120 Hz / 0 次，
+  仅作状态读数，不代表长时间无掉帧。最后恢复总音量 100%、全曲时间轴和原刷新统计
+  设置，保留暂停的宽屏舞台。未编辑或保存用户谱面。

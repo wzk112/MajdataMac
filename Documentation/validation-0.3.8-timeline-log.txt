@@ -1,0 +1,27 @@
+Building for production...
+[Planning deferred tasks]
+[13 / 25] MajdataCore
+[15 / 27] MajdataCore
+[24 / 41] MajdataCoreTests-product
+[29 / 44] MajdataCoreTests-product
+[32 / 47] MajdataCoreTests-product
+[35 / 49] MajdataCoreTests-product
+[35 / 57] MajdataMac-product
+[43 / 59] MajdataMac-product
+[44 / 59] MajdataMac-product
+[47 / 58] MajdataAppTests-product
+[50 / 59] MajdataAppTests-product
+[54 / 58] MajdataAppTests-product
+[56 / 58] MajdataAppTests-product
+Build complete! (21.43 sec.)
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite TimelineTextTests started.
+◇ Test glyphMetricsAndDrawingPreserveLabels() started.
+✔ Test glyphMetricsAndDrawingPreserveLabels() passed after 0.015 seconds.
+◇ Test repeatedNativeTimelineDrawingAcrossAppearanceAndViewportChanges() started.
+TIMELINE TEXT redraws=60000 seconds=8.369239708321402 backgrounds=300
+✔ Test repeatedNativeTimelineDrawingAcrossAppearanceAndViewportChanges() passed after 8.432 seconds.
+✔ Suite TimelineTextTests passed after 8.448 seconds.
+✔ Test run with 2 tests in 1 suite passed after 8.448 seconds.
