@@ -41,6 +41,9 @@ enum PreviewJudgementMode: String, CaseIterable {
     var waveform: [Float] = []
     var mix = AudioMixSettings.load() { didSet { playback?.apply(mix); mix.save() } }
     var showSensors = UserDefaults.standard.bool(forKey: "showSensors") { didSet { UserDefaults.standard.set(showSensors, forKey: "showSensors") } }
+    var showSensorPresses = UserDefaults.standard.object(forKey: "showSensorPresses") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showSensorPresses, forKey: "showSensorPresses") }
+    }
     var showSensorLabels = true
     var sensorOpacity = 0.45
     var showFrameStats = false
@@ -130,7 +133,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     }
     var title: String { document.title.isEmpty ? "未命名谱面" : document.title }
     var stageStyle: StageStyle {
-        StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil, showFireworks: showFireworks, showHitEffects: showHitEffects, showHoldParticles: showHoldParticles)
+        StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil, showFireworks: showFireworks, showHitEffects: showHitEffects, showHoldParticles: showHoldParticles, showSensorPresses: showSensorPresses)
     }
     func stepFrame(_ direction: Int) { pause(); seek(currentTime + Double(direction) / 60) }
     var rangeStart: Double { min(0, prepared?.startTime ?? (chart.notes.first?.time ?? 0) - 1) }

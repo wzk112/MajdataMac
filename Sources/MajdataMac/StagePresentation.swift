@@ -34,24 +34,53 @@ struct StagePresentation<Stage: View>: View {
     var showInfo: Bool = true
     var statistics: StageStatisticsTimeline?
     var time = 0.0
+    var liveModel: StudioModel?
     @ViewBuilder var stage: () -> Stage
     var body: some View {
         GeometryReader { geometry in
             let layout = StageArrangement(size: geometry.size, showInfo: showInfo && info != nil)
-            let score = statistics?.score(at: time) ?? StageStatistics()
             ZStack {
                 stage().frame(width: layout.side, height: layout.side).clipped()
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 if layout.infoWidth > 0, let info {
-                    StageMetadataPanel(info: info, cover: cover, statistics: statistics, score: score, scale: layout.side / 900)
-                        .frame(width: layout.infoWidth, height: layout.side)
-                        .position(x: layout.stageX / 2, y: geometry.size.height / 2)
-                    StageResultsPanel(info: info, statistics: statistics, score: score, time: time, scale: layout.side / 900)
-                        .frame(width: layout.infoWidth, height: layout.side)
-                        .position(x: geometry.size.width - layout.stageX / 2, y: geometry.size.height / 2)
+                    if let liveModel {
+                        LiveStageSidePanels(model: liveModel, info: info, cover: cover, statistics: statistics, layout: layout, size: geometry.size)
+                    } else {
+                        StageSidePanels(info: info, cover: cover, statistics: statistics, time: time, layout: layout, size: geometry.size)
+                    }
                 }
             }.foregroundStyle(.white)
         }.background(Color(red: 0.035, green: 0.045, blue: 0.065))
+    }
+}
+
+/// Only this small subtree observes the transport clock. The stage layout stays stable.
+struct LiveStageSidePanels: View {
+    var model: StudioModel
+    var info: StageChartInfo
+    var cover: NSImage?
+    var statistics: StageStatisticsTimeline?
+    var layout: StageArrangement
+    var size: CGSize
+    var body: some View {
+        StageSidePanels(info: info, cover: cover, statistics: statistics, time: model.currentTime, layout: layout, size: size)
+    }
+}
+private struct StageSidePanels: View {
+    var info: StageChartInfo
+    var cover: NSImage?
+    var statistics: StageStatisticsTimeline?
+    var time: Double
+    var layout: StageArrangement
+    var size: CGSize
+    var body: some View {
+        let score = statistics?.score(at: time) ?? StageStatistics()
+        StageMetadataPanel(info: info, cover: cover, statistics: statistics, score: score, scale: layout.side / 900)
+            .frame(width: layout.infoWidth, height: layout.side)
+            .position(x: layout.stageX / 2, y: size.height / 2)
+        StageResultsPanel(info: info, statistics: statistics, score: score, time: time, scale: layout.side / 900)
+            .frame(width: layout.infoWidth, height: layout.side)
+            .position(x: size.width - layout.stageX / 2, y: size.height / 2)
     }
 }
 

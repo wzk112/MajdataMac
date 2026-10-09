@@ -42,8 +42,8 @@ import MajdataCore
         for note in visible { drawJudgement(note) }
     }
     func drawSensors(_ visible: [Note]) {
-        let active = style.recording?.highlightedSensors(at: time) ?? SensorGeometry.active(notes: visible, at: time)
-        let buttons = style.recording?.highlightedButtons(at: time) ?? []
+        let active: Set<Int> = style.showSensorPresses ? (style.recording?.highlightedSensors(at: time) ?? SensorGeometry.active(notes: visible, at: time)) : []
+        let buttons: Set<Int> = style.showSensorPresses ? (style.recording?.highlightedButtons(at: time) ?? []) : []
         for n in 1...8 {
             var context = painter.context
             context.rotate(by: .degrees(Double(n - 1) * 45 + 22.5))
@@ -307,8 +307,35 @@ import MajdataCore
         }
         var text = painter.context
         text.scaleBy(x: 1 / worldScale, y: 1 / worldScale)
-        text.draw(Text(style.center).font(.system(size: 0.23 * worldScale, weight: .bold, design: .rounded)).foregroundStyle(.white.opacity(0.6)), at: CGPoint(x: 0, y: -0.5 * worldScale))
-        text.draw(Text(value).font(.system(size: (style.center == "ACHIEVEMENT" ? 0.56 : 0.9) * worldScale, weight: .heavy, design: .rounded)).foregroundStyle(.white.opacity(0.9)), at: CGPoint(x: 0, y: 0.12 * worldScale))
+        CenterTextCache.draw(style.center, size: 0.23 * worldScale, title: true,
+                             at: CGPoint(x: 0, y: -0.5 * worldScale), in: &text)
+        CenterTextCache.draw(value, size: (style.center == "ACHIEVEMENT" ? 0.56 : 0.9) * worldScale, title: false,
+                             at: CGPoint(x: 0, y: 0.12 * worldScale), in: &text)
+    }
+}
+
+/// Reuse rasterized text until the actual displayed value/size changes. Keep every digit and
+/// the original rounded font; a bounded cache supports reverse seeks and differently sized stages.
+@MainActor enum CenterTextCache {
+    private struct Key: Hashable { var value: String; var size: Double; var title: Bool }
+    private static var images: [Key: CGImage] = [:]
+    private static var order: [Key] = []
+    static func draw(_ value: String, size: Double, title: Bool, at point: CGPoint, in context: inout GraphicsContext) {
+        let key = Key(value: value, size: size, title: title)
+        let content = Text(value).font(.system(size: size, weight: title ? .bold : .heavy, design: .rounded))
+            .foregroundStyle(.white.opacity(title ? 0.6 : 0.9))
+        var image = images[key]
+        if image == nil {
+            let renderer = ImageRenderer(content: content.fixedSize().padding(2))
+            renderer.scale = 2
+            image = renderer.cgImage
+            if let image {
+                images[key] = image; order.append(key)
+                if order.count > 96 { images.removeValue(forKey: order.removeFirst()) }
+            }
+        }
+        if let image { context.draw(Image(decorative: image, scale: 2), at: point) }
+        else { context.draw(content, at: point) }
     }
 }
 

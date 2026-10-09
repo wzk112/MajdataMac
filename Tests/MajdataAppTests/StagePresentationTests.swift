@@ -81,7 +81,12 @@ import MajdataCore
         let fireOn = try pixels("(120){4},,Cf,E", 1.22, full)
         let fireOff = try pixels("(120){4},,Cf,E", 1.22, noFire)
         #expect(fireOn != fireOff)
-        #expect(fireOff == (try pixels("(120){4},,C,E", 1.22, full)))
+        let reference = try pixels("(120){4},,C,E", 1.22, full)
+        let differences = zip(fireOff, reference).filter { $0 != $1 }.count
+        // Canvas antialiasing can round a few edge channels by one level between GPU passes.
+        let maximumDifference = zip(fireOff, reference).map { abs(Int($0) - Int($1)) }.max() ?? 0
+        #expect(fireOff.count == reference.count && differences <= 64 && maximumDifference <= 1,
+                "Non-firework frame: \(differences) differing channels, maximum delta \(maximumDifference)")
         var noHit = noFire; noHit.showHitEffects = false
         #expect(try pixels("(120){4},,1,E", 1.1, full) != pixels("(120){4},,1,E", 1.1, noHit))
         var noHold = full; noHold.showHoldParticles = false

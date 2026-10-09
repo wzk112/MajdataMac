@@ -39,7 +39,7 @@ struct TimelinePanel: View {
                 Label("BREAK", systemImage: "star.fill").foregroundStyle(.yellow)
                 Spacer(minLength: 0)
             }.font(.system(size: 10, weight: .medium)).padding(.horizontal, 12).frame(height: 22)
-            TimelineSurface(model: model, time: model.currentTime, running: model.isPlaying)
+            LiveTimelineSurface(model: model)
             HStack(spacing: 10) {
                 Button("定位播放") { model.timelineStart = model.currentTime - viewport.span * 0.35 }
                 Button("定位光标") {
@@ -64,6 +64,13 @@ struct TimelinePanel: View {
                     .monospacedDigit().frame(minWidth: 145, alignment: .trailing)
             }.font(.caption2).buttonStyle(.plain).padding(.horizontal, 12).frame(height: 26)
         }.background(Color.primary.opacity(0.025))
+    }
+}
+
+struct LiveTimelineSurface: View {
+    var model: StudioModel
+    var body: some View {
+        TimelineSurface(model: model, time: model.currentTime, running: model.isPlaying)
     }
 }
 

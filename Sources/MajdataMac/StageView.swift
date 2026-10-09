@@ -16,6 +16,7 @@ struct StageStyle {
     var showFireworks = true
     var showHitEffects = true
     var showHoldParticles = true
+    var showSensorPresses = true
 }
 struct StageView: View {
     var chart: ParsedChart
@@ -48,5 +49,7 @@ struct StageEffectsControls: View {
         Toggle("烟花特效", isOn: $model.showFireworks)
         Toggle("击打光效", isOn: $model.showHitEffects)
         Toggle("长押粒子", isOn: $model.showHoldParticles)
+        Divider()
+        Toggle("判定区按压高亮", isOn: $model.showSensorPresses)
     }
 }

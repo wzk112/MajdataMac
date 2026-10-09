@@ -207,15 +207,22 @@ struct TransportBar: View {
                 }.buttonStyle(.glassProminent).tint(.cyan).controlSize(.large).help("播放 / 暂停 ⇧⌘C；准备音频时可预约或取消播放")
                 Button("回到开头", systemImage: "backward.end.fill") { model.seek(model.rangeStart) }.labelStyle(.iconOnly).buttonStyle(.plain)
             }
-            VStack(alignment: .leading, spacing: 3) {
-                Text(StudioModel.timeLabel(model.currentTime)).font(.system(size: 18, weight: .medium, design: .monospaced)).monospacedDigit()
-                Text("/ " + StudioModel.timeLabel(model.rangeEnd)).font(.system(size: 10, design: .monospaced)).foregroundStyle(.secondary)
-            }
+            TransportTimeLabel(model: model)
             Spacer()
             Toggle("跟随滚动", isOn: $model.follow).toggleStyle(.checkbox).font(.caption)
             Toggle(isOn: $model.loopEnabled) { Image(systemName: "repeat") }.toggleStyle(.button).help("循环 A–B 区间")
             Picker("速度", selection: $model.rate) { ForEach([0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0], id: \.self) { Text(String(format: "%.2g×", $0)).tag($0) } }.frame(width: 108)
         }
+        }
+    }
+}
+
+struct TransportTimeLabel: View {
+    var model: StudioModel
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(StudioModel.timeLabel(model.currentTime)).font(.system(size: 18, weight: .medium, design: .monospaced)).monospacedDigit()
+            Text("/ " + StudioModel.timeLabel(model.rangeEnd)).font(.system(size: 10, design: .monospaced)).foregroundStyle(.secondary)
         }
     }
 }
@@ -254,6 +261,7 @@ struct InspectorView: View {
                 }
                 Toggle("显示判定区", isOn: $model.showSensors)
                 if model.showSensors {
+                    Toggle("判定区按压高亮", isOn: $model.showSensorPresses)
                     Toggle("显示区域编号", isOn: $model.showSensorLabels)
                     slider("判定区透明度", value: $model.sensorOpacity, range: 0.1...1)
                     Text("34 块触屏区域，C1/C2 合并为 C；外圈短条显示 8 个外键。两者独立高亮，短按保留 80 ms，仅影响显示。").font(.caption).foregroundStyle(.secondary)
