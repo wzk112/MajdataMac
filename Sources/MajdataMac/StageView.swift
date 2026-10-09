@@ -13,6 +13,9 @@ struct StageStyle {
     var sensorLabels = true
     var sensorOpacity = 0.45
     var recording: RegionRecording?
+    var showFireworks = true
+    var showHitEffects = true
+    var showHoldParticles = true
 }
 struct StageView: View {
     var chart: ParsedChart
@@ -36,4 +39,14 @@ struct VideoSurface: NSViewRepresentable {
         let view = AVPlayerView(); view.controlsStyle = .none; view.videoGravity = .resizeAspectFill; view.player = player; return view
     }
     func updateNSView(_ view: AVPlayerView, context: Context) { if view.player !== player { view.player = player } }
+}
+
+/// Shared preferences apply to both live stages and the next video export.
+struct StageEffectsControls: View {
+    @Bindable var model: StudioModel
+    var body: some View {
+        Toggle("烟花特效", isOn: $model.showFireworks)
+        Toggle("击打光效", isOn: $model.showHitEffects)
+        Toggle("长押粒子", isOn: $model.showHoldParticles)
+    }
 }

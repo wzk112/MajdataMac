@@ -5,6 +5,59 @@ import MajdataCore
 @testable import MajdataMac
 
 @Suite(.serialized) struct MediaTests {
+    @Test func oldImplicitSimulationPreferenceDoesNotOverrideClassic() throws {
+        let name = "MajdataModeTest-" + UUID().uuidString
+        let defaults = try #require(UserDefaults(suiteName: name))
+        defer { defaults.removePersistentDomain(forName: name) }
+        defaults.set(true, forKey: "regionJudgement")
+        #expect(PreviewJudgementMode.load(defaults) == .classic)
+        defaults.set(PreviewJudgementMode.experimentalRegions.rawValue, forKey: "previewJudgementMode.v2")
+        #expect(PreviewJudgementMode.load(defaults) == .experimentalRegions)
+    }
+    @Test @MainActor func classicPreviewKeepsSimulationOutOfScoringAndSound() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        model.judgementMode = .classic
+        model.load(StudioModel.resourceURL.appendingPathComponent("Demo/maidata.txt"))
+        defer { model.invalidateAudio() }
+        for _ in 0..<200 where model.isPreparing { try await Task.sleep(for: .milliseconds(25)) }
+        try #require(model.prepared != nil)
+        #expect(model.recording == nil && model.stageStyle.recording == nil)
+        model.seek(model.rangeEnd)
+        #expect(model.combo == model.chart.notes.count)
+        let schedule = SoundSchedule.events(model.chart, metronome: false, recording: model.recording)
+        for note in model.chart.notes where note.kind == .tap && !note.isBreak && !note.isEX {
+            #expect(schedule.contains { $0.sound == "judge" && $0.time == note.time })
+        }
+    }
+    @Test @MainActor func outputReconnectPreservesPositionMixAndPauseIntent() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        model.load(StudioModel.resourceURL.appendingPathComponent("Demo/maidata.txt"))
+        defer { model.invalidateAudio() }
+        for _ in 0..<200 where model.isPreparing { try await Task.sleep(for: .milliseconds(25)) }
+        let original = try #require(model.playback)
+        let stems = try #require(model.prepared).stems
+        model.rate = 0.75; model.seek(3); model.play()
+        try await Task.sleep(for: .milliseconds(350)); model.tick()
+        let position = model.currentTime
+        // The real engine-configuration callback follows the same path as a default-device change.
+        original.onConfigurationChange?()
+        model.reconnectAudioOutput() // A burst must retain the original resume request.
+        #expect(model.isPreparing && model.playWhenReady)
+        for _ in 0..<200 where model.isPreparing { try await Task.sleep(for: .milliseconds(25)) }
+        let replacement = try #require(model.playback)
+        #expect(replacement !== original && model.prepared?.stems == stems)
+        #expect(model.isPlaying && replacement.outputVolume == 0 && replacement.rate == 0.75)
+        #expect(abs(replacement.channels[.judge]!.volume - model.mix.gain(.judge) * replacement.headroom) < 0.00001)
+        try await Task.sleep(for: .milliseconds(350)); model.tick()
+        #expect(model.currentTime > position + 0.1)
+        model.reconnectAudioOutput(); model.pause(); model.seek(5)
+        for _ in 0..<200 where model.isPreparing { try await Task.sleep(for: .milliseconds(25)) }
+        #expect(!model.isPlaying && !model.playWhenReady && model.currentTime == 5)
+        #expect(model.playback?.currentTime == 5 - model.prepared!.startTime)
+        model.reconnectAudioOutput(); model.stop()
+        for _ in 0..<200 where model.isPreparing { try await Task.sleep(for: .milliseconds(25)) }
+        #expect(!model.isPlaying && model.currentTime == model.rangeStart)
+    }
     @Test @MainActor func playDuringPreparationCanBeQueuedAndCancelled() async throws {
         let model = StudioModel(audioOutputEnabled: false)
         model.load(StudioModel.resourceURL.appendingPathComponent("Demo/maidata.txt"))

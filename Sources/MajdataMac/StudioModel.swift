@@ -4,6 +4,15 @@ import AppKit
 import UniformTypeIdentifiers
 import MajdataCore
 
+enum PreviewJudgementMode: String, CaseIterable {
+    case classic, experimentalRegions
+    var title: String { self == .classic ? "原版自动播放 / Classic" : "区域输入模拟（实验）" }
+    // The old regionJudgement default accidentally replaced Classic. Do not migrate that implicit opt-in.
+    static func load(_ defaults: UserDefaults = .standard) -> Self {
+        Self(rawValue: defaults.string(forKey: "previewJudgementMode.v2") ?? "") ?? .classic
+    }
+}
+
 @MainActor @Observable final class StudioModel {
     var document = ChartDocument.blank
     var difficulty = 4
@@ -35,13 +44,34 @@ import MajdataCore
     var showSensorLabels = true
     var sensorOpacity = 0.45
     var showFrameStats = false
+    var showFireworks = UserDefaults.standard.object(forKey: "showFireworks") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showFireworks, forKey: "showFireworks") }
+    }
+    var showHitEffects = UserDefaults.standard.object(forKey: "showHitEffects") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showHitEffects, forKey: "showHitEffects") }
+    }
+    var showHoldParticles = UserDefaults.standard.object(forKey: "showHoldParticles") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showHoldParticles, forKey: "showHoldParticles") }
+    }
+    var showStageInfo = UserDefaults.standard.object(forKey: "showStageInfo") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showStageInfo, forKey: "showStageInfo") }
+    }
+    var videoResolution = VideoResolution(rawValue: UserDefaults.standard.string(forKey: "videoResolution") ?? "") ?? .square1080 {
+        didSet { UserDefaults.standard.set(videoResolution.rawValue, forKey: "videoResolution") }
+    }
+    var exportChartInfo = UserDefaults.standard.object(forKey: "exportChartInfo") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(exportChartInfo, forKey: "exportChartInfo") }
+    }
     var previewFrameRate = (UserDefaults.standard.object(forKey: "previewFrameRate") as? Int) ?? 60 { didSet { UserDefaults.standard.set(previewFrameRate, forKey: "previewFrameRate") } }
     var frameRate = (UserDefaults.standard.object(forKey: "frameRate") as? Int) ?? 60 { didSet { UserDefaults.standard.set(frameRate, forKey: "frameRate") } }
-    var regionJudgement = UserDefaults.standard.object(forKey: "regionJudgement") == nil || UserDefaults.standard.bool(forKey: "regionJudgement")
+    var judgementMode = PreviewJudgementMode.load()
+    var regionJudgement: Bool { judgementMode == .experimentalRegions }
     var inputMode = AutomaticInputMode(rawValue: UserDefaults.standard.string(forKey: "automaticInputMode") ?? "") ?? .mixed
     var recording: RegionRecording?
     var prepared: PreparedAudio?
     @ObservationIgnored var playback: AudioPlayback?
+    var audioOutputName = AudioOutputMonitor.deviceName
+    @ObservationIgnored private var outputMonitor: AudioOutputMonitor?
     var errorMessage: String?
     var status = "打开谱面文件夹，或试试内置示例"
     var recentFiles: [String] = UserDefaults.standard.stringArray(forKey: "recentCharts") ?? []
@@ -89,6 +119,7 @@ import MajdataCore
         source = document.chart(difficulty)
         chart = SimaiParser.parse(source)
         loadSkin(nil)
+        outputMonitor = AudioOutputMonitor { [weak self] in self?.reconnectAudioOutput() }
         let updates = Timer(timeInterval: 1.0 / 20, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.tick() }
         }
@@ -99,7 +130,7 @@ import MajdataCore
     }
     var title: String { document.title.isEmpty ? "未命名谱面" : document.title }
     var stageStyle: StageStyle {
-        StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil)
+        StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil, showFireworks: showFireworks, showHitEffects: showHitEffects, showHoldParticles: showHoldParticles)
     }
     func stepFrame(_ direction: Int) { pause(); seek(currentTime + Double(direction) / 60) }
     var rangeStart: Double { min(0, prepared?.startTime ?? (chart.notes.first?.time ?? 0) - 1) }
@@ -114,12 +145,12 @@ import MajdataCore
         return floor((Double(score.weight) / Double(timeline.totalWeight) * 100 + (timeline.totalBreaks > 0 ? Double(score.breaks) / Double(timeline.totalBreaks) : 0)) * 10000) / 10000
     }
     var playbackTime: Double {
-        guard isPlaying, let playback, let audio = prepared else { return currentTime }
+        guard isPlaying, let playback, playback.engineIsRunning, let audio = prepared else { return currentTime }
         return min(rangeEnd, max(rangeStart, playback.currentTime + audio.startTime))
     }
     func setRegionJudgement(_ value: Bool) {
-        let resume = isPlaying; regionJudgement = value
-        UserDefaults.standard.set(value, forKey: "regionJudgement")
+        let resume = isPlaying || playWhenReady; judgementMode = value ? .experimentalRegions : .classic
+        UserDefaults.standard.set(judgementMode.rawValue, forKey: "previewJudgementMode.v2")
         invalidateAudio(); prepareAudio(thenPlay: resume)
     }
     func setInputMode(_ value: AutomaticInputMode) {
@@ -139,7 +170,7 @@ import MajdataCore
     func markDirty() { isDirty = true; revision += 1; invalidateAnalysis(); invalidateAudio() }
     func metadataChanged() { markDirty(); parse() }
     func invalidateAudio() {
-        pause(); prepareTask?.cancel(); isPreparing = false; playWhenReady = false; playback = nil
+        pause(); prepareTask?.cancel(); isPreparing = false; playWhenReady = false; playback?.shutdown(); playback = nil
         if let prepared {
             try? FileManager.default.removeItem(at: prepared.url)
             try? FileManager.default.removeItem(at: prepared.url.deletingPathExtension().appendingPathExtension("stems"))
@@ -266,15 +297,49 @@ import MajdataCore
                 }
                 // Publish a complete playable state only after the graph is ready.
                 let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled)
-                prepared = audio; recording = result; waveform = audio.waveform; playback = player
+                prepared = audio; recording = result; waveform = audio.waveform; connect(player)
                 playback?.rate = Float(rate); isPreparing = false
-                status = "音频已就绪 · 48 kHz · " + (regions ? "区域判定" : "自动全 PERFECT")
+                status = "音频已就绪 · 48 kHz · " + (regions ? "区域模拟（实验）" : "Classic 自动播放")
                 let requested = playWhenReady; playWhenReady = false
                 if requested { play() }
             } catch {
                 try? FileManager.default.removeItem(at: destination)
                 try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems"))
                 if !Task.isCancelled { isPreparing = false; playWhenReady = false; report(error) }
+            }
+        }
+    }
+    private func connect(_ player: AudioPlayback) {
+        playback = player; audioOutputName = AudioOutputMonitor.deviceName
+        player.onConfigurationChange = { [weak self, weak player] in
+            guard let self, let player, self.playback === player else { return }
+            self.reconnectAudioOutput()
+        }
+    }
+    func reconnectAudioOutput() {
+        audioOutputName = AudioOutputMonitor.deviceName
+        guard let audio = prepared else { return }
+        let resume = isPlaying || playWhenReady
+        let position = playbackTime
+        pause(); playback?.shutdown(); playback = nil
+        currentTime = position
+        prepareTask?.cancel(); isPreparing = true; playWhenReady = resume
+        status = "正在连接音频输出…"
+        let expectedRevision = revision
+        prepareTask = Task {
+            do {
+                // Coalesce device and graph notifications while CoreAudio changes format.
+                try await Task.sleep(for: .milliseconds(200))
+                guard !Task.isCancelled, expectedRevision == revision else { return }
+                let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled)
+                connect(player); player.rate = Float(rate); isPreparing = false
+                let requested = playWhenReady; playWhenReady = false
+                status = "输出已连接 · " + audioOutputName
+                if requested { play() }
+                else { try player.seek(currentTime - audio.startTime, playing: false) }
+            } catch {
+                guard !Task.isCancelled else { return }
+                isPreparing = false; playWhenReady = false; report(error)
             }
         }
     }
@@ -324,6 +389,7 @@ import MajdataCore
     }
     func tick() {
         if isPlaying, let playback {
+            if !playback.engineIsRunning { reconnectAudioOutput(); return }
             currentTime = playbackTime
             if loopEnabled, loopEnd > loopStart, currentTime >= loopEnd { seek(loopStart) }
             else if !playback.isPlaying { pause(); currentTime = rangeEnd }

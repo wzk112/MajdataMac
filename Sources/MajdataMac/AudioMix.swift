@@ -116,12 +116,15 @@ private final class AudioLevels: @unchecked Sendable {
     private var offset = 0.0
     private var pausedTime = 0.0
     private var running = false
+    private var configurationObserver: NSObjectProtocol?
+    var onConfigurationChange: (() -> Void)?
     private let duration: Double
     let headroom: Float
     var outputVolume: Float { engine.mainMixerNode.outputVolume }
+    var engineIsRunning: Bool { engine.isRunning }
     var reference: AVAudioPlayerNode { channels[.bgm]! }
     var currentTime: Double {
-        guard running, let render = reference.lastRenderTime, let player = reference.playerTime(forNodeTime: render) else { return pausedTime }
+        guard running, engine.isRunning, let render = reference.lastRenderTime, let player = reference.playerTime(forNodeTime: render) else { return pausedTime }
         // All stems use one graph, one time-pitch unit and one sample clock.
         return min(duration, offset + max(0, Double(player.sampleTime) / player.sampleRate))
     }
@@ -158,6 +161,19 @@ private final class AudioLevels: @unchecked Sendable {
             }
         }
         engine.prepare(); try engine.start(); apply(settings)
+        configurationObserver = NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.onConfigurationChange?() }
+        }
+    }
+    isolated deinit {
+        if let configurationObserver { NotificationCenter.default.removeObserver(configurationObserver) }
+        engine.stop()
+    }
+    func shutdown() {
+        onConfigurationChange = nil
+        if let configurationObserver { NotificationCenter.default.removeObserver(configurationObserver) }
+        configurationObserver = nil
+        pause(); engine.stop()
     }
     func apply(_ settings: AudioMixSettings) {
         for (channel, node) in channels { node.volume = settings.gain(channel) * headroom }

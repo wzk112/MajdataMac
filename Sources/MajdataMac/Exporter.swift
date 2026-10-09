@@ -44,15 +44,33 @@ enum ExportFailure: LocalizedError {
         chart = SimaiParser.parse(source, offset: document.offset)
         guard !chart.hasErrors, exportTask == nil else { status = "请先修正语法错误"; return }
         let panel = NSSavePanel(); panel.nameFieldStringValue = title + ".mp4"; panel.allowedContentTypes = [.mpeg4Movie]
-        let resolution = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 220, height: 28))
-        resolution.addItems(withTitles: ["1080 × 1080 · 60 fps", "1920 × 1080 · 60 fps", "720 × 720 · 60 fps"])
-        panel.accessoryView = resolution
+        let resolution = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 320, height: 28))
+        resolution.addItems(withTitles: VideoResolution.allCases.map(\.title))
+        resolution.selectItem(at: VideoResolution.allCases.firstIndex(of: videoResolution) ?? 1)
+        let infoSwitch = NSButton(checkboxWithTitle: "16:9 导出包含谱面信息", target: nil, action: nil)
+        infoSwitch.state = exportChartInfo ? .on : .off
+        let fireworks = NSButton(checkboxWithTitle: "烟花特效", target: nil, action: nil)
+        let hits = NSButton(checkboxWithTitle: "击打光效", target: nil, action: nil)
+        let particles = NSButton(checkboxWithTitle: "长押粒子", target: nil, action: nil)
+        fireworks.state = showFireworks ? .on : .off
+        hits.state = showHitEffects ? .on : .off
+        particles.state = showHoldParticles ? .on : .off
+        let options = NSStackView(views: [NSTextField(labelWithString: "视频分辨率 · 60 fps"), resolution, infoSwitch,
+                                        NSTextField(labelWithString: "画面特效 · 与播放共用"), fireworks, hits, particles])
+        options.orientation = .vertical; options.alignment = .leading; options.spacing = 8
+        options.frame = NSRect(x: 0, y: 0, width: 340, height: 200)
+        panel.accessoryView = options
         guard panel.runModal() == .OK, let destination = panel.url else { return }
-        let dimensions: [(Int, Int)] = [(1080, 1080), (1920, 1080), (720, 720)]
-        let (width, height) = dimensions[max(0, resolution.indexOfSelectedItem)]
+        videoResolution = VideoResolution.allCases[max(0, resolution.indexOfSelectedItem)]
+        exportChartInfo = infoSwitch.state == .on
+        showFireworks = fireworks.state == .on
+        showHitEffects = hits.state == .on
+        showHoldParticles = particles.state == .on
+        let (width, height) = videoResolution.dimensions
         pause()
         let snapshot = chart, music = musicURL, settings = mix, resources = Self.resourceURL, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
         let style = stageStyle
+        let info = exportChartInfo ? stageInfo : nil
         let video = videoURL, workspace = cacheDirectory.appendingPathComponent("Export-" + UUID().uuidString)
         exportProgress = 0; exportStatus = "准备音频…"
         exportTask = Task {
@@ -68,7 +86,7 @@ enum ExportFailure: LocalizedError {
                 let (audio, recording) = try await withTaskCancellationHandler { try await job.value } onCancel: { job.cancel() }
                 var style = style; style.recording = recording
                 let silent = workspace.appendingPathComponent("silent.mp4")
-                try await VideoExporter.render(chart: snapshot, audio: audio, video: video, style: style, width: width, height: height, destination: silent) { progress in
+                try await VideoExporter.render(chart: snapshot, audio: audio, video: video, style: style, width: width, height: height, destination: silent, info: info) { progress in
                     self.exportProgress = progress * 0.9; self.exportStatus = "渲染 \(width) × \(height) · \(Int(progress * 100))%"
                 }
                 try Task.checkCancellation(); exportStatus = "合并立体声音轨…"; exportProgress = 0.92
@@ -89,10 +107,11 @@ enum ExportFailure: LocalizedError {
     }
 }
 @MainActor enum VideoExporter {
-    static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, progress: (Double) -> Void) async throws {
-        guard width % 2 == 0, height % 2 == 0 else { throw ExportFailure.failure("导出宽高必须是偶数") }
+    static func render(chart: ParsedChart, audio: PreparedAudio, video: URL?, style: StageStyle, width: Int, height: Int, destination: URL, info: StageChartInfo? = nil, progress: (Double) -> Void) async throws {
+        guard width > 0, height > 0, width <= 4096, height <= 4096, width % 2 == 0, height % 2 == 0 else { throw ExportFailure.failure("导出宽高必须为 2–4096 之间的偶数") }
         let writer = try AVAssetWriter(outputURL: destination, fileType: .mp4)
-        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height, AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: 12_000_000, AVVideoExpectedSourceFrameRateKey: 60]])
+        let bitrate = min(50_000_000, max(8_000_000, Int(Double(width * height) / (1920 * 1080) * 12_000_000)))
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height, AVVideoCompressionPropertiesKey: [AVVideoAverageBitRateKey: bitrate, AVVideoExpectedSourceFrameRateKey: 60]])
         input.expectsMediaDataInRealTime = false
         let attributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB, kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height, kCVPixelBufferCGImageCompatibilityKey as String: true, kCVPixelBufferCGBitmapContextCompatibilityKey as String: true]
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: attributes)
@@ -106,6 +125,7 @@ enum ExportFailure: LocalizedError {
             generator?.maximumSize = CGSize(width: width, height: height)
             generator?.requestedTimeToleranceBefore = CMTime(value: 1, timescale: 60); generator?.requestedTimeToleranceAfter = CMTime(value: 1, timescale: 60)
         }
+        let statistics = info == nil ? nil : StageStatisticsTimeline.prepared(chart, recording: style.recording)
         let count = Int(ceil(audio.duration * 60))
         do {
             for frame in 0..<count {
@@ -118,7 +138,9 @@ enum ExportFailure: LocalizedError {
                 var frameStyle = style
                 if let generator, time >= 0, let image = try? await generator.image(at: CMTime(seconds: time, preferredTimescale: 60000)).image { frameStyle.background = NSImage(cgImage: image, size: .zero) }
                 try autoreleasepool {
-                    let view = StageView(chart: chart, time: time, style: frameStyle).frame(width: Double(width), height: Double(height))
+                    let view = StagePresentation(info: info, cover: style.background, statistics: statistics, time: time) {
+                        StageView(chart: chart, time: time, style: frameStyle)
+                    }.frame(width: Double(width), height: Double(height))
                     let renderer = ImageRenderer(content: view); renderer.scale = 1; renderer.isOpaque = true
                     guard let cgImage = renderer.cgImage else { throw ExportFailure.failure("无法渲染谱面帧") }
                     var buffer: CVPixelBuffer?

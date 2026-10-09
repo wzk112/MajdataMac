@@ -1,6 +1,15 @@
 判定区域与判定规则核对 — 2026-10-09
 
-使用的配置
+播放模式（0.3.3 修正）
+  原版 MajdataEdit EditorPlayMethod.Classic 为默认枚举值，对应 View
+  AutoPlayMode.Enable。TapBase.FixedUpdate / TouchDrop.FixedUpdate 直接
+  写入 JudgeType.Perfect，Check 跳过输入；Hold/Slide/WiFi 的自动分支同样
+  直接取最高判定。DJAuto 才生成传感器输入并经过区域判定。
+  本版旧默认混淆了两者，0.3.3 恢复 Classic，区域输入模拟必须明确选择。
+  Classic 的区域高亮只作演示，不参与计分；预览和导出均使用所选模式。
+  以下参数属于实验模拟，尚未证明等同原版 DJAuto，更不是机台规格。
+
+使用的配置（实验模拟）
   本版本采用“MajdataView 判定规则 + MajdataPlay 物理分区”的明确组合。
   这是可检查的原生兼容实现，不称为 SEGA 机台判定的官方规格。
 
@@ -18,7 +27,7 @@
   旧 MajdataView SampleScene 用 CircleCollider2D 生成滑条区域序列，并计算
   末区的参考判定时间。这是原版程序的近似。为了保留原版队列定义，本地将
   它用于 SlideJudgePlan 的生成；实际显示和输入接触使用多边形。
-  若删除这一区别，只画正确形状但仍按时间直接判 CP，判定行为仍然不正确。
+  这一混合配置可能与原版 DJAuto 接触时刻不同，不能据此断言原版也会低判。
 
 事件与状态
   Tap/Touch 需要新按下事件；同一块区域一直按住不会重复击中后续短音符。
@@ -144,3 +153,8 @@ Xaleid◆scopiX Re:MASTER 核对
   https://w.atwiki.jp/simai/pages/1003.html
   原 Edit/MainWindowCore.cs 的波形同时绘制 strongBeat、weakBeat、timinglist；
   本地对应全视窗小节、拍、分音三层，缩小时自动减少密集刻度而非只绘制一小节。
+
+Classic 源码依据
+  https://github.com/LingFeng-bbben/MajdataEdit/blob/master/Majson.cs
+  https://github.com/LingFeng-bbben/MajdataView/blob/master/Assets/Scripts/Notes/TapBase.cs
+  https://github.com/LingFeng-bbben/MajdataView/blob/master/Assets/Scripts/Notes/TouchDrop.cs

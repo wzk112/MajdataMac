@@ -312,6 +312,7 @@ struct AutomaticContact: Sendable {
     }
 }
 public struct RegionRecording: Sendable {
+    public let revision = UUID()
     public let scores: [RegionScore]
     public func score(at time: Double) -> RegionScore { Self.last(scores, at: time, key: \.time) ?? RegionScore() }
     private init(chart: ParsedChart, engine: RegionJudgeEngine, frames: [SensorFrame], presses: [SensorPress], contacts: [AutomaticContact]) {

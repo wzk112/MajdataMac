@@ -6,7 +6,7 @@ struct StudioView: View {
     @Bindable var model: StudioModel
     @State private var selection: String? = "studio"
     @AppStorage("sourcePanelWidth") private var sourcePanelWidth = 330.0
-    @AppStorage("timelinePanelHeight") private var timelinePanelHeight = 184.0
+    @AppStorage("timelinePanelHeight") private var timelinePanelHeight = 240.0
     @AppStorage("sidebarPanelWidth") private var sidebarPanelWidth = 205.0
     @AppStorage("inspectorPanelWidth") private var inspectorPanelWidth = 255.0
     @AppStorage("showSidebar") private var showSidebar = true
@@ -115,7 +115,7 @@ struct StudioView: View {
         VStack(spacing: 0) {
             GeometryReader { geometry in
             let editorWidth = min(max(240, sourcePanelWidth), max(240, geometry.size.width - 327))
-            let timelineHeight = min(max(156, timelinePanelHeight), max(156, geometry.size.height - 287))
+            let timelineHeight = min(max(210, timelinePanelHeight), max(210, geometry.size.height - 287))
             VStack(spacing: 0) {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
@@ -172,7 +172,7 @@ struct StudioView: View {
                 }.frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity).background(Color.primary.opacity(0.025))
             }.frame(height: max(280, geometry.size.height - timelineHeight - 7))
             PanelDivider(axis: .horizontal, value: $timelinePanelHeight, displayedValue: timelineHeight,
-                         limits: 156...max(156, geometry.size.height - 287), label: "时间轴高度分隔线")
+                         limits: 210...max(210, geometry.size.height - 287), label: "时间轴高度分隔线")
             TimelinePanel(model: model).frame(height: timelineHeight)
             }
             }
@@ -188,6 +188,11 @@ struct StudioView: View {
 struct TransportBar: View {
     @Bindable var model: StudioModel
     var body: some View {
+        VStack(spacing: 8) {
+        HStack(spacing: 10) {
+            Text("播放进度").font(.caption).foregroundStyle(.secondary)
+            PlaybackProgress(model: model).frame(height: 20)
+        }
         HStack(spacing: 18) {
             HStack(spacing: 14) {
                 Button("停止", systemImage: "stop.fill") { model.stop() }.labelStyle(.iconOnly).buttonStyle(.plain)
@@ -211,6 +216,7 @@ struct TransportBar: View {
             Toggle(isOn: $model.loopEnabled) { Image(systemName: "repeat") }.toggleStyle(.button).help("循环 A–B 区间")
             Picker("速度", selection: $model.rate) { ForEach([0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0], id: \.self) { Text(String(format: "%.2g×", $0)).tag($0) } }.frame(width: 108)
         }
+        }
     }
 }
 
@@ -231,8 +237,11 @@ struct InspectorView: View {
                 slider("Touch 速度", value: $model.touchSpeed, range: 1...12)
                 slider("背景遮罩", value: $model.backgroundDim, range: 0...1)
                 Picker("中心显示", selection: $model.centerDisplay) { ForEach(["COMBO", "ACHIEVEMENT", "DX SCORE", "NONE"], id: \.self) { Text($0) } }
-                Toggle("按区域模拟判定", isOn: Binding(get: { model.regionJudgement }, set: { model.setRegionJudgement($0) }))
-                    .help("模拟按压和滑动，再按原版判定队列计分。关闭后使用自动全 PERFECT。")
+                Picker("播放判定", selection: Binding(get: { model.judgementMode }, set: { model.setRegionJudgement($0 == .experimentalRegions) })) {
+                    ForEach(PreviewJudgementMode.allCases, id: \.self) { Text($0.title).tag($0) }
+                }
+                Text(model.regionJudgement ? "按假设的输入轨迹计算成绩，可能产生低判；尚未与原版 DJAuto 对齐。" : "与原版 Classic 一样直接给出最高判定；判定区高亮仅作位置演示。")
+                    .font(.caption).foregroundStyle(.secondary)
                 if model.regionJudgement {
                     Picker("输入方式", selection: Binding(get: { model.inputMode }, set: { model.setInputMode($0) })) {
                         ForEach(AutomaticInputMode.allCases, id: \.self) { Text($0.title).tag($0) }
@@ -259,7 +268,13 @@ struct InspectorView: View {
                 Toggle("显示刷新统计", isOn: $model.showFrameStats)
                 Button("导入皮肤文件夹…") { model.chooseSkin() }
             }
+            Section("画面特效 · 播放与导出") {
+                StageEffectsControls(model: model)
+                Text("立即应用于预览，视频导出使用相同设置。音效音量在混音器中单独调整。").font(.caption).foregroundStyle(.secondary)
+            }
             Section("声音") {
+                Text("输出：跟随系统 · " + model.audioOutputName).font(.caption).foregroundStyle(.secondary)
+                Button("重新连接音频输出") { model.reconnectAudioOutput() }.disabled(model.prepared == nil)
                 Text(model.musicURL?.lastPathComponent ?? "未加载音乐").font(.caption).foregroundStyle(.secondary)
                 Button("选择音乐…") { model.importMusic() }
                 HStack {
@@ -352,7 +367,7 @@ struct AnalysisView: View {
                     ContentUnavailableView("尚未运行输入冲突检查", systemImage: "checkmark.seal", description: Text("点击运行检查。修改源码或切换难度后需要重新检查。"))
                 }
                 if let report = model.analysis {
-                    GroupBox("输入方式对比") {
+                    GroupBox("实验输入模拟 · 方式对比") {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 ForEach(AutomaticInputMode.allCases, id: \.self) { mode in
@@ -372,10 +387,10 @@ struct AnalysisView: View {
                 }
                 if let recording = model.analysis?.recording(for: inputMode) ?? model.recording {
                     let nonCritical = recording.results.values.filter { $0.grade != .critical }.sorted { $0.time == $1.time ? $0.noteID < $1.noteID : $0.time < $1.time }
-                    GroupBox("自动模拟 · " + (model.analysis == nil ? model.inputMode.title : inputMode.title)) {
+                    GroupBox("区域模拟（实验）· " + (model.analysis == nil ? model.inputMode.title : inputMode.title)) {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("\(recording.results.count) 个判定 · \(nonCritical.count) 个非 Critical 结果").font(.headline)
-                            Text("下列结果取决于所选输入方式。FAST/LATE 为该次模拟的实际时间差，不能直接当作谱面错误。").font(.caption).foregroundStyle(.secondary)
+                            Text("这是本程序假设输入轨迹的结果，不是原版 Classic 播放成绩，尚未与 DJAuto 对齐。FAST/LATE 是模拟时间差，低判不直接代表谱面错误。").font(.caption).foregroundStyle(.secondary)
                             ForEach(nonCritical, id: \.noteID) { result in
                                 if let note = model.chart.notes.first(where: { $0.id == result.noteID }) {
                                     VStack(alignment: .leading, spacing: 5) {

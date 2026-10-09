@@ -154,6 +154,7 @@ import MajdataCore
         }
     }
     func drawSustain(at p: Point, elapsed: Double) {
+        guard style.showHoldParticles else { return }
         let particle = art.manifest.holdParticles
         let last = Int(elapsed * particle.rate)
         for index in max(0, last - Int(ceil(particle.lifetime * particle.rate)))...last {
@@ -261,7 +262,7 @@ import MajdataCore
         guard elapsed >= 0, elapsed < 1.4 else { return }
         let touch = note.kind == .touch || note.kind == .touchHold
         let p = touch ? touchPoint(note) : lane(note.lane, 4.8)
-        if grade(note) != .miss {
+        if style.showHitEffects && grade(note) != .miss {
         if note.kind == .touch {
             painter.effect("TouchEffect", animation: "touch", elapsed: elapsed, at: p)
         } else {
@@ -287,7 +288,7 @@ import MajdataCore
             }
             painter.sprite(name, at: textPoint, angle: angle, sx: scale, opacity: alpha)
         }
-        if note.isFirework && grade(note) != .miss { painter.effect("Firework", animation: "fire", elapsed: elapsed, at: p, absoluteTime: time) }
+        if style.showFireworks && note.isFirework && grade(note) != .miss { painter.effect("Firework", animation: "fire", elapsed: elapsed, at: p, absoluteTime: time) }
     }
     func drawCenter() {
         guard style.center != "NONE" else { return }
