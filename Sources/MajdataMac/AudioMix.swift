@@ -95,6 +95,9 @@ enum SoundSchedule {
             add("track_start", .bgm, opening.startTime, duration: 5)
             for time in opening.clockTimes { add("clock", .bgm, time) }
         }
+        if let outro = AllPerfectOutro(chart: chart, recording: recording) {
+            add("all_perfect", .bgm, outro.startTime)
+        }
         // One upstream stream per sample. Simultaneous EACH notes trigger it only once.
         var last: [String: Double] = [:]
         return result.sorted { $0.time < $1.time }.filter { event in

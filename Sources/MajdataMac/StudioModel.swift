@@ -152,7 +152,9 @@ enum PreviewJudgementMode: String, CaseIterable {
     }
     func stepFrame(_ direction: Int) { pause(); seek(currentTime + Double(direction) / 60) }
     var rangeStart: Double { min(0, prepared?.startTime ?? (chart.notes.first?.time ?? 0) - 1) }
-    var rangeEnd: Double { max(2, parsedDuration + 2) }
+    var rangeEnd: Double {
+        max(2, parsedDuration + 2, prepared.map { $0.startTime + $0.duration } ?? 0)
+    }
     var duration: Double { rangeEnd - rangeStart }
     var combo: Int { (regionJudgement ? recording?.score(at: currentTime).combo : nil) ?? RenderTimeline.prepared(chart, speed: noteSpeed, touch: touchSpeed).score(at: currentTime).combo }
     var achievement: Double {

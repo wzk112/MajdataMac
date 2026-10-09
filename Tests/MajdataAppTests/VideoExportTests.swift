@@ -42,7 +42,7 @@ import MajdataCore
         let aac = scratch.appendingPathComponent("mix.m4a")
         let encoder = try #require(AVAssetExportSession(asset: AVURLAsset(url: audio.url), presetName: AVAssetExportPresetAppleM4A))
         try await encoder.export(to: aac, as: .m4a)
-        try await VideoExporter.mux(video: silent, audio: aac, output: final)
+        try await VideoExporter.mux(video: silent, audio: audio.url, output: final)
         let wall = ProcessInfo.processInfo.systemUptime - began
         let asset = AVURLAsset(url: final)
         let track = try #require(try await asset.loadTracks(withMediaType: .video).first)

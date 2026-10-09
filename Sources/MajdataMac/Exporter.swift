@@ -105,13 +105,8 @@ enum ExportFailure: LocalizedError {
                     self.exportStatus = "渲染 \(width) × \(height) · \(codec.name) · \(Int(progress * 100))%" + (elapsed > 1 ? " · \(speed) 帧/秒" : "")
                 }
                 try Task.checkCancellation(); exportStatus = "合并立体声音轨…"; exportProgress = 0.92
-                let encodedAudio = workspace.appendingPathComponent("mix.m4a")
-                let audioAsset = AVURLAsset(url: wav)
-                guard let audioSession = AVAssetExportSession(asset: audioAsset, presetName: AVAssetExportPresetAppleM4A) else { throw ExportFailure.failure("无法创建 AAC 编码器") }
-                try await audioSession.export(to: encodedAudio, as: .m4a)
-                try Task.checkCancellation()
                 let final = workspace.appendingPathComponent("final.mp4")
-                try await VideoExporter.mux(video: silent, audio: encodedAudio, output: final)
+                try await VideoExporter.mux(video: silent, audio: wav, output: final)
                 try Task.checkCancellation()
                 // Replace only after the complete movie exists. Existing exports survive cancellation/failure.
                 try Data(contentsOf: final, options: .mappedIfSafe).write(to: destination, options: .atomic)
@@ -200,16 +195,59 @@ struct VideoRenderMetrics: Sendable {
     }
     static func mux(video: URL, audio: URL, output: URL) async throws {
         let videoAsset = AVURLAsset(url: video), audioAsset = AVURLAsset(url: audio)
-        let composition = AVMutableComposition()
         let duration = try await videoAsset.load(.duration)
         guard let sourceVideo = try await videoAsset.loadTracks(withMediaType: .video).first,
               let sourceAudio = try await audioAsset.loadTracks(withMediaType: .audio).first,
-              let videoTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid),
-              let audioTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else { throw ExportFailure.failure("导出的媒体轨道缺失") }
-        try videoTrack.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: sourceVideo, at: .zero)
-        let audioDuration = try await audioAsset.load(.duration)
-        try audioTrack.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration, audioDuration)), of: sourceAudio, at: .zero)
-        guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough) else { throw ExportFailure.failure("无法创建封装器") }
-        try await exporter.export(to: output, as: .mp4)
+              let videoFormat = try await sourceVideo.load(.formatDescriptions).first else { throw ExportFailure.failure("导出的媒体轨道缺失") }
+        // Encoding to M4A then composition-passthrough to MP4 loses AAC's 2,112
+        // priming samples on this system. Encode PCM directly into the final MP4;
+        // compressed video packets pass through unchanged (no second video encode).
+        let videoReader = try AVAssetReader(asset: videoAsset), audioReader = try AVAssetReader(asset: audioAsset)
+        let videoOutput = AVAssetReaderTrackOutput(track: sourceVideo, outputSettings: nil)
+        let audioOutput = AVAssetReaderTrackOutput(track: sourceAudio, outputSettings: [AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: 48_000, AVNumberOfChannelsKey: 2, AVLinearPCMBitDepthKey: 32, AVLinearPCMIsFloatKey: true,
+            AVLinearPCMIsNonInterleaved: false])
+        videoOutput.alwaysCopiesSampleData = false; audioOutput.alwaysCopiesSampleData = false
+        videoReader.add(videoOutput); audioReader.add(audioOutput)
+        audioReader.timeRange = CMTimeRange(start: .zero, duration: min(duration, try await audioAsset.load(.duration)))
+        let writer = try AVAssetWriter(outputURL: output, fileType: .mp4)
+        let videoInput = AVAssetWriterInput(mediaType: .video, outputSettings: nil, sourceFormatHint: videoFormat)
+        videoInput.transform = try await sourceVideo.load(.preferredTransform)
+        let audioInput = AVAssetWriterInput(mediaType: .audio, outputSettings: [AVFormatIDKey: kAudioFormatMPEG4AAC,
+            AVSampleRateKey: 48_000, AVNumberOfChannelsKey: 2, AVEncoderBitRateKey: 320_000])
+        writer.add(videoInput); writer.add(audioInput)
+        var complete = false
+        defer {
+            if !complete {
+                videoReader.cancelReading(); audioReader.cancelReading(); writer.cancelWriting()
+                try? FileManager.default.removeItem(at: output)
+            }
+        }
+        guard writer.startWriting(), videoReader.startReading(), audioReader.startReading() else {
+            throw writer.error ?? videoReader.error ?? audioReader.error ?? ExportFailure.failure("无法启动音视频封装")
+        }
+        writer.startSession(atSourceTime: .zero)
+        var videoDone = false, audioDone = false
+        while !videoDone || !audioDone {
+            try Task.checkCancellation()
+            var advanced = false
+            for (reader, readerOutput, input, isVideo) in [(videoReader, videoOutput, videoInput, true), (audioReader, audioOutput, audioInput, false)] {
+                guard !(isVideo ? videoDone : audioDone), input.isReadyForMoreMediaData else { continue }
+                if let sample = readerOutput.copyNextSampleBuffer() {
+                    guard input.append(sample) else { throw writer.error ?? ExportFailure.failure("音视频封装写入失败") }
+                } else {
+                    guard reader.status == .completed else { throw reader.error ?? ExportFailure.failure("音视频封装读取失败") }
+                    input.markAsFinished()
+                    if isVideo { videoDone = true } else { audioDone = true }
+                }
+                advanced = true
+            }
+            guard writer.status == .writing else { throw writer.error ?? ExportFailure.failure("音视频封装中断") }
+            if !advanced { try await Task.sleep(for: .milliseconds(1)) }
+        }
+        writer.endSession(atSourceTime: duration)
+        await writer.finishWriting()
+        guard writer.status == .completed else { throw writer.error ?? ExportFailure.failure("音视频封装未完成") }
+        complete = true
     }
 }

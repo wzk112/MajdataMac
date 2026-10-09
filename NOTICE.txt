@@ -15,6 +15,12 @@ AnimationClips, UIs/color.png, 1080Circle_Shaped.png, JacketInfo.png, bg_dummy.j
 and Minimoon.ttf are copied/derived from the same source distribution.
 Reproduction: Scripts/import-recording-intro.py. Intro audio: release track_start.wav
 and clock.wav; scheduling reference: MajdataEdit MainWindowCore.cs / SoundEffect.cs.
+All Perfect outro: CanvasAllPerfect, Enter.anim, Minimoon SDF glyph atlas/metrics,
+UIs/apbloom.png, Sprite/StarWhite.png, Sprite/TouchEffparts_01.png, and the outline/
+glow material parameters from the same source. The bundled TMP distance-field
+outline/glow calculations are adapted for a Metal color shader. Reproduction:
+Scripts/import-all-perfect.py. Audio: release all_perfect.wav; timing follows
+MajdataEdit SoundEffect.GetAllPerfectStartTime, independently of music duration.
 
 MajdataEdit — bbben and contributors
 https://github.com/LingFeng-bbben/MajdataEdit

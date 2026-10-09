@@ -1,5 +1,8 @@
 Majdata Mac 1.0.0 — macOS 26+ 首个正式版（Apple silicon）
 
+build 16 修订：修复谱面结束导致音乐截断；预览、WAV 和视频保留完整音乐尾段。
+最后一个音符完成后播放原版 All Perfect 动画及音效，音乐继续播放。
+
 下载与安装
   https://github.com/wzk112/MajdataMac/releases/latest
   打开 DMG，将 Majdata Mac.app 拖入 Applications。升级前先保存并退出旧版。

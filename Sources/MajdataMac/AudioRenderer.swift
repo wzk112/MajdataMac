@@ -69,7 +69,13 @@ enum AudioRenderer {
     static func render(chart: ParsedChart, music: URL?, resources: URL, destination: URL, settings: AudioMixSettings,
                        retainStems: Bool = false, ffmpeg: String? = nil, recording: RegionRecording? = nil, opening: RecordingOpening? = nil) throws -> PreparedAudio {
         let start = opening?.startTime ?? min(0, (chart.notes.first?.time ?? 0) - 1)
-        let duration = max(2, chart.duration + 2 - start)
+        // Allocate for the decoded music, not just E / the last note. BGM starts at
+        // chart time zero; negative pre-roll is additional time, never a music trim.
+        let musicSamples = try music.map { try decode($0, ffmpeg: ffmpeg) }
+        try Task.checkCancellation()
+        let end = max(chart.duration + 2, Double(musicSamples?[0].count ?? 0) / rate,
+                      AllPerfectOutro(chart: chart, recording: recording)?.endTime ?? 0)
+        let duration = max(2, end - start)
         guard duration <= 1800 else { throw AudioRenderError.tooLong }
         let frames = Int(ceil(duration * rate))
         let stemDirectory = destination.deletingPathExtension().appendingPathExtension("stems")
@@ -92,7 +98,7 @@ enum AudioRenderer {
                 guard hi > lo else { return }
                 for ch in 0..<2 { for i in lo..<hi { samples[ch][offset + i] += input[ch][i] } }
             }
-            if channel == .bgm, let music { mix(try decode(music, ffmpeg: ffmpeg), at: 0) }
+            if channel == .bgm, let musicSamples { mix(musicSamples, at: 0) }
             // Restarting the same sample truncates its previous tail, as in the source BASS streams.
             for (sound, group) in Dictionary(grouping: events, by: \.sound) {
                 let file = resources.appendingPathComponent("SFX").appendingPathComponent(sound + ".wav")

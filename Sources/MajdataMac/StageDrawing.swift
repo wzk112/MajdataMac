@@ -8,6 +8,7 @@ import MajdataCore
         world.translateBy(x: size.width / 2, y: size.height / 2)
         world.scaleBy(x: unit, y: unit)
         StageRenderer(worldScale: unit, timeline: RenderTimeline.prepared(chart, speed: style.noteSpeed, touch: style.touchSpeed), painter: SpritePainter(context: world, skin: style.skin), chart: chart, time: time, style: style).draw()
+        AllPerfectDrawing.draw(context: &context, size: size, chart: chart, recording: style.recording, time: time)
     }
 }
 

@@ -1,6 +1,26 @@
 #include <metal_stdlib>
 using namespace metal;
 
+// CanvasAllPerfect uses the Minimoon SDF atlas with TMP's outline/glow material.
+// The importer retains the atlas values and material parameters from MajdataView.
+[[ stitchable ]] half4 allPerfectGlyph(float2 position, half4 sample, float2 size, float scale,
+    float4 topLeft, float4 topRight, float4 bottomLeft, float4 bottomRight,
+    float4 outlineColor, float outlineWidth, float4 glow) {
+    float2 uv = clamp(position / size, 0.0, 1.0);
+    float4 tint = mix(mix(topLeft, topRight, uv.x), mix(bottomLeft, bottomRight, uv.x), uv.y);
+    // Opaque RGB stores the distance field. Use raw atlas values, not image alpha.
+    float distance = (0.5 - float(sample.r)) * scale + 0.5;
+    float outline = outlineWidth * scale;
+    float coverage = 1.0 - clamp(distance - outline * 0.5, 0.0, 1.0);
+    float edge = clamp(distance + outline * 0.5, 0.0, 1.0) * sqrt(min(1.0, outline));
+    float4 color = mix(float4(tint.rgb, 1), outlineColor, edge) * coverage;
+    float halo = distance - glow.x * 0.5 * scale;
+    float thickness = (halo >= 0 ? glow.z : glow.y) * 0.5 * scale;
+    float strength = (1.0 - pow(clamp(abs(halo / (1.0 + thickness)), 0.0, 1.0), glow.w)) * sqrt(min(1.0, thickness));
+    color.rgb += clamp(strength * 2.0, 0.0, 1.0);
+    return half4(color * tint.a);
+}
+
 // Port of MajdataView/Assets/MaimaiColorEffect.shader (GPL-3.0).
 // SwiftUI supplies premultiplied sprite color; preserve its alpha and material ramp.
 [[ stitchable ]] half4 hanabi(float2 position, half4 color, float2 size, float time, float alpha) {
