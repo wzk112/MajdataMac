@@ -1,0 +1,11 @@
+.build/
+.swiftpm/
+dist/
+outputs/
+.asset-tools/
+.DS_Store
+*.xcuserstate
+**/xcuserdata/
+Assets/AppIcon.iconset/
+.env
+.env.*

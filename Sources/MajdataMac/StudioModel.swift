@@ -1,0 +1,428 @@
+import SwiftUI
+import AVFoundation
+import AppKit
+import UniformTypeIdentifiers
+import MajdataCore
+
+@MainActor @Observable final class StudioModel {
+    var document = ChartDocument.blank
+    var difficulty = 4
+    var chart = ParsedChart() { didSet { parsedDuration = chart.duration } }
+    private var parsedDuration = 0.0
+    var source = ""
+    var fileURL: URL?
+    var musicURL: URL?
+    var backgroundURL: URL?
+    var videoURL: URL?
+    var background: NSImage?
+    var videoPlayer: AVPlayer?
+    var selectedRange = NSRange(location: 0, length: 0)
+    var isDirty = false
+    var isPlaying = false
+    var isPreparing = false
+    var playWhenReady = false
+    var currentTime = 0.0
+    var rate = 1.0 { didSet { playback?.rate = Float(rate); if isPlaying { videoPlayer?.rate = Float(rate) } } }
+    var noteSpeed = 7.5
+    var touchSpeed = 7.5
+    var backgroundDim = 0.65
+    var fontSize = 15.0
+    var follow = true
+    var centerDisplay = "COMBO"
+    var waveform: [Float] = []
+    var mix = AudioMixSettings.load() { didSet { playback?.apply(mix); mix.save() } }
+    var showSensors = UserDefaults.standard.bool(forKey: "showSensors") { didSet { UserDefaults.standard.set(showSensors, forKey: "showSensors") } }
+    var showSensorLabels = true
+    var sensorOpacity = 0.45
+    var showFrameStats = false
+    var previewFrameRate = (UserDefaults.standard.object(forKey: "previewFrameRate") as? Int) ?? 60 { didSet { UserDefaults.standard.set(previewFrameRate, forKey: "previewFrameRate") } }
+    var frameRate = (UserDefaults.standard.object(forKey: "frameRate") as? Int) ?? 60 { didSet { UserDefaults.standard.set(frameRate, forKey: "frameRate") } }
+    var regionJudgement = UserDefaults.standard.object(forKey: "regionJudgement") == nil || UserDefaults.standard.bool(forKey: "regionJudgement")
+    var inputMode = AutomaticInputMode(rawValue: UserDefaults.standard.string(forKey: "automaticInputMode") ?? "") ?? .mixed
+    var recording: RegionRecording?
+    var prepared: PreparedAudio?
+    @ObservationIgnored var playback: AudioPlayback?
+    var errorMessage: String?
+    var status = "打开谱面文件夹，或试试内置示例"
+    var recentFiles: [String] = UserDefaults.standard.stringArray(forKey: "recentCharts") ?? []
+    var showFind = false
+    var findText = ""
+    var replacement = ""
+    var analysis: ChartAnalysisReport?
+    var isAnalyzing = false
+    private var analysisTask: Task<Void, Never>?
+    var exportProgress: Double?
+    var exportStatus = ""
+    var exportTask: Task<Void, Never>?
+    var loopEnabled = false
+    var loopStart = 0.0
+    var loopEnd = 8.0
+    var skinDirectory: URL?
+    var skinImages: [String: NSImage] = [:]
+    var taps: [Double] = []
+    var tappedBPM: Double?
+    var showInspector = true
+    var timelineZoom = 1.0
+    var timelineStart = 0.0
+    var timelineFollow = true
+    var timelineBeatsPerBar = 4
+    var timelineSnap = false
+    var ffmpegPath = UserDefaults.standard.string(forKey: "ffmpegPath") ?? "/opt/homebrew/bin/ffmpeg"
+    private var parseTask: Task<Void, Never>?
+    private var prepareTask: Task<Void, Never>?
+    private var timer: Timer?
+    private var fileDate: Date?
+    private var lastRecovery = Date.distantPast
+    private var revision = 0
+    private let audioOutputEnabled: Bool
+    let recoveryDirectory: URL
+    let cacheDirectory: URL
+    static var resourceURL: URL { Bundle.module.resourceURL!.appendingPathComponent("Resources") }
+
+    init(audioOutputEnabled: Bool = true) {
+        self.audioOutputEnabled = audioOutputEnabled
+        let fm = FileManager.default
+        recoveryDirectory = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("MajdataMac/Recovery")
+        cacheDirectory = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("MajdataMac")
+        try? fm.createDirectory(at: recoveryDirectory, withIntermediateDirectories: true)
+        try? fm.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+        source = document.chart(difficulty)
+        chart = SimaiParser.parse(source)
+        loadSkin(nil)
+        let updates = Timer(timeInterval: 1.0 / 20, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.tick() }
+        }
+        RunLoop.main.add(updates, forMode: .common); timer = updates
+        NotificationCenter.default.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.checkExternalChange() }
+        }
+    }
+    var title: String { document.title.isEmpty ? "未命名谱面" : document.title }
+    var stageStyle: StageStyle {
+        StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil)
+    }
+    func stepFrame(_ direction: Int) { pause(); seek(currentTime + Double(direction) / 60) }
+    var rangeStart: Double { min(0, prepared?.startTime ?? (chart.notes.first?.time ?? 0) - 1) }
+    var rangeEnd: Double { max(2, parsedDuration + 2) }
+    var duration: Double { rangeEnd - rangeStart }
+    var combo: Int { (regionJudgement ? recording?.score(at: currentTime).combo : nil) ?? RenderTimeline.prepared(chart, speed: noteSpeed, touch: touchSpeed).score(at: currentTime).combo }
+    var achievement: Double {
+        if regionJudgement, let recording { return recording.score(at: currentTime).achievement }
+        let timeline = RenderTimeline.prepared(chart, speed: noteSpeed, touch: touchSpeed)
+        let score = timeline.score(at: currentTime)
+        guard timeline.totalWeight > 0 else { return 0 }
+        return floor((Double(score.weight) / Double(timeline.totalWeight) * 100 + (timeline.totalBreaks > 0 ? Double(score.breaks) / Double(timeline.totalBreaks) : 0)) * 10000) / 10000
+    }
+    var playbackTime: Double {
+        guard isPlaying, let playback, let audio = prepared else { return currentTime }
+        return min(rangeEnd, max(rangeStart, playback.currentTime + audio.startTime))
+    }
+    func setRegionJudgement(_ value: Bool) {
+        let resume = isPlaying; regionJudgement = value
+        UserDefaults.standard.set(value, forKey: "regionJudgement")
+        invalidateAudio(); prepareAudio(thenPlay: resume)
+    }
+    func setInputMode(_ value: AutomaticInputMode) {
+        let resume = isPlaying; inputMode = value
+        UserDefaults.standard.set(value.rawValue, forKey: "automaticInputMode")
+        invalidateAudio(); prepareAudio(thenPlay: resume)
+    }
+    func setMetronome(_ value: Bool) {
+        let resume = isPlaying
+        mix.metronome = value; invalidateAudio(); prepareAudio(thenPlay: resume)
+    }
+    func saveMixDefault() { mix.save("audioMix.default.v3"); status = "已保存默认音量" }
+    func restoreMixDefault() { let old = mix.metronome; mix = .load("audioMix.default.v3"); if old != mix.metronome { setMetronome(mix.metronome) } }
+    func edited(_ text: String) {
+        source = text; document.setChart(text, difficulty: difficulty); markDirty(); parse()
+    }
+    func markDirty() { isDirty = true; revision += 1; invalidateAnalysis(); invalidateAudio() }
+    func metadataChanged() { markDirty(); parse() }
+    func invalidateAudio() {
+        pause(); prepareTask?.cancel(); isPreparing = false; playWhenReady = false; playback = nil
+        if let prepared {
+            try? FileManager.default.removeItem(at: prepared.url)
+            try? FileManager.default.removeItem(at: prepared.url.deletingPathExtension().appendingPathExtension("stems"))
+        }
+        prepared = nil; recording = nil; waveform = []
+    }
+    func parse(immediate: Bool = false) {
+        invalidateAnalysis()
+        parseTask?.cancel()
+        let source = source, offset = document.offset, expectedRevision = revision
+        parseTask = Task {
+            if !immediate { try? await Task.sleep(for: .milliseconds(220)) }
+            if Task.isCancelled { return }
+            let parsed = await Task.detached(priority: .userInitiated) { SimaiParser.parse(source, offset: offset) }.value
+            guard !Task.isCancelled, expectedRevision == revision else { return }
+            chart = parsed
+            status = parsed.hasErrors ? "发现 \(parsed.diagnostics.count) 个语法问题" : "\(parsed.notes.count) 个音符 · \(String(format: "%.2f", parsed.duration)) 秒"
+        }
+    }
+    func selectDifficulty(_ value: Int) {
+        parseTask?.cancel(); invalidateAnalysis()
+        document.setChart(source, difficulty: difficulty)
+        difficulty = value; source = document.chart(value); selectedRange = NSRange(location: 0, length: 0)
+        revision += 1; invalidateAudio(); chart = SimaiParser.parse(source, offset: document.offset); currentTime = 0
+    }
+    func allowReplacing() -> Bool {
+        guard isDirty else { return true }
+        let alert = NSAlert(); alert.messageText = "保存当前谱面的修改？"
+        alert.informativeText = "尚未保存的内容也会保留在本地恢复文件中。"
+        alert.addButton(withTitle: "保存"); alert.addButton(withTitle: "取消"); alert.addButton(withTitle: "不保存")
+        let result = alert.runModal()
+        if result == .alertFirstButtonReturn { return save() }
+        if result == .alertThirdButtonReturn { writeRecovery(); return true }
+        return false
+    }
+    func openPanel() {
+        guard allowReplacing() else { return }
+        let panel = NSOpenPanel(); panel.canChooseDirectories = true; panel.canChooseFiles = true
+        panel.message = "选择 maidata.txt 或包含谱面的文件夹"
+        if panel.runModal() == .OK, let url = panel.url { load(url) }
+    }
+    func load(_ url: URL) {
+        do {
+            var directory: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &directory)
+            let file = directory.boolValue ? url.appendingPathComponent("maidata.txt") : url
+            let text = try String(contentsOf: file, encoding: .utf8)
+            pause(); parseTask?.cancel(); invalidateAnalysis(); revision += 1
+            document = ChartDocument(text: text); fileURL = file
+            difficulty = (0..<7).last(where: { !document.chart($0).isEmpty }) ?? 4
+            source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset)
+            currentTime = min(0, chart.notes.first?.time ?? 0); isDirty = false
+            invalidateAudio(); loadMedia(file.deletingLastPathComponent())
+            fileDate = modificationDate(file)
+            recentFiles.removeAll { $0 == file.path }; recentFiles.insert(file.path, at: 0); recentFiles = Array(recentFiles.prefix(12))
+            UserDefaults.standard.set(recentFiles, forKey: "recentCharts")
+            status = "已打开 \(file.lastPathComponent) · \(chart.notes.count) 个音符"
+            prepareAudio(thenPlay: false)
+        } catch { report(error) }
+    }
+    func loadDemo() {
+        guard allowReplacing() else { return }
+        let demo = Self.resourceURL.appendingPathComponent("Demo")
+        let dest = cacheDirectory.appendingPathComponent("Demo")
+        if !FileManager.default.fileExists(atPath: dest.path) { try? FileManager.default.copyItem(at: demo, to: dest) }
+        load(dest)
+    }
+    func newDocument() {
+        guard allowReplacing() else { return }
+        invalidateAnalysis()
+        pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4
+        fileURL = nil; musicURL = nil; videoURL = nil; videoPlayer = nil; background = nil; backgroundURL = nil
+        invalidateAudio(); chart = SimaiParser.parse(source); currentTime = 0; isDirty = false
+    }
+    @discardableResult func save(as saveAs: Bool = false) -> Bool {
+        document.setChart(source, difficulty: difficulty)
+        var target = fileURL
+        if saveAs || target == nil {
+            let panel = NSSavePanel(); panel.nameFieldStringValue = "maidata.txt"; panel.allowedContentTypes = [.plainText]
+            guard panel.runModal() == .OK, let url = panel.url else { return false }; target = url
+        }
+        guard let target else { return false }
+        if !saveAs, target == fileURL, let old = fileDate, modificationDate(target) != old {
+            let alert = NSAlert(); alert.messageText = "磁盘上的谱面已被其他程序修改"
+            alert.informativeText = "请选择另存为以保留两个版本。"; alert.addButton(withTitle: "另存为"); alert.addButton(withTitle: "取消")
+            return alert.runModal() == .alertFirstButtonReturn ? save(as: true) : false
+        }
+        do {
+            try document.serialized.write(to: target, atomically: true, encoding: .utf8)
+            fileURL = target; fileDate = modificationDate(target); isDirty = false; status = "已保存 · \(target.lastPathComponent)"; return true
+        } catch { report(error); return false }
+    }
+    func loadMedia(_ folder: URL) {
+        let files = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)) ?? []
+        func find(_ names: [String]) -> URL? { names.lazy.compactMap { name in files.first { $0.lastPathComponent.lowercased() == name.lowercased() } }.first }
+        musicURL = find(["track.mp3", "track.ogg", "track.wav", "track.m4a", "track.flac"])
+        backgroundURL = find(["cover.png", "cover.jpg", "cover.jpeg", "bg.png", "bg.jpg", "bg.jpeg"])
+        background = backgroundURL.flatMap { NSImage(contentsOf: $0) }
+        videoURL = find(["pv.mp4", "mv.mp4", "bg.mp4", "pv.mov"])
+        videoPlayer?.pause(); videoPlayer = videoURL.map(AVPlayer.init(url:)); videoPlayer?.isMuted = true
+        videoPlayer?.actionAtItemEnd = .pause
+    }
+    func importMusic() {
+        let panel = NSOpenPanel(); panel.allowedContentTypes = [.audio]; panel.message = "选择谱面音乐"
+        if panel.runModal() == .OK, let url = panel.url { musicURL = url; invalidateAudio(); prepareAudio(thenPlay: false) }
+    }
+    func prepareAudio(thenPlay: Bool) {
+        guard !chart.hasErrors else { status = "请先修正语法错误后再播放"; return }
+        prepareTask?.cancel(); isPreparing = true; playWhenReady = thenPlay
+        status = thenPlay ? "正在准备音频，完成后播放…" : "正在准备音频…"
+        let chart = chart, music = musicURL, settings = mix, resources = Self.resourceURL, rev = revision, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
+        let destination = cacheDirectory.appendingPathComponent(UUID().uuidString + ".wav")
+        prepareTask = Task {
+            do {
+                let work = Task.detached(priority: .userInitiated) {
+                    let recording = regions ? try RegionRecording.simulate(chart, inputMode: inputMode) : nil
+                    let audio = try AudioRenderer.render(chart: chart, music: music, resources: resources, destination: destination, settings: settings, retainStems: true, ffmpeg: ffmpeg, recording: recording)
+                    return (audio, recording)
+                }
+                let (audio, result) = try await withTaskCancellationHandler { try await work.value } onCancel: { work.cancel() }
+                guard !Task.isCancelled, rev == revision else {
+                    try? FileManager.default.removeItem(at: destination)
+                    try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems")); return
+                }
+                // Publish a complete playable state only after the graph is ready.
+                let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled)
+                prepared = audio; recording = result; waveform = audio.waveform; playback = player
+                playback?.rate = Float(rate); isPreparing = false
+                status = "音频已就绪 · 48 kHz · " + (regions ? "区域判定" : "自动全 PERFECT")
+                let requested = playWhenReady; playWhenReady = false
+                if requested { play() }
+            } catch {
+                try? FileManager.default.removeItem(at: destination)
+                try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems"))
+                if !Task.isCancelled { isPreparing = false; playWhenReady = false; report(error) }
+            }
+        }
+    }
+    func togglePlayback() {
+        if isPlaying { pause(); return }
+        if isPreparing {
+            playWhenReady.toggle()
+            status = playWhenReady ? "正在准备音频，完成后播放…" : "正在准备音频，完成后保持暂停"
+            return
+        }
+        // Parse the visible text before starting, including edits made within the debounce interval.
+        parseTask?.cancel(); chart = SimaiParser.parse(source, offset: document.offset)
+        guard !chart.hasErrors else { status = "请先修正语法错误后再播放"; return }
+        if prepared == nil || playback == nil {
+            if prepared != nil { invalidateAudio() }
+            prepareAudio(thenPlay: true)
+        } else { play() }
+    }
+    func play() {
+        guard let playback, let audio = prepared else { return }
+        if currentTime >= rangeEnd - 0.02 { currentTime = rangeStart }
+        playback.rate = Float(rate)
+        do { try playback.play(at: currentTime - audio.startTime); isPlaying = true }
+        catch { isPlaying = false; report(error) }
+        syncVideo(play: isPlaying)
+    }
+    func pause() { playWhenReady = false; if isPlaying { currentTime = playbackTime }; playback?.pause(); videoPlayer?.pause(); isPlaying = false }
+    func stop() { pause(); seek(rangeStart) }
+    func seek(_ time: Double) {
+        currentTime = min(rangeEnd, max(rangeStart, time))
+        if let audio = prepared {
+            do { try playback?.seek(currentTime - audio.startTime, playing: isPlaying) }
+            catch { isPlaying = false; report(error) }
+        }
+        syncVideo(play: isPlaying)
+    }
+    func syncVideo(play: Bool) {
+        guard let videoPlayer else { return }
+        videoPlayer.pause()
+        let requestedTime = max(0, currentTime), requestedRevision = revision
+        videoPlayer.seek(to: CMTime(seconds: requestedTime, preferredTimescale: 60000), toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
+            Task { @MainActor in
+                guard let self, finished, requestedRevision == self.revision, play, self.isPlaying, self.currentTime >= 0 else { return }
+                videoPlayer.rate = Float(self.rate)
+            }
+        }
+    }
+    func tick() {
+        if isPlaying, let playback {
+            currentTime = playbackTime
+            if loopEnabled, loopEnd > loopStart, currentTime >= loopEnd { seek(loopStart) }
+            else if !playback.isPlaying { pause(); currentTime = rangeEnd }
+            if let videoPlayer, currentTime >= 0, videoPlayer.rate == 0, currentTime < rangeEnd - 0.1 {
+                if let item = videoPlayer.currentItem, item.duration.seconds.isFinite, currentTime < item.duration.seconds { syncVideo(play: true) }
+            }
+        }
+        if isDirty && Date().timeIntervalSince(lastRecovery) > 15 { writeRecovery() }
+    }
+    func transform(_ transform: ChartTransform) {
+        let ns = source as NSString, selected = selectedRange
+        let valid = selected.length > 0 && NSMaxRange(selected) <= ns.length
+        let text = valid ? ns.substring(with: selected) : source
+        edited(valid ? ns.replacingCharacters(in: selected, with: transform.apply(to: text)) : transform.apply(to: text))
+    }
+    func subdivide() {
+        let ns = source as NSString
+        let valid = selectedRange.length > 0 && NSMaxRange(selectedRange) <= ns.length
+        let text = valid ? ns.substring(with: selectedRange) : source
+        edited(valid ? ns.replacingCharacters(in: selectedRange, with: ChartTransform.subdivide(text, factor: 2)) : ChartTransform.subdivide(text, factor: 2))
+    }
+    func findNext() {
+        guard !findText.isEmpty else { return }
+        let ns = source as NSString, start = min(ns.length, NSMaxRange(selectedRange))
+        var range = ns.range(of: findText, range: NSRange(location: start, length: ns.length - start))
+        if range.location == NSNotFound { range = ns.range(of: findText) }
+        if range.location != NSNotFound { selectedRange = range }
+    }
+    func replaceAll() { guard !findText.isEmpty else { return }; edited(source.replacingOccurrences(of: findText, with: replacement)) }
+    func locate(_ diagnostic: Diagnostic) {
+        selectedRange = NSRange(location: diagnostic.location.offset, length: diagnostic.location.length)
+        if let point = chart.timings.last(where: { $0.location.offset <= diagnostic.location.offset }) { seek(point.time) }
+    }
+    func locate(_ note: Note, at time: Double? = nil) {
+        selectedRange = NSRange(location: note.location.offset, length: note.location.length)
+        pause(); seek((time ?? note.time) - 0.4)
+    }
+    private func invalidateAnalysis() {
+        analysisTask?.cancel(); analysisTask = nil; analysis = nil; isAnalyzing = false
+    }
+    func checkConflicts() {
+        parseTask?.cancel(); invalidateAnalysis(); isAnalyzing = true
+        let source = source, offset = document.offset, expectedRevision = revision
+        analysisTask = Task {
+            do {
+                let worker = Task.detached(priority: .userInitiated) {
+                    let parsed = SimaiParser.parse(source, offset: offset)
+                    return (parsed, parsed.hasErrors ? nil : try ChartAnalysis.inspect(parsed))
+                }
+                let (parsed, report) = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: { worker.cancel() }
+                guard !Task.isCancelled, expectedRevision == revision else { return }
+                chart = parsed; analysis = report; isAnalyzing = false
+                status = parsed.hasErrors ? "请先修正语法错误，再检查输入冲突" : "谱面检查完成"
+            } catch {
+                guard !Task.isCancelled, expectedRevision == revision else { return }
+                isAnalyzing = false; report(error)
+            }
+        }
+    }
+    func tapBPM() {
+        let now = ProcessInfo.processInfo.systemUptime
+        if let last = taps.last, now - last > 3 { taps = [] }
+        taps.append(now); taps = Array(taps.suffix(12))
+        if taps.count > 1 { tappedBPM = 60 * Double(taps.count - 1) / (taps.last! - taps.first!) }
+    }
+    func loadSkin(_ url: URL?) {
+        skinDirectory = url
+        let fallback = Self.resourceURL.appendingPathComponent("Skin")
+        let names = ((try? FileManager.default.contentsOfDirectory(atPath: fallback.path)) ?? []).filter { $0.hasSuffix(".png") }
+        skinImages = [:]
+        for name in names {
+            let custom = url.flatMap { NSImage(contentsOf: $0.appendingPathComponent(name)) }
+            skinImages[String(name.dropLast(4))] = custom ?? NSImage(contentsOf: fallback.appendingPathComponent(name))
+        }
+    }
+    func chooseSkin() {
+        let panel = NSOpenPanel(); panel.canChooseFiles = false; panel.canChooseDirectories = true
+        if panel.runModal() == .OK { loadSkin(panel.url) }
+    }
+    func writeRecovery() {
+        document.setChart(source, difficulty: difficulty); lastRecovery = Date()
+        let name = fileURL?.path.data(using: .utf8)?.base64EncodedString().replacingOccurrences(of: "/", with: "_") ?? "untitled"
+        let safeName = String(name.suffix(160)) + ".txt"
+        do { try document.serialized.write(to: recoveryDirectory.appendingPathComponent(safeName), atomically: true, encoding: .utf8) }
+        catch { status = "自动恢复文件写入失败：\(error.localizedDescription)" }
+    }
+    func recover() {
+        let panel = NSOpenPanel(); panel.directoryURL = recoveryDirectory; panel.allowedContentTypes = [.plainText]
+        guard allowReplacing(), panel.runModal() == .OK, let url = panel.url else { return }
+        load(url); fileURL = nil; isDirty = true; status = "已恢复，请另存为 maidata.txt"
+    }
+    func checkExternalChange() {
+        guard let fileURL, let fileDate, let newDate = modificationDate(fileURL), newDate != fileDate else { return }
+        if !isDirty { load(fileURL) }
+        else { status = "磁盘文件已变更；保存时将提示保留两个版本" }
+    }
+    func modificationDate(_ url: URL) -> Date? { (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate }
+    func report(_ error: Error) { errorMessage = error.localizedDescription; status = "操作未完成" }
+    static func timeLabel(_ value: Double) -> String { let v = abs(value); return String(format: "%@%02d:%06.3f", value < 0 ? "−" : "", Int(v) / 60, v.truncatingRemainder(dividingBy: 60)) }
+}

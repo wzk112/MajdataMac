@@ -1,0 +1,69 @@
+Majdata Mac 0.3.2 — macOS 26+ 原生开发版
+
+构建后打开 dist/Majdata Mac.app，或复制到「应用程序」。本地构建支持 Apple silicon。
+⌘O 打开 maidata.txt 或谱面文件夹，会自动加载同目录音乐、图片和 PV。
+文件菜单的内置示例包含全部主要音符类型，方便先检查功能。
+
+操作
+  ⇧⌘C 播放/暂停；⇧⌘X 停止；⇧⌘P 独立舞台；⇧⌘M 九路混音器。
+  ⇧⌘J 显示判定区；⌥⌘← / ⌥⌘→ 后退/前进一帧（1/60 秒）。
+  ⌘S 保存；⌘F 查找替换。拖动时间轴定位，A/B 循环检查选段。
+  右侧可选刷新率、判定区标签/透明度、速度、背景、中心信息和皮肤。
+
+0.3.2 更新
+  • 代码/预览/时间轴及两侧栏支持拖动分隔线；时间轴边缘可自动滚动。
+  • 独立源码播放光标、局部高亮更新、同帧贴图解析复用。
+  • 准备音频期间可预约/取消播放；播放器缺失或启动失败不再无提示返回。
+  • 时间轴拖动固定坐标基准，松手后恢复原播放状态；平移不改变播放时间。
+  • 青色实线显示播放，紫色虚线显示源码光标；独立显示刷新，静态内容缓存。
+  • 全视窗小节/拍/分音网格、BPM 标记、每小节拍数、缩放/平移/吸附及定位。
+  • 判定对比全内屏、Tap/Hold 全外键、内外配合；外键与触屏独立显示。
+  • 新应用图标；自动测试静音，不影响实际混音增益和时钟检查。
+
+0.3.1 更新
+  • 检查按真实区域按下事件和判定结果定位冲突，附目标、来源与提前量。
+    不再按滑条距离报警；同刻重叠和起滑前的区域接近不会报成蹭判。
+  • 固定区域多押合并重复区域、计入持续 Hold；不把 Touch 组数量当成手数。
+  • 判定区短按高亮保留 80 ms，原始判定脉冲保持不变。
+  • 源码青色高亮当前播放单元，橙色高亮持续中的 Hold/Slide；支持暂停定位、
+    回拖和循环，跟随滚动不再抢占编辑选区。
+  • 检查在后台运行，编辑或切换难度立即清空过期结果。
+
+0.3.0 更新
+  • 判定区使用真实 A/B/C/D/E 网格：34 个物理分区，C1/C2 合并为 C。
+  • 默认开启区域模拟。传感器输入经过判定引擎后生成判定、分数、轨道
+    消失进度和音效；包括进入/离开、Slide 顺序、WiFi 三分支和 Hold 覆盖率。
+  • 九路音量：BGM、Answer、Judge、Slide、Break、BreakSlide、EX、Touch、Hanabi。
+    支持主音量、静音、独奏、电平、保存默认值；播放时修改立即生效。
+    预览与 WAV/MP4 导出使用同一增益。各通道使用同一个音频采样时钟。
+  • 舞台使用显示器刷新回调，主界面和独立舞台分别支持 20/30/60/120/自动；暂停或遮挡时停止画面更新。
+    缓存判定区标签图像和路径，时间轴静态内容与播放线分开更新。
+    取消主界面固定 20 Hz 限制，两处默认 60 Hz，可在右侧分别修改并自动保存。
+  • 修复密集同区点击误判、0.3 秒 Hold 浮点边界、WiFi 判定基准和消失索引，
+    并正确读取每个难度的谱师信息。
+
+画面沿用 0.2 的原始 Skin/SFX、42 组 Slide 预制体、12 组动画曲线、Hold 粒子
+及 Metal 烟花着色器。预览和离线导出共用 SwiftUI Canvas 渲染。
+当前区域模拟是自动生成触摸轨迹，不是鼠标/键盘手动游玩或实体控制器输入。
+
+完整功能核对：Documentation/Feature-audit.txt
+判定依据与差异：Documentation/Judgement-reference.txt
+验证记录：Documentation/Rendering-status.txt、validation-log.txt
+上游文件清单/代码索引/问题清单也在 Documentation 内。
+尚有原版功能未移植；不能声称功能完全对等或所有已知 bug 已修复。
+
+构建（Xcode 26+，macOS SDK、Metal Toolchain）
+  ./Scripts/build-app.sh release
+  swift test -c release
+若缺少 Metal 编译器：xcodebuild -downloadComponent MetalToolchain
+打开 Package.swift 可在 Xcode 中编辑。构建脚本进行本地临时签名。
+
+重新提取资源（正常构建不需要 Python）
+  python3 -m venv .asset-tools
+  .asset-tools/bin/pip install PyYAML Pillow
+  .asset-tools/bin/python Scripts/import-unity-art.py /path/to/MajdataView
+  python3 Scripts/import-sensor-mesh.py /path/to/MajdataPlay
+
+GPL-3.0。原项目与资源来源见 NOTICE.txt；完整源码保存在此目录。
+不是 SEGA 官方软件。当前主机为 macOS 27，最低部署版本 26，未在 macOS 26
+实体设备复测。未完成 Windows Unity 原版逐帧像素差异验证。

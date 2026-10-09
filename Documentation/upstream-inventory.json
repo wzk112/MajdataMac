@@ -1,0 +1,5338 @@
+[
+  {
+    "repository": "MajdataEdit",
+    "path": ".gitattributes",
+    "bytes": 2518,
+    "sha256": "45a7cbb7d9942ba7ffce0b20bc8dbe2d1196533bc6e4bd245871d77fb1eedfdc",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": ".github/workflows/main.yml",
+    "bytes": 489,
+    "sha256": "ffc6952550bf4855103b2a4930ea520884c9aa1a7e1e558bebe67b1abefb878f",
+    "kind": ".yml",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": ".gitignore",
+    "bytes": 5745,
+    "sha256": "b2bc587f32e66bd9d397ea04282e1300cbb06889e8ca6eb810836eef9133d6c0",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": ".vscode/settings.json",
+    "bytes": 79,
+    "sha256": "88dabf400306515c63da5b3267c9a55609aafcf1796517c40dff946c08922dd0",
+    "kind": ".json",
+    "lines": 4
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "App.xaml",
+    "bytes": 36271,
+    "sha256": "c80fa72f99cdc48787f1bd9be06d6823bba3779d8cd9b6589033de147b457718",
+    "kind": ".xaml",
+    "lines": 470
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "App.xaml.cs",
+    "bytes": 1096,
+    "sha256": "9a7c3729e00d96d4809cb07f51976177e7c0aea5a230794e3be42e4587e3b738",
+    "kind": ".cs",
+    "lines": 34
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveExceptions.cs",
+    "bytes": 1244,
+    "sha256": "0aab10127af93b65418126f7646229027207e7e6d8863cdcd35150614d642da1",
+    "kind": ".cs",
+    "lines": 50
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveIndex.cs",
+    "bytes": 938,
+    "sha256": "1831262287dbb14fa2d4d5f047344de460e238db5fb8539ef547d2126b3e39ae",
+    "kind": ".cs",
+    "lines": 40
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveIndexManager.cs",
+    "bytes": 4978,
+    "sha256": "508e3351c52debf865d1b68ddbf617bc3a0e89644e9fdbdba06650fd2f06d54b",
+    "kind": ".cs",
+    "lines": 193
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveManager.cs",
+    "bytes": 2911,
+    "sha256": "f4e7071fc0f3d33b9a7d876a038c5e8696540a8b34020722a00932a2e47cfb0e",
+    "kind": ".cs",
+    "lines": 116
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveRecoverer.cs",
+    "bytes": 3144,
+    "sha256": "2aa3af3491ec583598dfc038cb83ff62948c8d99b214ba64ff684d7b01c01a0c",
+    "kind": ".cs",
+    "lines": 106
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/FumenInfos.cs",
+    "bytes": 3198,
+    "sha256": "6bbafc7e4e663278e6bc8ca348b735ebd965ac00cedd4f3f7556329f6b58fa6b",
+    "kind": ".cs",
+    "lines": 99
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/GlobalAutoSave.cs",
+    "bytes": 928,
+    "sha256": "5df4ef9b2d45deb1d3dc63724dccf9ef540e837ba3cb2313c79bcb8fc6dfedc9",
+    "kind": ".cs",
+    "lines": 34
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/GlobalAutoSaveContext.cs",
+    "bytes": 414,
+    "sha256": "2357eeaddd680fd65e6167d60154b08b115666cf25213012a98bb6992871c41a",
+    "kind": ".cs",
+    "lines": 17
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSave.cs",
+    "bytes": 470,
+    "sha256": "6d644f206280bfb47842b8ff66edf025d5a90870bc5f29b9b3becd339088121d",
+    "kind": ".cs",
+    "lines": 19
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveContext.cs",
+    "bytes": 531,
+    "sha256": "920dacefd6b5d98882aa2065a2c694e7e3494b4e4b5b5e4307ad6be4b0b6b09d",
+    "kind": ".cs",
+    "lines": 19
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveIndexManager.cs",
+    "bytes": 1663,
+    "sha256": "5677b68949e9c143ad5e00f0b591114c53a7836f26f4cc014e154e3418a3e254",
+    "kind": ".cs",
+    "lines": 59
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveRecoverer.cs",
+    "bytes": 1192,
+    "sha256": "8e25a3deccace03635d459f6be89c9367254b58fe69bff9c4079e21eff8f7c66",
+    "kind": ".cs",
+    "lines": 41
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/LocalAutoSave.cs",
+    "bytes": 1024,
+    "sha256": "e148c8c9e1c1e76181c4445a35347b62f8d30b71fe54a6b4017312e53a8632c5",
+    "kind": ".cs",
+    "lines": 36
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/LocalAutoSaveContext.cs",
+    "bytes": 532,
+    "sha256": "506f539e01e80379f1ea7301c2eb069151fda6b91398021500bb4a9ea64fe084",
+    "kind": ".cs",
+    "lines": 20
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "AutoSaveModule/SafeTerminationDetector.cs",
+    "bytes": 1514,
+    "sha256": "09c8f6ff181cc0c7b65397d8330cdb4b20df4b99116fa5e0e81348d86204e46d",
+    "kind": ".cs",
+    "lines": 65
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Image/bg_dummy.jpg",
+    "bytes": 161766,
+    "sha256": "051f5ad9a3edecf26cb18dd1020dabf72ad128992a0b6888b8d3cf4bb253aabc",
+    "kind": ".jpg",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Image/outline_find_replace_white_24dp.png",
+    "bytes": 456,
+    "sha256": "b9ffb6144138d54d163c7cdfb3d2c5d11586d6acc4d72727ed02bd3b81105e1c",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Image/outline_search_white_24dp.png",
+    "bytes": 377,
+    "sha256": "6ad1d3650d32b74c4a7fcdac58739154a9480353c1545d59a2e1c6ccc5dabe5e",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "LICENSE",
+    "bytes": 35149,
+    "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.Designer.cs",
+    "bytes": 3051,
+    "sha256": "6f021e2c39b7918804a8076bfbf3573780b63d681d6767ab301d7b81c7b7621a",
+    "kind": ".cs",
+    "lines": 72
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.en-US.Designer.cs",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kind": ".cs",
+    "lines": 0
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.en-US.resx",
+    "bytes": 19362,
+    "sha256": "12be2c6f591f1b224b10d5624cedc1a2a57f97c24748daec9f2cdb6165eb46e0",
+    "kind": ".resx",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.ja.Designer.cs",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kind": ".cs",
+    "lines": 0
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.ja.resx",
+    "bytes": 22212,
+    "sha256": "82d3ce480206d21846179562b528e00337d981ba02b276f186af5713818bf261",
+    "kind": ".resx",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.resx",
+    "bytes": 6509,
+    "sha256": "9c22f040c56c804a80cfbb81b82467c1a83d103a405ad32af87d84ed7235dea7",
+    "kind": ".resx",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.zh-CN.resx",
+    "bytes": 19529,
+    "sha256": "f78b4a7a1dcea61c35414ab4ea3fe0cabd6258f200b3b1fe882be809fb2efcff",
+    "kind": ".resx",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Langs/Langs.zh-CN1.Designer.cs",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kind": ".cs",
+    "lines": 0
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "MainWindow.xaml",
+    "bytes": 21732,
+    "sha256": "7c0c773ebf2b6a441a0784249bcc9eb3f0c00c31268eb31b3c218032d36c3d24",
+    "kind": ".xaml",
+    "lines": 293
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "MainWindow.xaml.cs",
+    "bytes": 20425,
+    "sha256": "77d1580f32d005ac0e355af8d6a46a0093fdc853ff74311c188a7e20020fa2fd",
+    "kind": ".cs",
+    "lines": 655
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "MainWindowCore.cs",
+    "bytes": 62177,
+    "sha256": "116df6ee946b1e1af442002386e3e7db262aeac0487213a4055fd25cfa7f345f",
+    "kind": ".cs",
+    "lines": 1568
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "MajdataEdit.csproj",
+    "bytes": 2804,
+    "sha256": "8984d6cc080ff81fe82bab673c4d4f9724dcc1b6041b96e3846bc4b270351658",
+    "kind": ".csproj",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "MajdataEdit.sln",
+    "bytes": 1095,
+    "sha256": "dbb5ce6272fccd3bdff7941020472df72941b02bc4691bce2990357fa7ac3ed5",
+    "kind": ".sln",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Majson.cs",
+    "bytes": 3405,
+    "sha256": "4be1a02aa69cddfa9a7ff6928ba43aac187a3052b2502ad8c2c5e910e4764d30",
+    "kind": ".cs",
+    "lines": 117
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Mirror.cs",
+    "bytes": 10233,
+    "sha256": "f7e4edcba04c87f7662a50e54479e3cf20bf65f7685375d16ab5509f2abb36d8",
+    "kind": ".cs",
+    "lines": 306
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Properties/AssemblyInfo.cs",
+    "bytes": 1203,
+    "sha256": "0d75958ef3f496f7f52e5bb42c6169a9a32af4150dcf54d9150c1178ef2b7085",
+    "kind": ".cs",
+    "lines": 26
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Properties/Resources.Designer.cs",
+    "bytes": 3446,
+    "sha256": "807d8f4c543e2232b0dc72eb99f7c509fc167efcb1183ddfd3ce72075b223314",
+    "kind": ".cs",
+    "lines": 82
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Properties/Resources.resx",
+    "bytes": 6929,
+    "sha256": "d5b4604f97c1d5cc67d8bec347e99e4f3c628d6e7c4f00aba055f52cfc07b2eb",
+    "kind": ".resx",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Properties/Settings.Designer.cs",
+    "bytes": 1029,
+    "sha256": "092a4eaa548d1b1793cdeabec4b5315a9acb4b4ccae91a263281e3ede0940475",
+    "kind": ".cs",
+    "lines": 25
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "Properties/Settings.settings",
+    "bytes": 203,
+    "sha256": "c3e1df115d27bca3c08a95a4665290fc4d86ec85ff7beae6c9b5761b88666b05",
+    "kind": ".settings",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "README.md",
+    "bytes": 145,
+    "sha256": "bd93d87c7b40b0f766088977944dc7be371e276a54e23cd652b3b377d7d4afff",
+    "kind": ".md",
+    "lines": 4
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SimaiProcess.cs",
+    "bytes": 22215,
+    "sha256": "805db6cca6e42fb98489593fe61460af3a676d67c11f43a3a95b75111749022d",
+    "kind": ".cs",
+    "lines": 671
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SoundEffect.cs",
+    "bytes": 40487,
+    "sha256": "e5846b3f235c1bb7b59bd7759021d2700d8c28c0c4a459ad1d9fc91e383c7637",
+    "kind": ".cs",
+    "lines": 935
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/AutoSaveRecover.xaml",
+    "bytes": 5457,
+    "sha256": "4fdab9d9405325d6f1ed67dc80fd4df962670fb35548aa717e2ff2faf7f5e0d0",
+    "kind": ".xaml",
+    "lines": 95
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/AutoSaveRecover.xaml.cs",
+    "bytes": 7594,
+    "sha256": "6932ae8ba541cd5b3cf775e6ace633656389f1b7e38ab5e52c012696faf88536",
+    "kind": ".cs",
+    "lines": 249
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/BPMtap.xaml",
+    "bytes": 1347,
+    "sha256": "b2e5be0042784a30311e2b21ac1154a53eb2791c7a533f7657f25b7e62ed9404",
+    "kind": ".xaml",
+    "lines": 29
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/BPMtap.xaml.cs",
+    "bytes": 1028,
+    "sha256": "5811d065057a52fbf8daeb64ec2982424095a9a3cb618e7a6e9d76cad04ca16e",
+    "kind": ".cs",
+    "lines": 42
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/EditorSettingPanel.xaml",
+    "bytes": 8851,
+    "sha256": "0293e747119095e9f402725df9dfd53319cabc708420bdc49b80be19322a1d1d",
+    "kind": ".xaml",
+    "lines": 186
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/EditorSettingPanel.xaml.cs",
+    "bytes": 6243,
+    "sha256": "a90001493e5e68a14bc28ec152c5c80be1a4322ee71c020b7fc22a9dfe20e3b3",
+    "kind": ".cs",
+    "lines": 163
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/Infomation.xaml",
+    "bytes": 4226,
+    "sha256": "fe0c3bcef6537c2b9d273362f5e87d7a713757a4acf61b705bfbcc8c3da53da1",
+    "kind": ".xaml",
+    "lines": 51
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/Infomation.xaml.cs",
+    "bytes": 4529,
+    "sha256": "2ba026321d9bbf234a03293c83b945e883ffeebadb385e25ee285dabe810527b",
+    "kind": ".cs",
+    "lines": 144
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/MuriCheck.xaml",
+    "bytes": 3675,
+    "sha256": "e8637a4da4c34eb817b30d71b403642348cb23523a8952475b51dfabe35cdab5",
+    "kind": ".xaml",
+    "lines": 76
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/MuriCheck.xaml.cs",
+    "bytes": 18444,
+    "sha256": "5b6d8551dbca496e8d0d7022e54fee8a0a17940c8b50f4e91f35f4741e792ba9",
+    "kind": ".cs",
+    "lines": 516
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/MuriCheckResult.xaml",
+    "bytes": 1527,
+    "sha256": "df341e8e20628d295bd2f6eba911ced1c717247d1cb3c4ff30935cddd4133ea9",
+    "kind": ".xaml",
+    "lines": 32
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/MuriCheckResult.xaml.cs",
+    "bytes": 876,
+    "sha256": "d7d7e8d16325335e027cd7740a1e0192369d82e1725f71b3f1a387d566b462d6",
+    "kind": ".cs",
+    "lines": 39
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/SoundSetting.xaml",
+    "bytes": 12722,
+    "sha256": "a973b4830415b83c45de6b8887a6fbfd15b16fb133600d5c154582f6b4635e23",
+    "kind": ".xaml",
+    "lines": 156
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SubWindow/SoundSetting.xaml.cs",
+    "bytes": 7389,
+    "sha256": "0a5983c3688887bb1c0689b55d344b799b55f2900501d67979bb39b2ec211398",
+    "kind": ".cs",
+    "lines": 153
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "SyntaxModule/SyntaxCheck.cs",
+    "bytes": 35947,
+    "sha256": "b893dddbc38bc79a3d4e23833de36ba02b4be9ad0e6027fdfe15b0fdad699888",
+    "kind": ".cs",
+    "lines": 999
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "WebControl.cs",
+    "bytes": 1269,
+    "sha256": "d0dac969652e395dc87c245b8d92f1399c095906b14bcf7234841971b75804ed",
+    "kind": ".cs",
+    "lines": 44
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "bass.dll",
+    "bytes": 160288,
+    "sha256": "94ff6f6d935292b6664779b06ddd6a63db274c962dc15e18723f9a46c5529d4f",
+    "kind": ".dll",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "bass_fx.dll",
+    "bytes": 88064,
+    "sha256": "a6e1847eef52d882b4137af514d834c2e220daceb417c821d1e502fb7a34c84a",
+    "kind": ".dll",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "favicon.ico",
+    "bytes": 1081406,
+    "sha256": "03e5a73866ce53161a220e26b8fbef88876722cb27096136d105a74896819ca1",
+    "kind": ".ico",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "salt.pdn",
+    "bytes": 680551,
+    "sha256": "ae6e9f0b294144af8cc3cc58590d73d55604a430d7d9e0f39084a55148703bc1",
+    "kind": ".pdn",
+    "lines": null
+  },
+  {
+    "repository": "MajdataEdit",
+    "path": "slide_time.json",
+    "bytes": 12634,
+    "sha256": "dc30813ce3843debca65a030fa98e9c99a737586141e73882258eebc70593a18",
+    "kind": ".json",
+    "lines": 924
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".gitattributes",
+    "bytes": 85,
+    "sha256": "0b280d69a290296bb1f27082e49d82779a19761ad5d76f2f97e7839d1c244bb0",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".github/ISSUE_TEMPLATE/ISSUE_TEMPLATE_empty.md",
+    "bytes": 48,
+    "sha256": "4df6e5f803465376a823c612e462fcc585ebaa29a6c93b23da779a42e7b9f775",
+    "kind": ".md",
+    "lines": 4
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".github/ISSUE_TEMPLATE/ISSUE_TEMPLATE_en_us.md",
+    "bytes": 1284,
+    "sha256": "8ad2bfe954b7b835d89c00b6962538bbf1ed205183034b245efdca55a0c1bc32",
+    "kind": ".md",
+    "lines": 30
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".github/ISSUE_TEMPLATE/ISSUE_TEMPLATE_new_feature.md",
+    "bytes": 227,
+    "sha256": "f6a3e130fe91f33f892b8a2d2e4605e353be8f002d1737506144936d8134619e",
+    "kind": ".md",
+    "lines": 12
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".github/ISSUE_TEMPLATE/ISSUE_TEMPLATE_zh_cn.md",
+    "bytes": 1079,
+    "sha256": "5820a49e245e4590e37246ee7e50c5abe49fff084438ecb6ba199f8a8489af27",
+    "kind": ".md",
+    "lines": 27
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".github/workflows/main.yml",
+    "bytes": 777,
+    "sha256": "c0b6ea87311454e0b15dd2af8ff0f8d8091bdde127c35206231ba99852e492dc",
+    "kind": ".yml",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".gitignore",
+    "bytes": 585,
+    "sha256": "19a0d94974e4fc5db073aecb64c2a12c8dbd66b52d237de6424cbe29f75b4783",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": ".vsconfig",
+    "bytes": 98,
+    "sha256": "36b546ea23eeba523e71ab56452ed57b2a931a6e38514ef948856a59d150434f",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Addctive.mat",
+    "bytes": 3091,
+    "sha256": "b987f3516ce002c4542d0ec174d24a47530c66dae8e14419c6025df423a0e79f",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Addctive.mat.meta",
+    "bytes": 182,
+    "sha256": "cb5ec71aac0536a289d2bc912ac6064f53161c79dd763c9d406da58916f41d1d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/AddictiveBall.mat",
+    "bytes": 2572,
+    "sha256": "9160950acc9c88b45f8f8c26775612679f3fe5489c6469a8fac332c83e16912d",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/AddictiveBall.mat.meta",
+    "bytes": 182,
+    "sha256": "c3bfcf40b00d765aab8f45e0c8342d212d6e08ae4d2aced54540799a2ffa58f1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation.meta",
+    "bytes": 172,
+    "sha256": "17e5fc3e1768d0c15d2ed81521eedc1dee179120b72d722eea19c0fa3ff02498",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakShine.anim",
+    "bytes": 4020,
+    "sha256": "1b6f7eba3e5d405fe691f678ecdf1826e7c5d9d0431865e1e7e4ba780e7737f1",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakShine.anim.meta",
+    "bytes": 188,
+    "sha256": "2d885a34f6c7dde77e3f2d26314c7d99b18369f049b409330b940083cdae4215",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakShine.controller",
+    "bytes": 2031,
+    "sha256": "23cf868a0a9a2dafe782463871397065689f2eade0dcc2b1c70d76996be0b65e",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakShine.controller.meta",
+    "bytes": 188,
+    "sha256": "79c314eeed9ba9510ec0d5e94b08c4e0c940e8034ddde1143878430028b2d900",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakStarOver.anim",
+    "bytes": 16808,
+    "sha256": "ebef6df140531da35a46ef368eed0c9cc269aeeb5c7f162cca03c5b220389fa8",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/BreakStarOver.anim.meta",
+    "bytes": 188,
+    "sha256": "7e6566be507b1e8707dcf1c62aa6a37eb5daee3a40699ad0523e3bb24ce62d48",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Canvas.controller",
+    "bytes": 4755,
+    "sha256": "29f2a6a256a8214cf6bcaf5f16644e3b22310faa842e22d767806e9772c4c8f8",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Canvas.controller.meta",
+    "bytes": 182,
+    "sha256": "f48489c99e67dc9dda7de4068b85f88d8ef00e86de021e514e7d58172d4b4b07",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/CanvasAllPerfect.controller",
+    "bytes": 2028,
+    "sha256": "75e625c1045c3495f00d4974d5ad464bc34e4f9366593e9d0473bdfb4a8bf79c",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/CanvasAllPerfect.controller.meta",
+    "bytes": 182,
+    "sha256": "68e73ca2755664a0bea49ee149f3fd7fdaf7a0ef1bd7394266e670053b57fc5a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Enter.anim",
+    "bytes": 109851,
+    "sha256": "65ef1d71508811b601836b8c33c337e0e78af7475ed2ca69fe44ac3b24797d01",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Enter.anim.meta",
+    "bytes": 182,
+    "sha256": "f7c42a25e0f30b9523da183f54147a9b98826e878423810d86894b7e96ecc2b2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Entry.anim",
+    "bytes": 19503,
+    "sha256": "2d5b1dd45e4535182b46c04c2cafe88240ec4444456bedbbaa7b5a4e93244bdd",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Entry.anim.meta",
+    "bytes": 182,
+    "sha256": "1b45b7d674eda661330b2360a1dba69e6a9b6e46aaea2a93831c9aba7889de55",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Exit.anim",
+    "bytes": 24057,
+    "sha256": "ae6810a25d95c434f56cd93a1a22c55e6cd74755a29020b588c094a582bf32d7",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Exit.anim.meta",
+    "bytes": 182,
+    "sha256": "1e8d542bed43f32f01822d554bead87620bdb8d12c5689830bee24b155a64ef1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Firework.controller",
+    "bytes": 4852,
+    "sha256": "38a7a7ac0061bfd57bd6893611744ed235e8ff822106705b79231d0c0bc99178",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Firework.controller.meta",
+    "bytes": 182,
+    "sha256": "afb2d424c7f57fd445d7cd3e469eb29d52317ddebbde5878d650b2e028b3f801",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Good.controller",
+    "bytes": 3174,
+    "sha256": "e60b3590bf557dd98b2bf2868d806a19526882476a6ebebe9c9b7a384ddfe838",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Good.controller.meta",
+    "bytes": 188,
+    "sha256": "f852cac0c2a4e6efb7dcf23ad680a83c569b777aba30b33fb80ed0c415683d6f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Great.controller",
+    "bytes": 3172,
+    "sha256": "d8a0b978a8aab61f03ec0d679b53edab83178824949d71f94b0eb3e7bdf9a3bf",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Great.controller.meta",
+    "bytes": 188,
+    "sha256": "194da3763b03dc048415783aeaa7b7543d26061b82fc17dd5e62d9aa36e43fcd",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Hex.controller",
+    "bytes": 15013,
+    "sha256": "115cc5ff10e704794c1a4b9f81f84cd7f71510d69d0825c8aca608d226761825",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Hex.controller.meta",
+    "bytes": 182,
+    "sha256": "eb82e4211d7bb6e21aa63e54a109f83d47fce5c4608c55f6c91c1bc39521904c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/HoldShine.anim",
+    "bytes": 3809,
+    "sha256": "73338538a20dbdd8f2071584e6920eb1f26d10c51a6bc61d2d7a43009082a7ba",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/HoldShine.anim.meta",
+    "bytes": 188,
+    "sha256": "2d1526430bfc90b13ffc929f57fa7607343615b79aa83767e2dce42e91c45868",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/HoldShine.controller",
+    "bytes": 2028,
+    "sha256": "ac6c083a2568e42dbb28020ffdcaa2b519e385fdfc9179c2683006a8f58db9d5",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/HoldShine.controller.meta",
+    "bytes": 188,
+    "sha256": "3972e4b52661ad146f870a4e99bb3607da44a40b036c745d4833f00fc5b899a7",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreak.anim",
+    "bytes": 18750,
+    "sha256": "9a0bab14dfc0655333a5990f4f7739e04f9632f0f354e1d58c80d386ad9a74b9",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreak.anim.meta",
+    "bytes": 188,
+    "sha256": "7f90a1170afcd89140760a0c754dc9a472f6645d10e863c85116e527b26a9970",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreakShine.anim",
+    "bytes": 16450,
+    "sha256": "d1ca81902212dcabb2c19457d3ac8dc384f30e87b986479eddc77adbc9f1e390",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreakShine.anim.meta",
+    "bytes": 188,
+    "sha256": "9f3f8590c1cea9583041f69ee4ebaf068127762007a081f6c9e6666f14fd0d43",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreakShine.controller",
+    "bytes": 2041,
+    "sha256": "6b1560200211ab784c2b5824336e2c63d214585358328b40000e03204065ea19",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeBreakShine.controller.meta",
+    "bytes": 188,
+    "sha256": "2e720e0b17d97e209cd0374b9cf91fd689a87647866fab15b8d93e0b899c9a4f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeEffect.controller",
+    "bytes": 8506,
+    "sha256": "c3dfe798bc283baa20c986b8c9eb4e422e0a32d6aedaeb91a2371d4d32a221d5",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeEffect.controller.meta",
+    "bytes": 188,
+    "sha256": "03dd1704d97a7eaf04f6df2f1478701c24e91278dbd4acb8982620015f44d87c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeIdle.anim",
+    "bytes": 3340,
+    "sha256": "b95921a44ca4b46f08cec3d28c4ddb24178c7f867afa818cd7d40bec5fb66b98",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgeIdle.anim.meta",
+    "bytes": 188,
+    "sha256": "3a7e4e328c9ecc2702285b2f43facb2681224d5a6b764279805d141c8a9c7678",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgePerfect.anim",
+    "bytes": 15492,
+    "sha256": "7e7701e6febc4ceeb9ba2134cf464f919f468253e71614fb5113eb76605d88b0",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/JudgePerfect.anim.meta",
+    "bytes": 188,
+    "sha256": "c1c8998d9e175c6e1374d3828615c0d68ae111c5ee9beaf0e60e146cfd361e3d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Just_curv.controller",
+    "bytes": 2024,
+    "sha256": "11854458b14580a7f17f9f24dd9582add26cda05216971d3b746294ec75dcfd4",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Just_curv.controller.meta",
+    "bytes": 188,
+    "sha256": "784536f03b48150b7f23856320a3bc58398ac49f3da4a82aff50019305dc488e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/NoFire.anim",
+    "bytes": 18658,
+    "sha256": "7ec22e19b966fa35339ecb80984cd410e781cc2a86addde0d88e4b6138f5590b",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/NoFire.anim.meta",
+    "bytes": 188,
+    "sha256": "265b9aa985a9f121a1d6301988c0a90e5abf6235b530ca5798f9bf469ae999c0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Showing.anim",
+    "bytes": 13128,
+    "sha256": "1ed5d0e39f5308411b473cf82e77db51dc0d11c941a1a83d3bcb2f073aa70926",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/Showing.anim.meta",
+    "bytes": 182,
+    "sha256": "c68666b46cdd9a439f4225673bd24c7f643cb43240612e9e5c40e09ad05155c8",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/SlideFadeIn.anim",
+    "bytes": 357912,
+    "sha256": "bbb8be0b6913d7cec0399dfd85f75c35656b3b26deb9ca21f3c89b96d9ff284a",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/SlideFadeIn.anim.meta",
+    "bytes": 188,
+    "sha256": "27026772f12efbe2617759290db4599b5f759c9a16b723d242af0f806c3f07f1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/SlideFadeIn.controller",
+    "bytes": 4792,
+    "sha256": "5c4eda7ba3493089a81060760bf34a40466466dd40561605ceda44706de7be83",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/SlideFadeIn.controller.meta",
+    "bytes": 188,
+    "sha256": "977b5ca96d41d3b3d440837744fabc2dad6e4d1d7c50a61e9461fbf8bf278b1d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/StarOver.anim",
+    "bytes": 11263,
+    "sha256": "ae725d8aa520cf51fc83b66b6ee53c15059b554ceb1fa0b393bac0d045affeea",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/StarOver.anim.meta",
+    "bytes": 182,
+    "sha256": "c3e8221f89788d7ed985956c7e13e75ef0d340ddbe2b8a2569f13fce67461981",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/TouchEffect.controller",
+    "bytes": 2022,
+    "sha256": "1a57528e1c3d50851e09c517a7f678bd7fe3d62274ea0578701230f342b7c8ea",
+    "kind": ".controller",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/TouchEffect.controller.meta",
+    "bytes": 182,
+    "sha256": "5767e121c29b6a66fc20dac867464f89f3c3dfcdb5f0890b0633a5d57176ef3a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/TouchJudge.anim",
+    "bytes": 14329,
+    "sha256": "2020a821a4a20bb3e312822c459cf4e8f325ff7379de036c84389fd6b212b37a",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/TouchJudge.anim.meta",
+    "bytes": 188,
+    "sha256": "91bc6bc667dc3c5e008e47df6cb447d1d8eeb67a7a6ab9d61635cebb6877338a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/WifiFadeIn.anim",
+    "bytes": 69476,
+    "sha256": "827ca83e4f41b635b51a5fcdb00a0e60608c5191ea107727e83bc0776753586d",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/WifiFadeIn.anim.meta",
+    "bytes": 188,
+    "sha256": "855d6de6bd0a0eb10f47ef184891790c3a5845034d80761c5c3ad977202aaa48",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakEffect.anim",
+    "bytes": 125845,
+    "sha256": "52d37771ffb4349a78892570a1eff3651640c3eebd746228734b112d118d38a6",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakEffect.anim.meta",
+    "bytes": 182,
+    "sha256": "8c12f99ecdfebabdedaafcfd7e7f5ad4840f684388fd55560178f2ddd08115bf",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakGdEffect.anim",
+    "bytes": 126167,
+    "sha256": "5e39b99fcbee7ecfce7e121eb5fe970e15e4b53db6d215d13756bfd6e3c60541",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakGdEffect.anim.meta",
+    "bytes": 188,
+    "sha256": "a65d76f417cf1534d1a9e44d4eda1e3cb9fddc415504825aa25bcce75cfe92c0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakGrEffect.anim",
+    "bytes": 126167,
+    "sha256": "a23867c3d73bbb3df494c89f9fd64e92d413b2d2cf7a8a0c4a447a9f9c17dc60",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/breakGrEffect.anim.meta",
+    "bytes": 188,
+    "sha256": "5fc2c76c8f251657ecb81235778f743b559bd1d126b3ef9dea6edd3ca25067ff",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/fire.anim",
+    "bytes": 33766,
+    "sha256": "848937244b3caff0957c9b5a0e65d6c57248ca95b3c03fb3b544b426ac4f9e01",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/fire.anim.meta",
+    "bytes": 182,
+    "sha256": "d8195fe3c697d5179a0f22751c7d087724fce18a10b70f86920699c14fbd1b99",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/goodEffect.anim",
+    "bytes": 56134,
+    "sha256": "27943120508fd1d6eac01fa03b39a9ec35836a1dbea8f6cba1fc71cd3153c998",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/goodEffect.anim.meta",
+    "bytes": 188,
+    "sha256": "c8ae54f3407213bafac2f23be9f7cb12c46b8a8daf1f84725e9b5593e629cdd2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/greatEffect.anim",
+    "bytes": 68374,
+    "sha256": "109bf38664d659971ed7eed7719ab925b4965e35bf83d134ebbed7a56f88faf6",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/greatEffect.anim.meta",
+    "bytes": 188,
+    "sha256": "8c8b50680ebeed31a7bf36c4bfb77fafbd1465f721860a90919ade93193f3073",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/over.anim",
+    "bytes": 50352,
+    "sha256": "d0a55f219baafaf40d63fe37cd601a659237f8452037b9039a7c48f2c136e186",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/over.anim.meta",
+    "bytes": 182,
+    "sha256": "e96adbf8f3e9d15760f2dd3bc838d8232ce9ea1f94e4d4273132e7a8a1ba43c0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/tapEffect.anim",
+    "bytes": 124966,
+    "sha256": "80f180daa80f5b27b42358bff183d533d9e409dc5dc7a26b5264d11a4dd46b6c",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/tapEffect.anim.meta",
+    "bytes": 182,
+    "sha256": "3c9f4de1e1205baa5e9bd51b1e8d989e5003f33962eb344b478d5ba42eef1b23",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/touch.anim",
+    "bytes": 13125,
+    "sha256": "6459704fb2721f5ab4ef9014573c77ff9130ce7ad7fb5b86960923af68069219",
+    "kind": ".anim",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Animation/touch.anim.meta",
+    "bytes": 182,
+    "sha256": "b9d6c91d3a2354c15b8ae0fe8d807516e08cee3dcd1b1639e7008c18a5fe2e88",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/CircleHold.mat",
+    "bytes": 2556,
+    "sha256": "8cda57dbc152fd9d5921c0e9b0973a8fe3bd9790b13d84b98f5f07dd66149bde",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/CircleHold.mat.meta",
+    "bytes": 182,
+    "sha256": "3b8a666a1f0d227e40e3543cfa3bf7c0722d10c3a6ed3a7ffb2bb179b0adea73",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/CircleMiss.mat",
+    "bytes": 1189,
+    "sha256": "7c3a4e3254e90432b78128bde7be4c4e52941974d36a67621f4fd724223aa199",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/CircleMiss.mat.meta",
+    "bytes": 188,
+    "sha256": "045aedf6583b3c441c68c441f0f64473575088ef2e6559684c9b251241822379",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/ColorAdjustEffect.shader",
+    "bytes": 2051,
+    "sha256": "acf7f80f94d57d81ec942b5b6242e758de90c13387928e70ab7d6a8a12975424",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/ColorAdjustEffect.shader.meta",
+    "bytes": 230,
+    "sha256": "b0bcd9615d6c578d771441766a63a7aba255f3c1dbb9cc68b8c853cb0a69d6b6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Hanabi.mat",
+    "bytes": 2322,
+    "sha256": "9f35d1f32c9af618c6895cf32ef4d511dc41d763ae2cb81309cc46ea941e8b75",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Hanabi.mat.meta",
+    "bytes": 182,
+    "sha256": "cb48921c681a990f98ab997153ecc2b2d083a2a1130f62ac838f6c9c506dfab0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/MaimaiColorEffect.shader",
+    "bytes": 2604,
+    "sha256": "a308ea914f983382ccd45bf3e41c21bb773301bc5487361a50a311c612b2e320",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/MaimaiColorEffect.shader.meta",
+    "bytes": 204,
+    "sha256": "cb9a044917430cf4c6b60bfb2b567b18901e633315e17f3c6c23a7a179e81596",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Minimoon SDF.asset",
+    "bytes": 2113404,
+    "sha256": "8500753e240266c5994dc19651034a989cbfb25b3643be85541fdcab99fe6176",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Minimoon SDF.asset.meta",
+    "bytes": 189,
+    "sha256": "27a76e0f9a57adbda931790051e152cdcf0f624fc151d1509ee14a39694c0e95",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Minimoon.ttf",
+    "bytes": 27424,
+    "sha256": "910fbb3f566c261d7d732162d699d7b7fd4c527ec247d655599a96e09707926c",
+    "kind": ".ttf",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Minimoon.ttf.meta",
+    "bytes": 494,
+    "sha256": "4ae20ad107775e94bdb4b3021040de259c8cb67b8a312b413969ac67760ecfda",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/NuGet.config",
+    "bytes": 630,
+    "sha256": "bf9f6a5cc27dc415d8e063bd369f2f3befea747d7fb03eb6216dbe0e457a3750",
+    "kind": ".config",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/NuGet.config.meta",
+    "bytes": 628,
+    "sha256": "19f7b14781680169b6407bc6db2159384761eb140d20111c4de55f700fb4db88",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Plugins.meta",
+    "bytes": 172,
+    "sha256": "39ad7c4190b23b3f96b36c73aa8d403f5c9860a97b4a7b77db40cb40007b718e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab.meta",
+    "bytes": 172,
+    "sha256": "ef610fdff38e3077d981c379a0fcb5ac213c769ceb7e823f659341e09205f8e4",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/EachLine.prefab",
+    "bytes": 3093,
+    "sha256": "95ef7a770607dd92cc215956f23d20b3f54df1819e04fcd55ad9353028b65cf7",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/EachLine.prefab.meta",
+    "bytes": 154,
+    "sha256": "7ecc1414242ccf2b53ce7360c14c6a588eef5f5f67b655e8617c48b8bb754076",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Firework.prefab",
+    "bytes": 8515,
+    "sha256": "a4296fad199517cd804988b553c0ff48f2c7d9dd999475769fca14a6196e61e8",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Firework.prefab.meta",
+    "bytes": 154,
+    "sha256": "37b9ac319437b6ea637e15bf9e524833481fc0af19e44d02d20e7056f4933695",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Gd_Effect.prefab",
+    "bytes": 12987,
+    "sha256": "575071e48e912eac8636660d1741cde1b2f68c5f8608b78c01f6876fd5d4e5b4",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Gd_Effect.prefab.meta",
+    "bytes": 154,
+    "sha256": "94fccc4b42cdab109b4794bbd08734d022525c8366575eb6314718443ee9db65",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Gr_Effect.prefab",
+    "bytes": 13089,
+    "sha256": "321d5e97408f105f9cba26820b523d8b4aee76a5e955e5367c3514bebe8d4317",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Gr_Effect.prefab.meta",
+    "bytes": 154,
+    "sha256": "39b9a236a2f0d3bb0266b1114337b7da07d9fb8ce95a42ec8c4d9ca76ea60ec4",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Hold_01.prefab",
+    "bytes": 9105,
+    "sha256": "48f3fb7b1ebcd9d7ccf37b90483a5ca3c193b02f83591a6530bd067c7ae4b7db",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Hold_01.prefab.meta",
+    "bytes": 154,
+    "sha256": "3407c94c3829806df8476d56727aa1f19eaddd8fe009ec59d8aad4f70fc1794e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Hold_Effect.prefab",
+    "bytes": 117552,
+    "sha256": "6a72a97e9efc1206d61cda208f13b10890abbe185f50627fb6e6950fe415db7a",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Hold_Effect.prefab.meta",
+    "bytes": 154,
+    "sha256": "1facc905289fcda749a30d361b434e82c28b4057cd149f1f2e7c964d473e6857",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/JudgeEffect.prefab",
+    "bytes": 7751,
+    "sha256": "1abc09736c7d4db002fe1506ae164bc298d6d765f3396df2342826dc2650146f",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/JudgeEffect.prefab.meta",
+    "bytes": 154,
+    "sha256": "024bd7f679becc4299559a5f621754a759bf3b4f3550e6627aee56d66ceb5cd3",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_curv.prefab",
+    "bytes": 3981,
+    "sha256": "c5f0bb4685b2fa2b9619f797bcf3ef9005cd68c68a1e1b5d5b6355f95050a79f",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_curv.prefab.meta",
+    "bytes": 154,
+    "sha256": "d85db7a566c93ef4ad9def201c6e6a3f85924e5c2fee427530d23a80910b051e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_str.prefab",
+    "bytes": 3969,
+    "sha256": "d40bdac60801151baf1c8a717b2d9993814cba560b002310dbfb2d11b54b7b38",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_str.prefab.meta",
+    "bytes": 154,
+    "sha256": "c555ac644a847cbf73e9e222ee2806d1162d2f8d9ea2588cc1de8a90f78b837d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_wifi.prefab",
+    "bytes": 3817,
+    "sha256": "e652eab65e8beb28f340fd7e63b79053793d6a8c7f5907c60b6e80319f531144",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Just_wifi.prefab.meta",
+    "bytes": 154,
+    "sha256": "c5ea9edbdf832c6c83ddd49da600aa4e32aef3d32ae78b024bfd5b253c7dd54f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/StarLIne.prefab",
+    "bytes": 2263,
+    "sha256": "ad78cbbac1f0d67e7387ca5147ff23426e4c4ede1aa9c8a29348a4e358c45f96",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/StarLIne.prefab.meta",
+    "bytes": 154,
+    "sha256": "afb33b111e7a961690975be7ff19a8ee8f41c93c9f1a523917dc1961b7caf04c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Star_01.prefab",
+    "bytes": 6396,
+    "sha256": "2af62f5e7eaeedfb4af1394e640596511665b9bb933b2aca38abdd8dfc0a0a5b",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Star_01.prefab.meta",
+    "bytes": 154,
+    "sha256": "cefb6d759ca8722b687b97426af07d638806376d6b22c09cfe933a0793ba652a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Star_Slide.prefab",
+    "bytes": 2397,
+    "sha256": "e824dcf39407dfd05a46d9251ed1d5e945c4986b4c64805cf85ef765ca0aba12",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Star_Slide.prefab.meta",
+    "bytes": 154,
+    "sha256": "2a1bfd42dd084db07255c140724c1193747b3a6511d6b6db0ee7807b337a1033",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TapLine.prefab",
+    "bytes": 2278,
+    "sha256": "4658a5e11cc911a47b6a5d7295c47df2ff7530044b4598115be6af10417bf2be",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TapLine.prefab.meta",
+    "bytes": 154,
+    "sha256": "795b30708ff35f1953c84c6b244c96cf26cdde70d06966d43e442c5dd455b9bd",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Tap_01.prefab",
+    "bytes": 6008,
+    "sha256": "9790ad97cf54fc862c34d7d6819ee9b1f4840c42587f6bf4a2449866d56ee586",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Tap_01.prefab.meta",
+    "bytes": 154,
+    "sha256": "7c71272cf284fcfb87f3f60dde3ed7cee7413d886000919f8a1388c798ad6657",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Tap_Effect.prefab",
+    "bytes": 16730,
+    "sha256": "c5c58fa2611d40941f3f632e102274b88c979b8d3e155abe0fc8b609f9deec54",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Tap_Effect.prefab.meta",
+    "bytes": 154,
+    "sha256": "eeb1087001501e54c84e7e9b41fe98cf7ed3bc7101529a5cc01fc9882419441b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Touch.prefab",
+    "bytes": 22263,
+    "sha256": "a49b765ee138daca81f63659c201a587e166a10b6d08a0d2833f216f0d73805e",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/Touch.prefab.meta",
+    "bytes": 154,
+    "sha256": "0739a8b33bad54c4e7569835dcc36793a3fb191e5e1bede72de8c9a3edb6a523",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TouchEffect.prefab",
+    "bytes": 35066,
+    "sha256": "c8f91cf9ae4d9903fb20264bd953ccdfeffeb2980d37a940fd4a98e8887f9f3c",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TouchEffect.prefab.meta",
+    "bytes": 154,
+    "sha256": "4fb675c77f86a435e5a6effdf58560171d07b4c0426df81b5b354e246e6e7ed9",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TouchHold.prefab",
+    "bytes": 19675,
+    "sha256": "34f60423ffcc4d787656202ee08b6710fa248b9f689daec2596764894ab2d604",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Prefab/TouchHold.prefab.meta",
+    "bytes": 154,
+    "sha256": "736baf403e5b6f10e0d2d5095e702a9f7188eded24844644421ab4da0aea7de9",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scenes.meta",
+    "bytes": 172,
+    "sha256": "5b506b15cf088935ea1f3b42a516e1288498c01dc529d2786a4b2c8e2f8d7e12",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scenes/SampleScene.unity",
+    "bytes": 413673,
+    "sha256": "b874b7690833272d226c1d6fe0a30edb4606b5c4ba950372e6747614a3c0bb75",
+    "kind": ".unity",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scenes/SampleScene.unity.meta",
+    "bytes": 155,
+    "sha256": "e7391ff924b7defdf30e0b0b235f8113618481c93f567e0c699c8895a9534579",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scenes/Server.unity",
+    "bytes": 14590,
+    "sha256": "1157d5e7d766ea15e2a574a267b9e28b12d568d0da96284e89c989a45c8e278d",
+    "kind": ".unity",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scenes/Server.unity.meta",
+    "bytes": 155,
+    "sha256": "7f3c58c84e2df459f140e3f8dcc041b8fb2ad380d298d1cbefb9c3546c116e88",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts.meta",
+    "bytes": 172,
+    "sha256": "6dfbd01a505a6a7526818da61c6a9a124e57f3cf46f6988656722ce594139168",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/AudioTimeProvider.cs",
+    "bytes": 1557,
+    "sha256": "1105c79f8af2a4391906c31013dd3f1e9c2d352b7ce709e962889ba691da2572",
+    "kind": ".cs",
+    "lines": 63
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/AudioTimeProvider.cs.meta",
+    "bytes": 243,
+    "sha256": "9f2ca7412ee046e05030111134ae0d1fc3916711b68309dbc837512b8d780b4c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/HttpHandler.cs",
+    "bytes": 6874,
+    "sha256": "73b445866c8781e45a673ff3e30db5712377ff2b57ee530ca39a60949b12465a",
+    "kind": ".cs",
+    "lines": 160
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/HttpHandler.cs.meta",
+    "bytes": 243,
+    "sha256": "efb216405e0c8b3b831ab80839003b31f821719133ff1825eabc51cd0f75a664",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Interfaces.meta",
+    "bytes": 172,
+    "sha256": "7b5656e3d36740d075e2dc3e7d9a78a906f43859be537f4f5b07ad60427c3316",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/IFlasher.cs",
+    "bytes": 111,
+    "sha256": "4760c5c0b3b676d19828e759cd3805a0dce1c13419ae484a7bf991ebc50ccbb0",
+    "kind": ".cs",
+    "lines": 8
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/IFlasher.cs.meta",
+    "bytes": 243,
+    "sha256": "84afe445b90e2589574431677e5eafe59cecf57d39cd0cb8dd302a7bc9f5e668",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/INote.cs",
+    "bytes": 221,
+    "sha256": "f97a64cbe08aa9a5b79339c5b4a01f76d5c857d57d0137f621989a1d357cecf3",
+    "kind": ".cs",
+    "lines": 13
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/INote.cs.meta",
+    "bytes": 243,
+    "sha256": "fe6c6acf98ff414699d335edd484c04fc59d8aeb74a485af673601cac214a019",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/JsonDataLoader.cs",
+    "bytes": 70076,
+    "sha256": "fb0a233f8983df4b0dbfd47323d880ada695bfeb4025b53766f2f27c061a996a",
+    "kind": ".cs",
+    "lines": 1553
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/JsonDataLoader.cs.meta",
+    "bytes": 243,
+    "sha256": "db91701e58cdb246527e68edaa336d22ffff58cf3779d023b43049acff5325bb",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/JudgeArea.cs",
+    "bytes": 3189,
+    "sha256": "6fb43181f9c70307d662f78ec542116a45106260ae0e89e98b7c006d0ce1be7d",
+    "kind": ".cs",
+    "lines": 141
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/JudgeArea.cs.meta",
+    "bytes": 243,
+    "sha256": "312841ad19dc418266717d225549ad504c1a8741bf6914077a92ead0f683799e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/LoadJustSprite.cs",
+    "bytes": 1400,
+    "sha256": "4fa9d04c5dc0befb670fdee60ceaa63ad91ff02ff07c4dec751d24d33b8c81ac",
+    "kind": ".cs",
+    "lines": 65
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/LoadJustSprite.cs.meta",
+    "bytes": 243,
+    "sha256": "4702cae812a5348c93513421bad23f531e8e2d549ee390f844d32705f7c10bd5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Majson.cs",
+    "bytes": 2297,
+    "sha256": "08bd920077aba38cc74975ea1e3329b44d4b7c8ae9b458b9808bcf98f6c4bc1a",
+    "kind": ".cs",
+    "lines": 104
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Majson.cs.meta",
+    "bytes": 243,
+    "sha256": "378184bc3ee4632cb8810f8790578d3d3751bb195bc058f0b283a5d52df964b8",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc.meta",
+    "bytes": 172,
+    "sha256": "4de3e347680eb1d8c5bf442703f58b333d661ce954ce2b0004bd83c28fd51cd4",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/DestroySelf.cs",
+    "bytes": 522,
+    "sha256": "4a4701e1fc9a50a7bb17949428cbb35ea29e6a65d46db6fbbf23584acb9f71fb",
+    "kind": ".cs",
+    "lines": 22
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/DestroySelf.cs.meta",
+    "bytes": 243,
+    "sha256": "3fcaa904c3c9f30bebd5eb7104f9bbf87e65dec2aafe4cc658ddd99fceed4b3c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/DontDestroyOnLoad.cs",
+    "bytes": 165,
+    "sha256": "183e53aa07a01d9df9b52f29f92f16116b84ff6deeb4931d31553ea07f9e9330",
+    "kind": ".cs",
+    "lines": 9
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/DontDestroyOnLoad.cs.meta",
+    "bytes": 243,
+    "sha256": "3f2f0a8974e674e9718b15e438a3a6e78d84ab49daf20c7008e4dd81bc12aa21",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/InputManager.cs",
+    "bytes": 9703,
+    "sha256": "85039576ba779bbb7a87465d240a71e9dd418695a5858fa943b53e9f62ea09df",
+    "kind": ".cs",
+    "lines": 292
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/InputManager.cs.meta",
+    "bytes": 243,
+    "sha256": "801ddcaad578a975c76923b72ff005e45ca44abe9e68ce8823ab07aa50ce8a44",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/NoteManager.cs",
+    "bytes": 3074,
+    "sha256": "943e997d83327e363e626a48d91842bf87b2d744ec19a1a2db9b2dc9fa8370bc",
+    "kind": ".cs",
+    "lines": 92
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/NoteManager.cs.meta",
+    "bytes": 243,
+    "sha256": "f7e69a857992fc2d33ff036357895dc9a632a7e004d8e07f76d992ed16831c1a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/PlayAllPerfect.cs",
+    "bytes": 862,
+    "sha256": "075e26b280c033bed0cd286a9178bbd5ebd87efbaff2d8a5fe485194ed33e281",
+    "kind": ".cs",
+    "lines": 27
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/PlayAllPerfect.cs.meta",
+    "bytes": 243,
+    "sha256": "4b3356c427e4b20c9fa67bcd0eef7bb7a9c5b8f4d96fc059d3ad4f638ef3dbb9",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/SpriteLoader.cs",
+    "bytes": 1034,
+    "sha256": "d60e30907c5763ab55237386050154e6d41f04111fc9ef6619fd71a0d4af4c29",
+    "kind": ".cs",
+    "lines": 26
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Misc/SpriteLoader.cs.meta",
+    "bytes": 243,
+    "sha256": "971ae9380d8a8b1cb8452264d15ffb6585c4f6b70bd209666906386e426079ae",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes.meta",
+    "bytes": 172,
+    "sha256": "0409f3ed41d37a7fb5877e99dca1a9040879d938ca48a05cbbd49bcaea786079",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/BreakShineController.cs",
+    "bytes": 833,
+    "sha256": "38356240f30999f908885b85f6e8d64a98aa7f75ccd152b78d0ac542d76cd8b6",
+    "kind": ".cs",
+    "lines": 30
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/BreakShineController.cs.meta",
+    "bytes": 243,
+    "sha256": "dc48aa1b99a975b8d5877d5114ca28a0886af8e52eb83c5add731fca6c544e62",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/EachLineDrop.cs",
+    "bytes": 1313,
+    "sha256": "b09ab4283bc05973747340a6defaeb91d47fd0dc151c640da022d71c49a4fd98",
+    "kind": ".cs",
+    "lines": 45
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/EachLineDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "64a76cf715bc5a6c2a3addf5a3f684bcc60367b844200a4dc33ca50f2c557c0b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/HoldDrop.cs",
+    "bytes": 14967,
+    "sha256": "95951578ff5ef1bf39c41e12b3d168579e8b7e87f1148d94075bb60d134522f2",
+    "kind": ".cs",
+    "lines": 432
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/HoldDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "fa7cb0c34baea0c930eb4fd7141203894ed2f1c0bc4e70b15c0aa0cf3cb849ce",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/MultTouchHandler.cs",
+    "bytes": 1475,
+    "sha256": "71785666d665fbb0804bd76707694820de32c47a8f11b482eb92386fcf069e7c",
+    "kind": ".cs",
+    "lines": 59
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/MultTouchHandler.cs.meta",
+    "bytes": 243,
+    "sha256": "440228ba69d63088756cb77e734165fd7fa43309d1f26315bba312c9dd08f317",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteDrop.cs",
+    "bytes": 3215,
+    "sha256": "56e4cdeb416459c6c9fb50e5f88faef8c9a3eaf0e2b55346954b1be51155c1e4",
+    "kind": ".cs",
+    "lines": 100
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "b1de7389e20f2eb3e742571f96ba5827f4fd4fe445a567cbb68fa54d277d6504",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteEffectManager.cs",
+    "bytes": 7887,
+    "sha256": "85a73b74cf3e28c1784358eef60114e350d2e4b0a5dfec834b57b3dc6e93053a",
+    "kind": ".cs",
+    "lines": 200
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteEffectManager.cs.meta",
+    "bytes": 243,
+    "sha256": "6794ee1d0f7642aff10286d8490ce7c633cacf4b80429aa94310fc90c26c1a3c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/SlideDrop.cs",
+    "bytes": 28648,
+    "sha256": "cf31d4e5e78d7c80caa183afc5a2fa00b4022bf2663fbeaaae6c02c0803271e3",
+    "kind": ".cs",
+    "lines": 814
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/SlideDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "a91b0e506e797d83639bd602577992a027a97a82696d532fa22f61c1186a3ae2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/StarDrop.cs",
+    "bytes": 5646,
+    "sha256": "b8234e9560031082c62dddb371b170b9c0fcf4d969a28baf543e49751a748987",
+    "kind": ".cs",
+    "lines": 163
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/StarDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "6cfe5a51e728c7a2d67cccda743ff30a7787ca8c38fa76735b460c21f396911e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapBase.cs",
+    "bytes": 8189,
+    "sha256": "99b8b1b86015f49787e8b14ead256bbec4a980ee7d30cf17ad57aca345ae2b4b",
+    "kind": ".cs",
+    "lines": 226
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapBase.cs.meta",
+    "bytes": 243,
+    "sha256": "478bfc95996974c1c6c65d295bcea94f1e3ce6df04d323659a230b398d36ff71",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapDrop.cs",
+    "bytes": 1402,
+    "sha256": "315673329926647576368b5034e1e22b87d108470464fdfb8777d4a320a450bd",
+    "kind": ".cs",
+    "lines": 43
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "9d40e77a74ade8555141f1ae43592f084cae6a721cc4508547e81e334b4b6072",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchBase.cs",
+    "bytes": 1403,
+    "sha256": "afe16f12a12f9fb3e6606307a830bdbddbc09a7315db66550bcfdb86687854a8",
+    "kind": ".cs",
+    "lines": 47
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchBase.cs.meta",
+    "bytes": 243,
+    "sha256": "46549aa71168992d21a2b7542f6e66a825175b34602ecb68240ced4cc6acd6bb",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchDrop.cs",
+    "bytes": 13169,
+    "sha256": "c97eee10ffdb045b787ff4de4e47e50801bff59fd491bc52ed6bccaf7d608816",
+    "kind": ".cs",
+    "lines": 406
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "04a1f6549bc0178ad30f88403c00db8111913ec617e2d84b1b62fb231f6eed07",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchHoldDrop.cs",
+    "bytes": 13869,
+    "sha256": "171c70d64dc72075891c6078b2be6eea85f19ac19d4019719381c2a8f8a5c396",
+    "kind": ".cs",
+    "lines": 378
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchHoldDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "a35090afb8f82f689a43355c4c5894293a7134262bd624aa16a3d328b9962490",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/WifiDrop.cs",
+    "bytes": 20684,
+    "sha256": "43521dc0ca76d347e6368e1b8d3a36722dfe900bbf859c6f5b64b204bfb19ddf",
+    "kind": ".cs",
+    "lines": 592
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Notes/WifiDrop.cs.meta",
+    "bytes": 243,
+    "sha256": "7f95b29a6dfb777f75dedd8bd7e0c72d78c8a9b6b13e3fbdbbb780401286e795",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/ScreenRecorder.cs",
+    "bytes": 4656,
+    "sha256": "3f077c0badeb3227394acb1b8d0724f1b7b73179765966b874f1713e8581ad50",
+    "kind": ".cs",
+    "lines": 133
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/ScreenRecorder.cs.meta",
+    "bytes": 243,
+    "sha256": "e1f36a3da80a2d25997f3ea96122e3eb59168358d93cccc994c20b08533d2007",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Sensor.cs",
+    "bytes": 2849,
+    "sha256": "ea0b014ad2ad847e1fadf75253ae40562aae103174c582902a0a0ec6964d7059",
+    "kind": ".cs",
+    "lines": 113
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Sensor.cs.meta",
+    "bytes": 243,
+    "sha256": "86888d7854d24bcdd8c53ee2098bf4987ef22d449d08d6c9f920c71caddd5503",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/SensorManager.cs",
+    "bytes": 1271,
+    "sha256": "3deb105d1c5e6fb69dad0662dbe629c866a12652d867893fcd92f8f1e94c762a",
+    "kind": ".cs",
+    "lines": 43
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/SensorManager.cs.meta",
+    "bytes": 243,
+    "sha256": "bac9733dbda01e7bcc1997508f99dc996dde1990a2722eb93129159734caec7d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types.meta",
+    "bytes": 172,
+    "sha256": "89a890d465fe038d36f2b946344be8774557c320e60e115163e66c5c69779780",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/ConnSlideInfo.cs",
+    "bytes": 2292,
+    "sha256": "70e8b266d54b7000450a5c3df63525889857af8e9dfb36882ff2c4791efe024d",
+    "kind": ".cs",
+    "lines": 80
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/ConnSlideInfo.cs.meta",
+    "bytes": 59,
+    "sha256": "23cae29878146ca40649a10cc180cb041c07445b871550b39068212c742d64b0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/Enums.cs",
+    "bytes": 1378,
+    "sha256": "19719cb8bd868346de6125cd2b8d9d0bb53a05eb5f53deb75baed7e7a879e7a0",
+    "kind": ".cs",
+    "lines": 96
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/Enums.cs.meta",
+    "bytes": 243,
+    "sha256": "978ce555f155ec7325fed47c152c3fd6e517dc70ada3d0700aaf79c2ee63c280",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/Input.cs",
+    "bytes": 1112,
+    "sha256": "d764158d4355c41d82fd7448b28f47b30d667fd4f15a3275974352f82bb15bd3",
+    "kind": ".cs",
+    "lines": 37
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/Input.cs.meta",
+    "bytes": 243,
+    "sha256": "dca2fa0983d35661d8e8004acf2c2824cd8a154d319e40cff8241e15c2b869ee",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/NoteScore.cs",
+    "bytes": 500,
+    "sha256": "3a6f87cdbfdc71cbc96734b633003571f979cb3797d4eeb103fb552c24b98b0f",
+    "kind": ".cs",
+    "lines": 18
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/NoteScore.cs.meta",
+    "bytes": 243,
+    "sha256": "b63972f53ce0429270b2e17382767418bd2634c0bc62e945e3683d45c4b665c1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/TouchGroup.cs",
+    "bytes": 799,
+    "sha256": "aad2d9c3e0ab328f6384731ac663a3125a9861c410a71b3994663c6ed385e232",
+    "kind": ".cs",
+    "lines": 32
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/Types/TouchGroup.cs.meta",
+    "bytes": 243,
+    "sha256": "ddcaa43ac06286ffdff7fdea03ae6c7f5e7d4ef21d32f2089db30759e4c45cd6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI.meta",
+    "bytes": 172,
+    "sha256": "1826059784a61fb8ccbfdf28a2ec10c19af54861b9fba39bc2f09708dcc9f104",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/BGManager.cs",
+    "bytes": 4274,
+    "sha256": "d4773d1f886c95ef251a4471d9466eca95edd1ad295a8ceb515b10506cf015f5",
+    "kind": ".cs",
+    "lines": 139
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/BGManager.cs.meta",
+    "bytes": 243,
+    "sha256": "d49a9da71404b749ce3e9ca43d7f8aff36dd7b0b1c20e1c943f5ab5c7b14b708",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/CustomSkin.cs",
+    "bytes": 9367,
+    "sha256": "d8321ccf452be02cbf4bc2e2d650391e20bee6b60eed1454d4ff51b931fbd001",
+    "kind": ".cs",
+    "lines": 185
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/CustomSkin.cs.meta",
+    "bytes": 243,
+    "sha256": "a94dd1985d7221d7e072e8ea15574f3152e85a61fb40d64fe1a9298c3edae5ce",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/Floating.cs",
+    "bytes": 650,
+    "sha256": "9a4fc3d0b4447c6ee0bf89a4d5fbda0b8ea5f5ad312bfe46217377485999049f",
+    "kind": ".cs",
+    "lines": 25
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/Floating.cs.meta",
+    "bytes": 243,
+    "sha256": "ea2c82df48fa8f771f81696880cbe5c9238dacabd092dda30586742d805cf016",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/ObjectCounter.cs",
+    "bytes": 26121,
+    "sha256": "1f05e667d93aad64b9226036f4226bec52a899bf9ace91fbba9943edcac68af1",
+    "kind": ".cs",
+    "lines": 701
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/ObjectCounter.cs.meta",
+    "bytes": 243,
+    "sha256": "7aaa9d59295d0dfe2d2b2e79165415f110ef8bd2f7b81730e3ee26cb22f9255f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/TImeDisplayer.cs",
+    "bytes": 1161,
+    "sha256": "78dc78befc8277b379ecfa2431328b1847b3f2effeeb9197ed0a7ac3fbb841b4",
+    "kind": ".cs",
+    "lines": 42
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/TImeDisplayer.cs.meta",
+    "bytes": 243,
+    "sha256": "52856b65aa8632e924ccb2e54a3b74a90cd47a75423365ce643fce0c8a11d7e2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/ToggleFullScreen.cs",
+    "bytes": 1785,
+    "sha256": "6c66a569b5ec33f46f20979575134472f378f3672ac727192f06002194c9a271",
+    "kind": ".cs",
+    "lines": 72
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Scripts/UI/ToggleFullScreen.cs.meta",
+    "bytes": 243,
+    "sha256": "b4c5dc3a11f6b9ee663860d44813e8271fff985e83e29a9c4763f6f6a83fb211",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/ShineMaterial.mat",
+    "bytes": 2307,
+    "sha256": "73ab27b4b1e7a5b5086484def8d05b773aac8710077f9c695b3c816c49e33219",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/ShineMaterial.mat.meta",
+    "bytes": 188,
+    "sha256": "e371c91e3d6993d6460bd4117baed50acbfb39dc5f739a18357badd24ffa8f04",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab.meta",
+    "bytes": 172,
+    "sha256": "8f205564d4df35c4ff051536d4e543669ebfe246a124efd97eca2a250dd7e39e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Slide_Wifi.prefab",
+    "bytes": 35029,
+    "sha256": "6837ba307ad9ad6fc2d76f13ffd5d918848e71f74d43c3ccbe865d384877cddd",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Slide_Wifi.prefab.meta",
+    "bytes": 154,
+    "sha256": "4c3663f3a9c087ec65e1679013e6f9585c4db43c8140c7c4686ca8896c88f8b9",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_1.prefab",
+    "bytes": 157216,
+    "sha256": "e2abc36665c78bfa2aa9389ad8d96e51337c14b7d132ff68e292938b9a4b201f",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_1.prefab.meta",
+    "bytes": 154,
+    "sha256": "24a9c061020c1b261a1f51ec7f15ec86cf7d1623533d3c44283f91b9a3867418",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_2.prefab",
+    "bytes": 22432,
+    "sha256": "7fd2dd984b7021b0ae2b08811ee0b21dc2e440992a6d7d57959a147e1e6bfc72",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_2.prefab.meta",
+    "bytes": 154,
+    "sha256": "265f6511415e98ce264e0f6d7df354812e40aa909e9309a58437bfb99346c3ef",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_3.prefab",
+    "bytes": 41714,
+    "sha256": "5b3fea2f47c4add3f549cdf2cc7b4038cd0a9922ed1a9e4954c297701e187689",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "dc8fd75709d5410c8ad1cf870400cf89ed9cfe424b6890fbe54240f397c4b42a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_4.prefab",
+    "bytes": 60979,
+    "sha256": "92c9dd74eb4d434198c00851a58eb5a38af3583c27532ce9de5dd97ac57c906b",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "33dd51fdc4ebdfd601beb14384167fdfcc40b70ad58bc3dc79dcdcb974206a3e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_5.prefab",
+    "bytes": 80288,
+    "sha256": "a3ba3b383c4532a6c2fb2c5dab5a09e9ae5c22cae700f7e3191a7543f8167718",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_5.prefab.meta",
+    "bytes": 154,
+    "sha256": "8941a45f99944964821715758860437f6e4d47a976846892a72f6f4aea66e805",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_6.prefab",
+    "bytes": 99541,
+    "sha256": "92ebc56af52fdc69d2d48c730fd447c98edb3c4b10d31ca14baf13b7569549cc",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_6.prefab.meta",
+    "bytes": 154,
+    "sha256": "65f976ffb62d6c85b0b296891502ff4ebb13b564a7ae8945423258403c7cae7d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_7.prefab",
+    "bytes": 118772,
+    "sha256": "ec0f7576dbd46abf0c44a7a7b52f5fc4ad7ce9f6dbe071d8ebe3a09dc86c98dd",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_7.prefab.meta",
+    "bytes": 154,
+    "sha256": "3b9d4d5274e26817d3383d235efafb874d4b3245c9e9dfe186530268c2bb603a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_8.prefab",
+    "bytes": 137995,
+    "sha256": "2c4585e4f9048f7c12fb58ba9fcde4364f58a76d02d057b89fe6cc6a4570df28",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Circle_8.prefab.meta",
+    "bytes": 154,
+    "sha256": "3eb895986bffc3d57a2419bb0be22fdd2a64141a384343e7c4eeafbcf9329e18",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_2.prefab",
+    "bytes": 82331,
+    "sha256": "f0cfd72eb330fad6b7da76c54f367bd8b0c90603e79fcf4733a384827c601e2c",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_2.prefab.meta",
+    "bytes": 154,
+    "sha256": "96bd1d5db0c40029a0de4712e85e4c0e5fbb65457fd85536589a172f1592952e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_3.prefab",
+    "bytes": 87458,
+    "sha256": "b65dd9af26a02a5bc7ed8488e0ba8aa542c215e987825c88737f8bc1859a6188",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "8e5971e28d47a9c9cd37d4fb9a707f5b0c5bd3f9912c39007988313fb514fd2d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_4.prefab",
+    "bytes": 82730,
+    "sha256": "165b1fe16b6bff8699ff64177e90cc44710ebed67d043caa039f613fdf993853",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "177dc9bafee279af85c1d4c05420ca1eb74c16e4df5c1ed89ce5a65e578bf1cb",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_5.prefab",
+    "bytes": 73078,
+    "sha256": "7178cc2762ba424bbda8fab789c4dc552ba65db8d671d8edaa25e5a109ce199e",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_L_5.prefab.meta",
+    "bytes": 154,
+    "sha256": "3c6597aaf9237a9a7b0f5e159876cc1540b6f9b099a1da37ea9e733a0b587278",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_3.prefab",
+    "bytes": 35900,
+    "sha256": "d6c020bbcd03ef36665828558c5c8e9b61132a4a2487a7680fdcc55a58c1b63c",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "d6df60190d3603bb3337787e3ae45cf3ea8c57e02ada73038c9ef7dddba09312",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_4.prefab",
+    "bytes": 47965,
+    "sha256": "0b33343517c96389c962eab860ede451413f7ec5bb434c1b1c7c10b39611b622",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "17f994f41f0e1530af8514eeda8b636dab248648a8bb429d2f7a77d5d631ea7a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_5.prefab",
+    "bytes": 50224,
+    "sha256": "60adeee324dbc45f5000497d2184e80998a316e7a9f617ea36f79dde9c661c4e",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_5.prefab.meta",
+    "bytes": 154,
+    "sha256": "03c0684f63c0b138a978bf3b60a0d60dafa00aefa0034f675832e8f2e5c97981",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_6.prefab",
+    "bytes": 48165,
+    "sha256": "edc82ce6d74c1af3b1727b696413a5bc0592c6bc658439dadf2c048d3898c319",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_6.prefab.meta",
+    "bytes": 154,
+    "sha256": "774a117d18b068f2d357f38fe7324e3953e191eae605cba0f1bb483f636dad14",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_7.prefab",
+    "bytes": 36145,
+    "sha256": "f9c5cdc18aaa0908108709c9c38ec8c4935e0cbf2ca32c25cf826b24b353262a",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_Line_7.prefab.meta",
+    "bytes": 154,
+    "sha256": "a121b09fd179ce0b239161e88ccf9fdaa73372132962f49251c9678b42207b0b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_S.prefab",
+    "bytes": 77039,
+    "sha256": "fbe584d38adaa0c6088404672f9a23d72f2b8889f8b1dcfadf4f9f57c0e2f045",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_S.prefab.meta",
+    "bytes": 154,
+    "sha256": "832ec289ff135f2451dd42ff9b9e30725fe79987bc87294a109f933dd924ac7a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_1.prefab",
+    "bytes": 52704,
+    "sha256": "ac10a00c56c2e8da854eff97b960b6e1bbcf9d92977f191ee0ee41e7c2060fa1",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_1.prefab.meta",
+    "bytes": 154,
+    "sha256": "6dd75b838d489c82e5f2353931475ad1c53423b013cc5c6ba5383149874e9a10",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_2.prefab",
+    "bytes": 50308,
+    "sha256": "120d4a6af9db41fb2a1b7c13e8243e1a8cf78c6e2c89f7b3e44e1e69f7f28d4a",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_2.prefab.meta",
+    "bytes": 154,
+    "sha256": "ce3e7d7ca5ec96e2a6061a35cfb052cc145c2edd6e856b1e2aca263f55cb71e7",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_3.prefab",
+    "bytes": 50475,
+    "sha256": "85f0ea3c658662441778a4becb999230d97090286bfee850a92f7c7b278ed0e7",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "4d5afadc01dfefcba058f10e354525a8afb4a0d8b95ba9e69123decd0f3380d5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_4.prefab",
+    "bytes": 50478,
+    "sha256": "63da42cd5c361dadc4aa6cfc94e593515dfee11d423ee97f2031a44a222c86eb",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "5c2d44772989bc00c1ed2ee9b5543b5c15b7c2e7d49f956e21eba534e63db3ba",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_6.prefab",
+    "bytes": 50487,
+    "sha256": "9b5238929d1e0f161f2a932195ed47c99452d21169093c46ad151f1560a5c54e",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_6.prefab.meta",
+    "bytes": 154,
+    "sha256": "a8aa7d5f5159f4f8eec3c0785ced6e9900019c7b2f3f49abb721020acc0864a0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_7.prefab",
+    "bytes": 50472,
+    "sha256": "911b7a949a91d28854bf50bc375319ed6eb8cb117ae0aa6df63103e857326a65",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_7.prefab.meta",
+    "bytes": 154,
+    "sha256": "8e2e52129d7a88c98a9df93221a5d0c238e7e2623a4a7f19ad65115f86135664",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_8.prefab",
+    "bytes": 50430,
+    "sha256": "9028f3ef95e375f91a4173d9c1c018d5c7f19064a36e0abd0313f539265fa8cf",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_V_8.prefab.meta",
+    "bytes": 154,
+    "sha256": "e0571c43a1e5ea3d64ccd8bce88d39a10a6cae001bb36e167cc7d4bb9a54c3e0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_1.prefab",
+    "bytes": 89661,
+    "sha256": "51295dd4d81e8863c4940a5c503486a2ec3ca8d29b86033affb21f16b87678d1",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_1.prefab.meta",
+    "bytes": 154,
+    "sha256": "d2e755090c6421e06be480273573e8a042c07472f3decd61da5e91932711f752",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_2.prefab",
+    "bytes": 72843,
+    "sha256": "89c922ee72e622af907286ace210aa647c9dab02eb1cc6a4808f980a66de45b4",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_2.prefab.meta",
+    "bytes": 154,
+    "sha256": "c6c62fdd42989f8d712679361329442dec84885a90b720e62a055d1fc65007de",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_3.prefab",
+    "bytes": 58429,
+    "sha256": "ece2a38a7fb0c1e992b65a51f6d17076d271c8f5bc7f0c366f2eb1afc53e3396",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "2e33f82b8e6a2c24f90c9e94381297b020129979da4822d689220ce95a351dee",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_4.prefab",
+    "bytes": 123213,
+    "sha256": "f386860b6ad2eeaf1445b079b737fdfb63c1f5d2db0ef2c092baf5607e416751",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "def33c79498e8f3f7510946a23120c099f1a410116f99474054a5a5cd7bb3490",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_5.prefab",
+    "bytes": 123308,
+    "sha256": "ae642bfcf961f83a29c9719446bde2573fd468bae6c7e71473fe6b3aeb31d14a",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_5.prefab.meta",
+    "bytes": 154,
+    "sha256": "ab9b17c1cbcd8cc10cfbf4756f64f3e90e5cbaa9fb95c72663d0e0f676f73528",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_6.prefab",
+    "bytes": 121001,
+    "sha256": "c0c1c5d5194975d5abaf10c7f558af75004285932c23c0a6c646c04e674336fe",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_6.prefab.meta",
+    "bytes": 154,
+    "sha256": "3d704516f0dc20ea299e9b7c5027838072b5159e49e8a36b7e5f87199407f8e2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_7.prefab",
+    "bytes": 116230,
+    "sha256": "de67ecf5d219a8ca3d1f636947dae425cd2bf03c1e1fdd5eaff61c76962b6991",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_7.prefab.meta",
+    "bytes": 154,
+    "sha256": "65419522b5047cfaada7815eb5ccb62a66e171643df145496f0822f24cc22dff",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_8.prefab",
+    "bytes": 104271,
+    "sha256": "e6f42b654cd921b7eaceb24024773c52e29b060fd62b46f227d406e5386b0dbf",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_ppqq_8.prefab.meta",
+    "bytes": 154,
+    "sha256": "6a4a631de160500588e23583393edba8fadbf2da165a6d3ed8975acb38a00ddb",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_1.prefab",
+    "bytes": 85106,
+    "sha256": "038801ca33cad3e4047a9f6e269ae7510aab556c75a68fa16ba596adf4b088ee",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_1.prefab.meta",
+    "bytes": 154,
+    "sha256": "7484904d2c0aab696204c3d957e85cadb87d42d61c1400aa3c3ee030abf1e99b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_2.prefab",
+    "bytes": 77862,
+    "sha256": "c34a312b5c446a7af7caf79697012fc67f5e1294f45a2ac27abaffaef4337d77",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_2.prefab.meta",
+    "bytes": 154,
+    "sha256": "60bae6379711be0a7f208ae81f5a921815b5cc1501e1c7b32f37c7bde456a227",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_3.prefab",
+    "bytes": 70449,
+    "sha256": "9b7e98841c804954d0131c9ac373c7dc9af9c80eca9d5cea464d8ec49ef3894b",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_3.prefab.meta",
+    "bytes": 154,
+    "sha256": "75a6d72bd6fe2158c9c8e886186dab00cc77dc66a88a9624e67561b939c0c357",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_4.prefab",
+    "bytes": 63447,
+    "sha256": "6297bbd8d636573165463476d00df57b5a3458fd1edb4098053c1163b4ab819d",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_4.prefab.meta",
+    "bytes": 154,
+    "sha256": "563e1d6db4590cf34d3cc9e375604df79e885434bc8a0a48e7f404a6ba38ff87",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_5.prefab",
+    "bytes": 56144,
+    "sha256": "e9da75c887bed29d04cd07f1d7b8dfb74c9955a26cba029300bb648b70821d97",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_5.prefab.meta",
+    "bytes": 154,
+    "sha256": "94bf707bf67fc8808c1bf7f1f40bd0992bcff8d046541d18e400a1970ffab632",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_6.prefab",
+    "bytes": 106885,
+    "sha256": "beac32d131e60fd0526ac227332cb99f744d4dbb6af6905495bbfeef9c7b8039",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_6.prefab.meta",
+    "bytes": 154,
+    "sha256": "149daf197dc1bd1d4e1db2942ec8a266673bbb93fadd808c9d9e3c92becd70f1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_7.prefab",
+    "bytes": 99123,
+    "sha256": "115d7d80fb7f62abb9bc30c52c749fc969423db5fd65e419d83e356f95e0e793",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_7.prefab.meta",
+    "bytes": 154,
+    "sha256": "df129c76413cbbafbd6b0d4c8ccdcc61bae5767a3c539e754d5b4240c4b737e8",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_8.prefab",
+    "bytes": 92115,
+    "sha256": "b251f0ff75ec91307745e139a5266b49b6f2ce16eb8ca223b47a142ba196d031",
+    "kind": ".prefab",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/SlidePrefab/Star_pq_8.prefab.meta",
+    "bytes": 154,
+    "sha256": "bc0ddde1ba1d9b2b49603e814671ff32fd511c558d66861bc8b0a9698d821d1f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite.meta",
+    "bytes": 172,
+    "sha256": "7a40272baae15e8224941b3be9ec6864f1e1af3f06e79c295c11e8f5fcdeea56",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Break.png",
+    "bytes": 49259,
+    "sha256": "f33d15e244cbec31817d1154d42887de4c07b8da6802954e5715c3629558b59c",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Break.png.meta",
+    "bytes": 2082,
+    "sha256": "6850423dbdc0457b7e04bd7ce0f866413ed209382ea251278f980a0a77ff3ce3",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Circle.png",
+    "bytes": 31038,
+    "sha256": "26241fb98298089c2d10739d1df828e4793f0739021bb8e84b2155c942c5f193",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Circle.png.meta",
+    "bytes": 2623,
+    "sha256": "b1e8eafaa09091e37a63cb51fae32faec331c92dd58020b8b67a1d1aa725a4ea",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/CircleMask.png",
+    "bytes": 35213,
+    "sha256": "a69be05c744f5cc81ff57011ef80edd52d01e92163b500b37db9c48ab6923188",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/CircleMask.png.meta",
+    "bytes": 2082,
+    "sha256": "2619ddc4b7a413df0b7faf403e9a2b2cfd48c2bcd4af9fbf28654f133ae403ba",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/CircleMiss.png",
+    "bytes": 15130,
+    "sha256": "c9070a55cb400c441dfb64f63b564b3283863b2bc4a5c4d2c61b481c2dbee082",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/CircleMiss.png.meta",
+    "bytes": 3210,
+    "sha256": "8249e393251742827b49b2dbf5f5e61550a4d367127b2e281651852ca705d0e5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/ColorBall.png",
+    "bytes": 224545,
+    "sha256": "c8cbb336ef2cc333c88b7494bae268dabc8610e0c4951dae93aa30e808735b9f",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/ColorBall.png.meta",
+    "bytes": 2082,
+    "sha256": "3e426c9287119325e4da2f30fefdeac73932a8dd1504c58a9171fa91babb88d6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Default_Background.png",
+    "bytes": 612710,
+    "sha256": "3924119707c60d1f20727cf2bf491133d25786f4ca42db169e0fca55854c6ecd",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Default_Background.png.meta",
+    "bytes": 2082,
+    "sha256": "1402f84fac4be2f10d90200bceb5d08024fef45d972330cd2a647db21d8e9017",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Each.png",
+    "bytes": 48869,
+    "sha256": "7c5ee72d02a022e13d9e991c08d88093fce6698e99b41af493afb7d73a3e615d",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Each.png.meta",
+    "bytes": 2082,
+    "sha256": "d9dcee0b0cea69d4531a90b0bdc61544e298b718c0f61ab39806965dbf6dd912",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine1.png",
+    "bytes": 9143,
+    "sha256": "e5359200e5de8ea79012eeed0fd12611fa4e73d3a5193c8ca70250d687177add",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine1.png.meta",
+    "bytes": 2148,
+    "sha256": "a0bab8708b508fa73563837fbcbfb603d9335e036f22a21280cb4be0dd708a18",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine2.png",
+    "bytes": 13085,
+    "sha256": "b0055c5da9b6ba70fc9f09b5fd15d4a58ffd431c42f36e6e99b84baa82446241",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine2.png.meta",
+    "bytes": 2148,
+    "sha256": "abc5be7df3ac96c2656c174364a30138508dced971678c43f0534c300401db62",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine3.png",
+    "bytes": 18043,
+    "sha256": "cb329d64a0bb131b93f13701a2ee94d81296e78ad6febaa04fb5163560d46c06",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine3.png.meta",
+    "bytes": 2148,
+    "sha256": "bc24919a2b86fe1bbd2dfc8bacca82b80ed584e64ca7e29f45d91b4595178b3e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine4.png",
+    "bytes": 32962,
+    "sha256": "8393d957deed2e07503f4aa2eb2a65bdd9320b07c9510db25ec49b5573fef63f",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/EachLine4.png.meta",
+    "bytes": 2148,
+    "sha256": "b136801cadcaf8c3731cdef020169b0ef06cd02c58bc0fabf58a1c466102c15d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Firework.png",
+    "bytes": 75635,
+    "sha256": "5e40f06590879bba651e11bbc2d051df6953833ccc61221cf3fc4203ba251a3d",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Firework.png.meta",
+    "bytes": 2082,
+    "sha256": "54f22029a912caa7443cbe3a698253ebf7cc115e5e7a76ff30035591b4846635",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Firework_new.png",
+    "bytes": 102315,
+    "sha256": "f01d61266853b6474976d707204920dcf276882e63ceeaf7c998bfae6e997375",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Firework_new.png.meta",
+    "bytes": 2082,
+    "sha256": "e1782211062ddb9bbfa3424a54824392f86b16f3d6389b9ab7e446318919e66e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Good.png",
+    "bytes": 34055,
+    "sha256": "470443831fad1f08eeab9d1256fabecc27b0a61ac7b7d87d5d95972136417504",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Good.png.meta",
+    "bytes": 3217,
+    "sha256": "816c91bb6d096de2afcdc32a4772e4681e68fa8647b9bf5cc54649a18f0765ef",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Great.png",
+    "bytes": 47658,
+    "sha256": "0792d65a6e5b346c4184e4ed6e10f66d0c0471851e005d85c49a31b2e178bbcb",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Great.png.meta",
+    "bytes": 3216,
+    "sha256": "480b304c4713745cf26b8d5181c80cc0c3613fad4d53e827baf43fe16e822b92",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hex.png",
+    "bytes": 24979,
+    "sha256": "6e5032444b5a5320a1d08981e2ecd5a7f7d9abcc10e7a2675d4029347e67f585",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hex.png.meta",
+    "bytes": 2979,
+    "sha256": "6ff68f8cba02805fe042482856e1d040edfbeecd057adf2b973817fabd25d1da",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/HexBackup.png",
+    "bytes": 25284,
+    "sha256": "73b4439cf5cf4e71276b60cbbf40bdb706252297df57503beea872681cfa135b",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/HexBackup.png.meta",
+    "bytes": 2979,
+    "sha256": "8cd4ff9c336f6d5c0975db6695a370147dfa61f5a8dd4d79aaa4e76653c84048",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_Break_End.png",
+    "bytes": 3821,
+    "sha256": "fbb857e0c1d599b4a18509275f94cbdb4ef57791e6cd9180f4cd6ae41388ca3c",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_Break_End.png.meta",
+    "bytes": 2148,
+    "sha256": "88dcf3323b8b9b8ed069cb151d3cd3bdd249011c64c68c6d128c57c8c4b37c32",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_Each_End.png",
+    "bytes": 2728,
+    "sha256": "1bbda1cb0e12b36e5c5bc9a0793c7d9c3d254b17da529a885049ab1a2375da49",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_Each_End.png.meta",
+    "bytes": 2148,
+    "sha256": "25c13de15bc6d21e8d2dcbeb9c2f640eb7e35391a0cb77c0772645ea941bd564",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_End.png",
+    "bytes": 2803,
+    "sha256": "5275da925285bcb705db080371ab4706da4d9b35d64b109d8a007a39dde1ae9e",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Hold_End.png.meta",
+    "bytes": 2148,
+    "sha256": "90a6807bb576c3528e15218914d247df84febea6c6dbbdea36c1faa4a1f562ca",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_curv.png",
+    "bytes": 11530,
+    "sha256": "bf79736aed378789d2d4523104207f675336ff10e173ee746461c0777e134aa2",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_curv.png.meta",
+    "bytes": 2082,
+    "sha256": "448931d93a7a380a9f8d29f65ca96993ca99b6e4927b1877dc3c3525b95c8569",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_str.png",
+    "bytes": 4632,
+    "sha256": "33a10184c5db6089b2d179e3eb82f5495ffa7437a38c5190ff3a24f0699fb3eb",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_str.png.meta",
+    "bytes": 2082,
+    "sha256": "698cabe440d22047f28addb9c76e5edd46fd8b4019b0d6c46309ed73795dbe4b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_wifi.png",
+    "bytes": 32404,
+    "sha256": "f69ed332b5ff5d1e9402390a4ac4af59041033b20451db25488f38e0246bfff0",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Just_wifi.png.meta",
+    "bytes": 2082,
+    "sha256": "c8d6dd7721e7d67c7e2b9c5bd3b5181e73c8f092d39f7c2fc4cd1e2b5b42aa1a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Materials.meta",
+    "bytes": 172,
+    "sha256": "2aa0180f16938e87ec3c9f364019dc0c8585018be9d32211b62c921a28bcd843",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Materials/Circle.mat",
+    "bytes": 1185,
+    "sha256": "f6544a9a51d3bcc7a20cfb23157ce44ecfb2b23ddbe43325707958644cd1bd0e",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Materials/Circle.mat.meta",
+    "bytes": 188,
+    "sha256": "02f331ddb1860227c35097c4cca4fdf53dfd4818626e52a4e20b7ef5ddd9e4b2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Materials/CircleMiss.mat",
+    "bytes": 1189,
+    "sha256": "7c3a4e3254e90432b78128bde7be4c4e52941974d36a67621f4fd724223aa199",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Materials/CircleMiss.mat.meta",
+    "bytes": 188,
+    "sha256": "8ec115dec9671750fb770c628fc2693c83c014a2f3952883954b3707fe38a527",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Normal.png",
+    "bytes": 48094,
+    "sha256": "d25c807963efaf9deca67679f4dd2f3b7c62e1d3d8027bcd31bc8c6fe2171256",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Normal.png.meta",
+    "bytes": 2082,
+    "sha256": "765b57a51c5d870b79282c9a716c0a33d229bbe68a39f07d65d3fdfcdb0e4e77",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Slide.png",
+    "bytes": 43168,
+    "sha256": "35b71c447674e13600ad58e735d9f767ceb98c878e46a5bf05649a3ec81b26ad",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Slide.png.meta",
+    "bytes": 2082,
+    "sha256": "1ef8f070f72607c5c006d8d0afd78108ca86d6d04d7ef91197fac6c8365026f2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Slide_01.png",
+    "bytes": 1929,
+    "sha256": "0360166e53771ddeb173eabcfe60f89ae41c2f8d1eb0d1760a15a368ca943317",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Slide_01.png.meta",
+    "bytes": 2645,
+    "sha256": "af25fb88ac55425dc1052bd37968042f0300ec5a5d034b73c710a3c2d47667df",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Star.png",
+    "bytes": 29985,
+    "sha256": "fd9626c1ac4fb7fb74aae6e14f493df7fd3a746adeda7fcfc14b67f402a4f411",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Star.png.meta",
+    "bytes": 2082,
+    "sha256": "09a44e3cf0439337131d561b38efb7a68037fb5b9ef600621022253144e194be",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarBackup.png",
+    "bytes": 20414,
+    "sha256": "4c6462c89624608fd2611d58b418850e189f1b9f22c4b04e684a07eb3b66231f",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarBackup.png.meta",
+    "bytes": 2979,
+    "sha256": "1742a4e7a9faa869568339b0c202f570b99d18f5bc8a55a156b8ba2213fa551d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarWhite.png",
+    "bytes": 25979,
+    "sha256": "14af01c12d5b1c435df618e9b9f50baf9d721a3a0d779095e491a80b8304296d",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarWhite.png.meta",
+    "bytes": 2148,
+    "sha256": "3fc5be72cdf5c5e0bfcc250b614ec186b8f25c6c68c1e329a60e53197a03cf20",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarWhiteBackup.png",
+    "bytes": 12773,
+    "sha256": "c04ce0395c926d0aceb5704d0fd25f6e9abc8d71c107babf865ba5e22fbe66da",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/StarWhiteBackup.png.meta",
+    "bytes": 2979,
+    "sha256": "dc316d1325f30308a50701f4092c6c6d350cd02baf0e711bd77c140402983c4c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchBorder_02.png",
+    "bytes": 9368,
+    "sha256": "969ea0ceef79c3b3dcbc799498d55f03f7ae909a5c123c18e8f287a5b57f19a6",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchBorder_02.png.meta",
+    "bytes": 2148,
+    "sha256": "d71edbbda2b16325b5264f0e2852bc4319fe5787fe33399e4fc9b0b5720c09cc",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchBorder_03.png",
+    "bytes": 12216,
+    "sha256": "43ff41674c4046942b4cf698ffe04c6c1192693e2f6cad904169dcf9cf1e497a",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchBorder_03.png.meta",
+    "bytes": 2148,
+    "sha256": "67d7158d90b6fb3a589aa20b46e7c273b0d19472f680fad860049ebecf704303",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachBorder_02.png",
+    "bytes": 9418,
+    "sha256": "c8f9a9499a50094700f907379580a39dd10fb8acec30e9b35981db68a8695cfb",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachBorder_02.png.meta",
+    "bytes": 2148,
+    "sha256": "7a128e9e2f2d2b72061a5998949c84a7d69794496b63df3c43b0e5030bede76d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachBorder_03.png",
+    "bytes": 12343,
+    "sha256": "3ad9da919467902c043d42a7e90db61afdbc1d25c6be52efd71a62697923e9aa",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachBorder_03.png.meta",
+    "bytes": 2148,
+    "sha256": "8b0af789ab3d4e9b5f47c1daa0cc2ad6bd43f8c3658ede7e5019de7ab48db52d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachPoint.png",
+    "bytes": 1095,
+    "sha256": "ac2fc3871697d8de769990953e410065e5240c8c479c16d26a3f1f9ccac54168",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEachPoint.png.meta",
+    "bytes": 2148,
+    "sha256": "1e786dff15946132f0c9b2e423466af60d210a22b927881d5c80ce2d1271b346",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEach_01.png",
+    "bytes": 7314,
+    "sha256": "f5fa61178f4557387be3eaa17430597f21a16368e7fcc687d2af1dd88ec3a080",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEach_01.png.meta",
+    "bytes": 2148,
+    "sha256": "2bba009ec520a8ea72d6013da9470bd0fa5c624ff866d51f67989bb366d91c01",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEff.png",
+    "bytes": 1066916,
+    "sha256": "c89cdc521888bf5c51b9e50eb4232b1906cbf96f6127fb7baffaaa8d3ea58cc2",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEff.png.meta",
+    "bytes": 2082,
+    "sha256": "6115c9a9e259c52a51b69d8118adcc53d181a3664cff868f050e50c829c50209",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEffparts_01.png",
+    "bytes": 4083,
+    "sha256": "5c52039f8fc8a3b2fd1166756945adeeaa2dcb7080a472827f6b1ca90b098fd6",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEffparts_01.png.meta",
+    "bytes": 2148,
+    "sha256": "4f325b57d366f60886a2ae186e361f4225f5155f800da603c6f22d1c12ee60ff",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEffparts_02.png",
+    "bytes": 1953,
+    "sha256": "c7c67e6b7c210f9ee53d7bfa9dbe082270d56a925a18bf6005c037f3d01dcddd",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchEffparts_02.png.meta",
+    "bytes": 2148,
+    "sha256": "186c99dd39a56395d3ffa6b2733412d30fdb8bdc91655e5e324529ae770c875c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHoldBorder.png",
+    "bytes": 18932,
+    "sha256": "326ed5bc54f744861d9414f9e42fb2f980c2fe2623e14c51460f1ba4640a54f4",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHoldBorder.png.meta",
+    "bytes": 2148,
+    "sha256": "fb16594083d8c7cae57f2f7b235059781a08914a199d5767897c565adc9d7353",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_01.png",
+    "bytes": 6359,
+    "sha256": "edaa35efa56ff13ae229bb282aa2c585a82278a3e11a3b27540a2a4de24cfd54",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_01.png.meta",
+    "bytes": 2148,
+    "sha256": "c240c988f292c95369206b17392462794b91d5b2a536b8c9f76bac90cfec1671",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_02.png",
+    "bytes": 5978,
+    "sha256": "37beecc40ae957d291fc52ae71c20129c5b1710d7ad7eeaa387a8b1c216d87b7",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_02.png.meta",
+    "bytes": 2148,
+    "sha256": "5d1e3887eca8c41c31a9710ac4eadce9df5b88661c80bb8a86061c0bbb21dda6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_03.png",
+    "bytes": 6394,
+    "sha256": "f771f253cd927dfe4e7a9f8a3dd04f37f65fcf26edd4ede612bf527ebb92ef70",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_03.png.meta",
+    "bytes": 2148,
+    "sha256": "5d125d9853ceb880ae92b63df5e53ec1aa36e973966962ff578ac3c92bcb95bc",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_04.png",
+    "bytes": 6253,
+    "sha256": "6000ce964b8643c5846a9f189eedfa7ab212d384253ac4274a32d95301f65c99",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_04.png.meta",
+    "bytes": 2148,
+    "sha256": "277e8ba5ff8d2c123495cbab8e7c61e708f4bc84988b0ee31cba8b9368025979",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_Miss.png",
+    "bytes": 14985,
+    "sha256": "e79a49a1ee845424bfb73973cdb6f1e2aa4aaf58b7b8c248fc7de599ef69e0d7",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchHold_Miss.png.meta",
+    "bytes": 3262,
+    "sha256": "21c1274c5e4a0f8e105cf3e4f45a321851cc47fe264a821b3adc78e9515ddf07",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchJust.png",
+    "bytes": 4518,
+    "sha256": "e092e97ecebaf09f53d136bc03b821aec69cd6ff667231537bb925b20b379411",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchJust.png.meta",
+    "bytes": 2148,
+    "sha256": "9b0ae0c017f4f231f71b31bca0d0157dd7e6d733899ffcb13e1f0bd8e34d4f0e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchPoint.png",
+    "bytes": 1108,
+    "sha256": "a1dce856190aed06ba5b546e95b7525a00da644a5a89bb988d7d07a4862042e5",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/TouchPoint.png.meta",
+    "bytes": 2148,
+    "sha256": "91e9e5fb16b6522be1061098d58188838e597e581c08705bb82432389332ba5c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Touch_01.png",
+    "bytes": 7540,
+    "sha256": "12faf824109bfbd49d40248566670b4b7eaae4681e8222440fadffdcd97fbaec",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/Touch_01.png.meta",
+    "bytes": 2148,
+    "sha256": "c5ab8cb1f08dc242559317372567a69cc42e45318563287a05bb1d08904f3492",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/baseline_password_black_48dp.png",
+    "bytes": 738,
+    "sha256": "0a0d868d298052b0acec3c585314ab7e65fcc149d72fc6ea48d21bc59927b5ce",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/baseline_password_black_48dp.png.meta",
+    "bytes": 2148,
+    "sha256": "96acad331e7276375abd784f749b947e6ffcb1a5bfa5e0c1618872ea37563791",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/baseline_unfold_more_black_24dp.png",
+    "bytes": 423,
+    "sha256": "ca796605e8db9cb5a4c56d3cbde57ef01ea474a9f6252b8ecda00f0a748808ef",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/baseline_unfold_more_black_24dp.png.meta",
+    "bytes": 2148,
+    "sha256": "791a525da08342a66a6e5140d2f77503b1e2091da07d7c4cd19cad13f8a85d6c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/debug.meta",
+    "bytes": 172,
+    "sha256": "0aa1a1bfef5a2e0cb89826a44a3b8bdd83b292e66fe662ce11cf8f60d7d06d91",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/debug/outline.png",
+    "bytes": 89656,
+    "sha256": "8745d98e37a36ce54844e03abdf5cfecc0e01b908cb3e132e1e46d21643acbe3",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/debug/outline.png.meta",
+    "bytes": 2148,
+    "sha256": "c21b4c5b6efc246672bcdd5283b2ffa8c17b1db0594155fcfc614fa19884d933",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/mask.png",
+    "bytes": 47922,
+    "sha256": "e12a92d5297c1327d0cdec4cada10f417a33174249a8474c13beab79ccf65e27",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/mask.png.meta",
+    "bytes": 2082,
+    "sha256": "126a00ff29d4682ad4114dc9d0b4a3af82f014b4f722a3662d4f9152e8b5863f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/outline_fullscreen_white_24dp.png",
+    "bytes": 101,
+    "sha256": "060725c86c5a869565a2219f10384c07f8cfd5cc41640d772de97b66453e24ce",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/outline_fullscreen_white_24dp.png.meta",
+    "bytes": 2082,
+    "sha256": "342770be454b6d05f7a3af30e1336a31a018b2bef0f16152a4535ba28c0ebca8",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/salt.png",
+    "bytes": 399455,
+    "sha256": "68dab922ed366c9397aa4d6be3679142566dfd35a8b45b63ff7cccf6fb908f4c",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/salt.png.meta",
+    "bytes": 2082,
+    "sha256": "1b6eee4bdbbd6a0c4a9d76d016c8a64561308d3b95e5e2c2d396856778fd3335",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/star_green.png",
+    "bytes": 38280,
+    "sha256": "575bf6987cf8c87240957a5d8dcfce8c673430af26479597a691acfae84b4b8d",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/star_green.png.meta",
+    "bytes": 3177,
+    "sha256": "f3d7fb971be43c7825fc79875624a9a4c8ad125ed19ccf94faa3771552346926",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/star_pink.png",
+    "bytes": 33380,
+    "sha256": "51f93b0013bf323bd834f47e8b58f4f7938b5f417c6f0599dca4d7af0f209fac",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/star_pink.png.meta",
+    "bytes": 3174,
+    "sha256": "d5498885e5501605600f6db8c92fc24d06a9f7be0e114f6b2033827bc25725d9",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi.png",
+    "bytes": 77239,
+    "sha256": "32d0ead49a0326df8e4fa0fe52baa726ebabaa7f065ea12c5a6dd30bbd87e2cf",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi.png.meta",
+    "bytes": 9546,
+    "sha256": "a42229d83a4bc92c160ee5d14dd81a6bc68b396ccd0a4cc54c7b88b4b057eed2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi_break.png",
+    "bytes": 77782,
+    "sha256": "0180add1a98555f6d6a01f0ea6f48d9fcf5f1a04da23fa2e77cf3eb629ba7ca9",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi_break.png.meta",
+    "bytes": 9434,
+    "sha256": "41266988322068a7dde4dcfd2ac66317dcc5e129df3d62969639d3f049a6c958",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi_each.png",
+    "bytes": 82161,
+    "sha256": "b1b111a6485f9899745cb3b7ba02fca4b4f8be64db3cad291f9b36c2531c8cd8",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/Sprite/wifi_each.png.meta",
+    "bytes": 9723,
+    "sha256": "225dffaf43b5504aedc56c3c2cadfc75e87773859db82a7198b7c1afd270710f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets.meta",
+    "bytes": 172,
+    "sha256": "4da8cbb661e6ae000d68d0631aab23cfaab7206637d64f459a51b2be6c87dc3f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/README.md",
+    "bytes": 157,
+    "sha256": "5bf7529631a683dec23f05cdf7ff7e5781cf05bb9530fbf0b70af82f7b0a972f",
+    "kind": ".md",
+    "lines": 4
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/README.md.meta",
+    "bytes": 155,
+    "sha256": "a04299a771af86616934499250ef1ac5b8bf0747d7b30a3a715d5c4d8672cbe5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/ffarguments.txt",
+    "bytes": 206,
+    "sha256": "6b4d3f264c5a00e0593dbca5d5ea8fba209d6873b5d446af07f86deae872b5c7",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/ffarguments.txt.meta",
+    "bytes": 155,
+    "sha256": "047d1a6a8e09b68a7ba55993a4ccac9f8db1e8673a97d9c3693d8e3ea0bfd45d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/ffmpeg.exe",
+    "bytes": 78925824,
+    "sha256": "98094b9736637916bd98cc8ee7546d9d3638763545f153c6daa9dcf87b43d10e",
+    "kind": ".exe",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/StreamingAssets/ffmpeg.exe.meta",
+    "bytes": 155,
+    "sha256": "cd34aa8a56049de25f002016e635419c4eeedffb7604e51891a275786e956a4d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro.meta",
+    "bytes": 172,
+    "sha256": "8529d84d190a68aeb1a16e0a90308081bd30a738dbcc63c63b2a93c53b9a11b3",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Documentation.meta",
+    "bytes": 172,
+    "sha256": "07a8d45855ad4e331c57cd451654a5a454b001ef9677b725b856810b7d58b77b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Documentation/TextMesh Pro User Guide 2016.pdf",
+    "bytes": 694398,
+    "sha256": "93d6d3ca8a7d8423b01faacd00fa3921fe055fb2187873653a925e4cc1af85c0",
+    "kind": ".pdf",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Documentation/TextMesh Pro User Guide 2016.pdf.meta",
+    "bytes": 155,
+    "sha256": "942ef57b7129d587bdee03541cc260cf55af7564d9d2d582ea11eacd3de278ca",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Fonts.meta",
+    "bytes": 172,
+    "sha256": "11e80153fa39b86efadb8917ecde12a0402fe0729f2c88f6f8d1999f3fb04748",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt",
+    "bytes": 4469,
+    "sha256": "37f8552e9a874ec10710dc0ede6a9adf168e6609fbd02a507f35629373b85a48",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt.meta",
+    "bytes": 177,
+    "sha256": "5dbec32c014c17d94674af5f1494d49b42ba00edd50397f895f088c868ccbf86",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Fonts/LiberationSans.ttf",
+    "bytes": 350200,
+    "sha256": "e5b0af421ea2bfbc1ac8d251d647268087ae82786234c57f757d1f0b90fa8b49",
+    "kind": ".ttf",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Fonts/LiberationSans.ttf.meta",
+    "bytes": 414,
+    "sha256": "e2e35a015703584fb119355fa02631764d111c3e112d32519801d46bd697b596",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources.meta",
+    "bytes": 172,
+    "sha256": "167448559db07c9857b206a0f5a0aedcd6a6dad900d618b35b0702d636573805",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials.meta",
+    "bytes": 191,
+    "sha256": "8917470a9265beb1ef55a28c6a3718eb12ec8004554499998cc345056247995f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat",
+    "bytes": 2975,
+    "sha256": "b6b65c34e4907dd3006c2217fc8a4cef81b6da24df0a3de8e2288199eb6c5a9d",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat.meta",
+    "bytes": 179,
+    "sha256": "ef2eee63b288d47823da38109e3e8c879f4717a82dc662ac2d5e2460dacde698",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset",
+    "bytes": 9342,
+    "sha256": "4258bed1e28868571085fe493031136fa2ded7a885d7d38a7cd8183ba15abe7d",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset.meta",
+    "bytes": 179,
+    "sha256": "d6d86504040cf6e736767fda9bdef494afb06d5304384243e2dd703eba3a4a3d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat",
+    "bytes": 2889,
+    "sha256": "25874340976d40e9f9e8abf731b7f32e5a478541dead9288140bd60c7a3287d9",
+    "kind": ".mat",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat.meta",
+    "bytes": 179,
+    "sha256": "a8cf0ee9888a163e892368b4660b9c62a7375e7f8afdb8ee02e5c91ca1cdb355",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset",
+    "bytes": 2265851,
+    "sha256": "f9f8a1d2c592e1f0a2a87670aba14a75efd5e5039a77e402238c5117d5d3ece3",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset.meta",
+    "bytes": 179,
+    "sha256": "37233890984555987cb585551bc885069f2849a9b0d1c2191af073b9376aa10f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt",
+    "bytes": 269,
+    "sha256": "3a73e5ffe2510756dd3c2e982fdc1218b4be82c6e21abde88070d6860e1bc8e6",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt.meta",
+    "bytes": 179,
+    "sha256": "d5a86d8b7db6aa3ca6f4a63750eb94e0c42a64909b47d8c6c6f2565845534490",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt",
+    "bytes": 95,
+    "sha256": "62d3f4d5f64aaf885692d2d13a8313f6918e6e4c5aeb3990a43f614652bfd89c",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt.meta",
+    "bytes": 179,
+    "sha256": "6a925814d5e251a0ced6de210db2bacf2de29b4f0dc2991e85c908632e9565e4",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Sprite Assets.meta",
+    "bytes": 191,
+    "sha256": "5605affac803b81f876f35577f075c9b7e5ea73cf812fdfcc74277bf0f40140e",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset",
+    "bytes": 13441,
+    "sha256": "155fff99f467baa93dd2d0886df466bd242cd5e3c8c60c9d43e9cdad269f7f54",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset.meta",
+    "bytes": 179,
+    "sha256": "097525b164260b0fb34b4e0c73b3187c693f4dfe2991f475b5b416dbf07dfbbc",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Style Sheets.meta",
+    "bytes": 191,
+    "sha256": "1fdf0423552f46284fb97894f36adcd34d32e595aaf5c7cf1ce38a2349faaf89",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Style Sheets/Default Style Sheet.asset",
+    "bytes": 5539,
+    "sha256": "93e073cdb91b7e3d2fa31e2dd13626d7b9d2f327904ba8c3c2b97a3eecfbabac",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/Style Sheets/Default Style Sheet.asset.meta",
+    "bytes": 181,
+    "sha256": "b832663ca09ec7af8c8e816fd91a718b2af6c21ab4f126fa818871ad53bce763",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/TMP Settings.asset",
+    "bytes": 1852,
+    "sha256": "e6add3192b98153dc0c4453900e8a39127229c0ea0d9b4f92b997a6b705ce0d2",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Resources/TMP Settings.asset.meta",
+    "bytes": 179,
+    "sha256": "a65193b095ec3606789a3191751a837704cf52d4f461993ae7903024c6d43f45",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders.meta",
+    "bytes": 172,
+    "sha256": "c109eb7e331affedb377f7051df3d4881f8529b65f9593234585713e6e94ed30",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl",
+    "bytes": 6021,
+    "sha256": "88cf0f62e4000b71750c059d0886b19504cd1cf10f39bb61ddc11b77a882d417",
+    "kind": ".hlsl",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl.meta",
+    "bytes": 230,
+    "sha256": "e1d0c5347b3c55930759f5bc0985e11611a4b2ff22eef24523eb108687bd1642",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader",
+    "bytes": 3836,
+    "sha256": "42892a52f22bdde6d482cf2da5f35e4b813063fc6fe42189eee5562080079494",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader.meta",
+    "bytes": 204,
+    "sha256": "91be1d5618a7da33c878e20cf2be3e13b897d4976c70bde0cda7a67dbd502cd2",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader",
+    "bytes": 4071,
+    "sha256": "b50afc7edc8a710f8b4159149b2391e7238b5e4076cc0ea2119090ed29e13b4a",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader.meta",
+    "bytes": 204,
+    "sha256": "7430f3e97ae1b46f34e1ca75508705bb7b944307c41dc568ea728011f327086d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader",
+    "bytes": 3839,
+    "sha256": "1d32f34c71276c1321aa0540a2410e15808743a38b2026923045a4dec4a79b58",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader.meta",
+    "bytes": 204,
+    "sha256": "3d462e6f8ba57f45dc5e6000020db066c36ed5a1a24f74f749727812373c2325",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader",
+    "bytes": 11054,
+    "sha256": "a0d318756cba0f95a7052c387e629d0add3e9a4125c8333f1d1ed591af5f17cb",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader.meta",
+    "bytes": 204,
+    "sha256": "fb8fc84b612e19c169cdf3596195b416e68d227a8987a0eaa90d8c137fb69797",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader",
+    "bytes": 12438,
+    "sha256": "2a991951b00b0c052363a1025f655450054325437b3d13c2623a987c8ec77c30",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader.meta",
+    "bytes": 204,
+    "sha256": "bea74d576f181a8bb04b8cf02eedd0136540325ecb2824928a3aa52c75adcb13",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP LIT.shadergraph",
+    "bytes": 287427,
+    "sha256": "bf68062f68b38b588abd1c354f64e905f824d9a2c47f92ebdd70a32989eb2097",
+    "kind": ".shadergraph",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP LIT.shadergraph.meta",
+    "bytes": 285,
+    "sha256": "d1b70558e8b974d918e13c010db6d375fef815ba530bc2421ab031aa3a784ee8",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP UNLIT.shadergraph",
+    "bytes": 279909,
+    "sha256": "8a969c2d775079cce4e1c45d5eb6d3964b27d44dc884178363050c74fd5e9742",
+    "kind": ".shadergraph",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-HDRP UNLIT.shadergraph.meta",
+    "bytes": 285,
+    "sha256": "8cd498ce8f6ed2e7c0560d605eb912455cd6fdaf09a4d545d9743f63b3426bd0",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader",
+    "bytes": 8273,
+    "sha256": "41cff58473557bf760d03513a8c098f43a24e4eeb4c8ccd7d828c045a338a9ed",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader.meta",
+    "bytes": 204,
+    "sha256": "3744d078f9a8b6d3c5d9bca51e43f9223544fcafaf9396e121f49ea84a0609d3",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader",
+    "bytes": 8081,
+    "sha256": "fb286386d0592ce6d63eb736f180b4b0f638ec538b0855aa54767a438ebd1173",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader.meta",
+    "bytes": 204,
+    "sha256": "1eeca1536c7506f79d4d877b866a5fb88db8f402634e091b6d78aa9d21c9d18b",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader",
+    "bytes": 3064,
+    "sha256": "8b30c140f6af9134392fe6ecf4c0676db73f873489ac52adfb47bbd288cb51b8",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader.meta",
+    "bytes": 204,
+    "sha256": "e3412891b9306b017e60cba4ae4f6d258ee8b161d986dcde9cefb3d60345514d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile-2-Pass.shader",
+    "bytes": 11795,
+    "sha256": "4bc2db64befbd0e37e23539f21096ad2fcd9d61b36d2174d208a7d831a0883f7",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile-2-Pass.shader.meta",
+    "bytes": 204,
+    "sha256": "65ecbce6f1621f2d7ddc5e6004dda5e55e1f58ec6e01178f3691e1e81e01de55",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader",
+    "bytes": 8074,
+    "sha256": "44c39aabc7e88e7e1feffc1880df754f4adf86b62e9512aa89e9d2d65171aff4",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader.meta",
+    "bytes": 204,
+    "sha256": "f2112f50c72762d4e6731391495ea11f76975d677b698e9bcfdd38275ea18f9d",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader",
+    "bytes": 3523,
+    "sha256": "f9fae5906dd37d89298338953294459975de58a5421e68dd9e82a79794b95509",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader.meta",
+    "bytes": 204,
+    "sha256": "95aa060f371ee503a22c0a0b018e029c0328bd82b9317feaa784432b0a787343",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Surface.shader",
+    "bytes": 4353,
+    "sha256": "5dadb68b56429547918b392626e9af8fd5173936d20bb43cfca58dfa00947257",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-Surface.shader.meta",
+    "bytes": 204,
+    "sha256": "42439f5ac7491998f562e8ede73d64c3512953eb99fb1b49e833f5d9999a7660",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-URP Lit.shadergraph",
+    "bytes": 283866,
+    "sha256": "e0148ce8e5904232a4e711376a45b7af2a007fb9690c5a69c1cb4952a696cdbf",
+    "kind": ".shadergraph",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-URP Lit.shadergraph.meta",
+    "bytes": 285,
+    "sha256": "4c36abf5f2611c9d2cb04e7da8c30e42077503a17cb218020e171b6d3ff664f7",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-URP Unlit.shadergraph",
+    "bytes": 277012,
+    "sha256": "dc15b6819ad87a4b34ed888ae2c274624efc0ada902d1a9e7752d87922414dcc",
+    "kind": ".shadergraph",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF-URP Unlit.shadergraph.meta",
+    "bytes": 285,
+    "sha256": "f1ef815e2672fd770f47ee424c64f7ecdbdc642b7475828c29db032586aa10b6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF.shader",
+    "bytes": 11027,
+    "sha256": "10efe6d4728474a09970b857faf37913793e168dc13dbd4d7316b54b37615d97",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_SDF.shader.meta",
+    "bytes": 204,
+    "sha256": "0897fb06d170043fffa2d28783b347bbaee87a3f09f08374ca44b2c3848697d6",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Sprite.shader",
+    "bytes": 3446,
+    "sha256": "af669bb9ae136c8099f8e0a94a6933fd2f1e1fb0a6842129939a319fab4b8dbb",
+    "kind": ".shader",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMP_Sprite.shader.meta",
+    "bytes": 204,
+    "sha256": "9609584c5249687f3765f0018a93dfd6445c7e35d5aee4e87556f111c8852819",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro.cginc",
+    "bytes": 2277,
+    "sha256": "14edb7d7b88caf2b82cae68200abe895e5b5b3474c3fffbf0e9b4b09a4e2467e",
+    "kind": ".cginc",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro.cginc.meta",
+    "bytes": 215,
+    "sha256": "a9cf9d5431b809e36b8ffff4377b5ebda7d386a36d48838cd134bc09f3caec6c",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc",
+    "bytes": 5453,
+    "sha256": "d9d43ddd9810476162f21b42477d9ce2cdc4e6cc7571d354c3253aafc6673ead",
+    "kind": ".cginc",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc.meta",
+    "bytes": 204,
+    "sha256": "2e16fa15ef884a60a402d8b696f8b09e5315cbb468ba223d256030c7fe2b0667",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc",
+    "bytes": 2707,
+    "sha256": "66db1f03e8d7a413eba79bcb6602fdb2de710b586f34a6f2584ed6f68f028e90",
+    "kind": ".cginc",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc.meta",
+    "bytes": 204,
+    "sha256": "edace33591894d86d9a4144466fb3606e538d3341030fe22f908551755120ea5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc",
+    "bytes": 3515,
+    "sha256": "244b442520282a66363d121c8d2aeeb30bb1e72cbbadbf41ce68d9100322ade5",
+    "kind": ".cginc",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc.meta",
+    "bytes": 204,
+    "sha256": "247746f3a4e39dd24d1ad99e4fae03ae8976586307948b2846529a876dcb0a63",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites.meta",
+    "bytes": 172,
+    "sha256": "41e002b97ba2235689fba502d1ee4419f50ea0095cd3632cdc50bc90ca8a94de",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt",
+    "bytes": 185,
+    "sha256": "4b65f8960e4f4c5c8b35fd139e369265e9bb45667fc16461b2ba01188d464d93",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt.meta",
+    "bytes": 158,
+    "sha256": "9fffc8ac513116b8ac394d86d81ca9ac4ec52ee92c63c114d355808384ea16fc",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne.json",
+    "bytes": 3966,
+    "sha256": "b85c4b3001b6ba82d175f4cd5dab83da467bbc2527d3d447b66919d2d20c4faf",
+    "kind": ".json",
+    "lines": 156
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne.json.meta",
+    "bytes": 177,
+    "sha256": "ac2c551b5bc7f7d636d54ded634dfc3493e249567283b2efc06d1299f9360061",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne.png",
+    "bytes": 112319,
+    "sha256": "a87b965a701de3dc31d7401e542b1fc946587f912c51d7a26e46ade9f098bd1a",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/TextMesh Pro/Sprites/EmojiOne.png.meta",
+    "bytes": 9784,
+    "sha256": "eb63c0321658b980b138ce5f675d44689b8c7144df43976931e132e7706d1e1a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs.meta",
+    "bytes": 172,
+    "sha256": "42d6d1957822841e0d0940a280d0aa0fb94604964b5dfd1a7d675a8b419e0c67",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080BG.png",
+    "bytes": 287,
+    "sha256": "0c1fc24c7eb614cb5bc9ce4e814d7ec3a3f355fa005d4bbd770d5df132e20fe8",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080BG.png.meta",
+    "bytes": 2082,
+    "sha256": "206e09b2cc376b80806ac8160a54325c6b717525f5aa11f1d9c1f7e28e7e6bda",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle.png",
+    "bytes": 8450,
+    "sha256": "b39cbbef8339656b5412a0034ef5ad56ca76ca894b6e73c936f59e5b387579ae",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle.png.meta",
+    "bytes": 2082,
+    "sha256": "5248f4c832c09857166173800f579d0ab2ce6591222fd39c2413591a85e699ee",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle_Rev.png",
+    "bytes": 22837,
+    "sha256": "59281a206a8c6739c9142867480cdc1865ab236152906e585df0a28cebeb99f3",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle_Rev.png.meta",
+    "bytes": 2082,
+    "sha256": "17eda381ed91513948065417df18bfbbceb44e234c06f382c8b05a19f1bf9376",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle_Shaped.png",
+    "bytes": 904120,
+    "sha256": "3f201f71e9023522a1854d1c3b57aa3142ae76bcc8bf53414555042a9a86f9d8",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/1080Circle_Shaped.png.meta",
+    "bytes": 2082,
+    "sha256": "2af15b6e2e5a7c5b8c2e00945da4a57524edc14c6c0be70fb713acb2fc3e0347",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/JacketInfo.png",
+    "bytes": 9716,
+    "sha256": "ead7f5c362ade29194c3ac4830ec50759cbab43620fc3f12bff5ebb7ebbfa3ed",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/JacketInfo.png.meta",
+    "bytes": 2082,
+    "sha256": "75fa2247f1467659e8696945b68df6c4b4103e1bb9ada9bdcb728d35c7f72da5",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/apbloom.png",
+    "bytes": 52351,
+    "sha256": "c6575079eb719608e8116bec2d736c0d12dc43bd926a205651e647299053fe23",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/apbloom.png.meta",
+    "bytes": 2477,
+    "sha256": "bf90204671b8e343a7f40df883cc5769ceb61db94838089a1f28c3e2ec6f300f",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/bg_dummy.jpg",
+    "bytes": 161766,
+    "sha256": "051f5ad9a3edecf26cb18dd1020dabf72ad128992a0b6888b8d3cf4bb253aabc",
+    "kind": ".jpg",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/bg_dummy.jpg.meta",
+    "bytes": 2082,
+    "sha256": "8eb4e89f3bff82ab990941d440d7891702659b569e78cf347e741e273552f9b1",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/color.png",
+    "bytes": 680914,
+    "sha256": "985b197f50b42081a240d9057c12231c6ecb6f8b54476bda77afd21f5fea7859",
+    "kind": ".png",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Assets/UIs/color.png.meta",
+    "bytes": 2082,
+    "sha256": "c645edc5b7ffa977f7175fb3889131483201c259cd3dee3b1f92db70715ebe8a",
+    "kind": ".meta",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "LICENSE",
+    "bytes": 35149,
+    "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "kind": "",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Packages/manifest.json",
+    "bytes": 2067,
+    "sha256": "97e1890e7b1ae3e20c613d601b3de45d1763cec9728feb1dd4ec1841e9a48ca2",
+    "kind": ".json",
+    "lines": 51
+  },
+  {
+    "repository": "MajdataView",
+    "path": "Packages/packages-lock.json",
+    "bytes": 12020,
+    "sha256": "aef9ce29e626fae11028c19dc49649fb28ad95bb5b769d03a174b638a9939670",
+    "kind": ".json",
+    "lines": 456
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/AudioManager.asset",
+    "bytes": 416,
+    "sha256": "f2ed914f70919b6434c647bd820850be731b408f0f0c31e3bf7f98c8cafb617f",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/AutoStreamingSettings.asset",
+    "bytes": 379,
+    "sha256": "b7e5e508ca0e84b87c28a3d1bbd960b7c2fcbd9690f1ba4744fd83f05b3d1c46",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/BurstAotSettings_Android.json",
+    "bytes": 405,
+    "sha256": "cdfb63de48a42ac6c7acdb65702cc0c62451d88b81632b2ff7bf6af3f2cee8e9",
+    "kind": ".json",
+    "lines": 17
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/BurstAotSettings_StandaloneWindows.json",
+    "bytes": 426,
+    "sha256": "e1b08eb68e3905e44a962ec5f75ee3855efd360a01271ce6f71d8eb173e404d8",
+    "kind": ".json",
+    "lines": 18
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/ClusterInputManager.asset",
+    "bytes": 114,
+    "sha256": "40e65dd214bf254955d2c8829ca8ce2130fd3510485560ce012e9a1ddd93e623",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/CommonBurstAotSettings.json",
+    "bytes": 74,
+    "sha256": "fc1437674d2b2f3be577f3e556e70bce300753d75e82a5adc8aef98d37a3a180",
+    "kind": ".json",
+    "lines": 6
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/DynamicsManager.asset",
+    "bytes": 1190,
+    "sha256": "80ba5565beefddabba07863f19983c62409753fb36bff400fe36cf9a7db94690",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/EditorBuildSettings.asset",
+    "bytes": 352,
+    "sha256": "5eba48bb7278b99e20850961a1706526e520084894cb69a9c960c859af9676c4",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/EditorSettings.asset",
+    "bytes": 1107,
+    "sha256": "c324ec8d66589feb016a5e577e158414842e9815e906286d26216c18579416f8",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/GraphicsSettings.asset",
+    "bytes": 2165,
+    "sha256": "3b93f97de5f1f21b98105ff416113d41b9543dcbf0edde2a675bd456dfe13dbe",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/InputManager.asset",
+    "bytes": 5793,
+    "sha256": "1fb1c30f8a1615cf9a4220be6d18a33eccd3a09cc4cd0a3c7cd0a38a7c083134",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/MemorySettings.asset",
+    "bytes": 1192,
+    "sha256": "1e8379a461b10ae09f3f696911088c16875d63e87ed5f2d95df9e1892703f9fd",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/MultiplayerManager.asset",
+    "bytes": 163,
+    "sha256": "89b01d808ff59a89f072eb5bfb45550e3e9d06787abaaa768f4d7b4bbe2fb37f",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/NavMeshAreas.asset",
+    "bytes": 1308,
+    "sha256": "80106cfa7e6181a1928b142c075f3e510d527441e3d79bc83590e4ac91e7cd66",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/NetworkManager.asset",
+    "bytes": 151,
+    "sha256": "46395def99a6b5ae38ebb19b3e18f75215a9d4172c219361521a5a51e051f386",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/PackageManagerSettings.asset",
+    "bytes": 985,
+    "sha256": "d6a3a22b69bc47e641cf795aa8574794038ea0b7c962546b4435171f444e7a09",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/Physics2DSettings.asset",
+    "bytes": 2028,
+    "sha256": "d57a0fe55659c33879e8b70bc01c5ea9cdf082069dab649905c6c5138531e6eb",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/PresetManager.asset",
+    "bytes": 146,
+    "sha256": "29c125923fe6e29f90190d4fce1c82d660e7051546e2c9d02908d18c9cf2436c",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/ProjectSettings.asset",
+    "bytes": 22581,
+    "sha256": "2b8ef4285840f2b97f0018cbb069bfa9e789802e97479c60fb90372a3f02a666",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/ProjectVersion.txt",
+    "bytes": 85,
+    "sha256": "b018cc1783b8fae4a71cce3634820cbd4c55c7362af54982ccadbae822024deb",
+    "kind": ".txt",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/QualitySettings.asset",
+    "bytes": 4866,
+    "sha256": "5b83b042ff6c768d61d0f386cb1a5cb314a53bc10dda4164674ea8674c5ddf1c",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/SceneTemplateSettings.json",
+    "bytes": 5157,
+    "sha256": "d983786fb35276642847feb98f87259be23343f2c3eccc001baa1b787f944615",
+    "kind": ".json",
+    "lines": 167
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/TagManager.asset",
+    "bytes": 872,
+    "sha256": "fe3921762521a794ea9fcaee6a2b1a46c4304e2123aab15ca6552ee5fa3bafcb",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/TimeManager.asset",
+    "bytes": 195,
+    "sha256": "f7f7f30b3954f51ac22ac7fb38649f20d6c491a259f15a5537ef53b76e9e6c5a",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/TimelineSettings.asset",
+    "bytes": 438,
+    "sha256": "147d0a203865c6e8f50c5ee84d2e55c95101a8bcb6dfd5c21b1b3a88ac556daa",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/UnityConnectSettings.asset",
+    "bytes": 1005,
+    "sha256": "f3dbaf714f9bf896de9b05f21ba766591033847b3af3da5a60a605058efc6e60",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/VFXManager.asset",
+    "bytes": 308,
+    "sha256": "f066c6483919961332415ee64204f74fe52f38c02e82892eb02b7a5b2e381f0e",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/VersionControlSettings.asset",
+    "bytes": 188,
+    "sha256": "e7bda45bf7a394745fee1316e6c71fa676004d591ad1f3aa247fd3e4ceb86071",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ProjectSettings/XRSettings.asset",
+    "bytes": 158,
+    "sha256": "edd2beb4a2e388312b4b7da241aa51070434005d82c59363f1237dd2e567585f",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "README.md",
+    "bytes": 4014,
+    "sha256": "e34a4234e4606263bd0e1f1684e06b241aa20f146e6ac8dcd2183c3e4d8e897e",
+    "kind": ".md",
+    "lines": 55
+  },
+  {
+    "repository": "MajdataView",
+    "path": "UpgradeLog.htm",
+    "bytes": 14171,
+    "sha256": "7038dbe044747c0c7a6ccb985131fe4e76fb3645b8fc2722dcc1be2e7cc840cd",
+    "kind": ".htm",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "UserSettings/EditorUserSettings.asset",
+    "bytes": 1097,
+    "sha256": "6ba82d05f9b4d7e258eac48f89e2f0299b11ab2a11a1edd32d9eb9c321dbd1b4",
+    "kind": ".asset",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "UserSettings/Search.settings",
+    "bytes": 1242,
+    "sha256": "21529f2aa342a6a8b1d6a016b33b3ccf9cdbcf3e7e1b280b76d14e4a94ef708d",
+    "kind": ".settings",
+    "lines": null
+  },
+  {
+    "repository": "MajdataView",
+    "path": "ffmpeg-cli-param.txt",
+    "bytes": 145,
+    "sha256": "7a8a30dab8954b0ba60e9e53b906c11a207672a17e1f9c41f8dd897e85b4bb7f",
+    "kind": ".txt",
+    "lines": null
+  }
+]

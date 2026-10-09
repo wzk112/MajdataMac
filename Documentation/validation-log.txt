@@ -1,0 +1,195 @@
+Building for production...
+[Planning deferred tasks]
+[7 / 18] MajdataCore
+[9 / 19] MajdataCore
+[18 / 30] MajdataCoreTests-product
+[22 / 33] MajdataCoreTests-product
+[25 / 33] MajdataCoreTests-product
+[29 / 36] MajdataMac
+[37 / 43] MajdataMac-product
+[38 / 43] MajdataMac-product
+[42 / 52] MajdataAppTests-product
+[44 / 53] MajdataAppTests-product
+[48 / 52] MajdataAppTests-product
+[50 / 52] MajdataAppTests-product
+Build complete! (15.74 sec.)
+Test Suite 'All tests' started at 2026-10-09 15:19:11.943.
+Test Suite 'All tests' passed at 2026-10-09 15:19:11.944.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-09 15:19:12.084.
+Test Suite 'All tests' passed at 2026-10-09 15:19:12.085.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite PlaybackSourceTests started.
+◇ Suite ButtonInputTests started.
+◇ Suite SimaiTests started.
+◇ Suite JudgementTests started.
+◇ Suite AnalysisTests started.
+◇ Suite TimelineTests started.
+◇ Test independentButtonAndTouchAtSameInstant() started.
+◇ Test compareUserProvidedChart() started.
+◇ Test buttonModeStillAllowsEarlyTouchToJudgeTap() started.
+◇ Test mixedRoutingReleasesATouchDuringHold() started.
+◇ Test buttonDoesNotLightOrCompleteTouchPanel() started.
+◇ Test shortPressRemainsVisibleWithoutExtendingLogicalInput() started.
+◇ Test polygonsAndBoundaryContacts() started.
+◇ Test heldRegionCannotHitAgainAndButtonsCannotHitTouch() started.
+◇ Test areaQueueRequiresOrderReleaseAndAlternatives() started.
+◇ Test fixedStepDoesNotHighlightPastEndMarker() started.
+◇ Test deterministicFuzzNoCrashesOrInfinities() started.
+◇ Test headTimingWindowsAndEX() started.
+◇ Test holdReleaseAndTouchGroupMajority() started.
+◇ Test newDurationIssue103() started.
+◇ Test deterministicSimulationAndAllSlideShapes() started.
+◇ Test wifiNeedsAllThreePaths() started.
+◇ Test heldInputAndCompetingHeadsHaveConcreteCauses() started.
+◇ Test metadataRoundtrip() started.
+◇ Test fullCellsRestsUnicodeAndReverseSeek() started.
+◇ Test slideEntryMustActuallyTriggerAnEarlyJudgement() started.
+◇ Test finalCellWithoutCommaAndConnectedSlides() started.
+◇ Test allSlideShapesUseOriginalCoordinates() started.
+◇ Test connectedSlidesAndIndependentWifi() started.
+◇ Test allKindsAndFlags() started.
+◇ Test launchOverlapFutureSlideAndReleasedEndpointAreNotConflicts() started.
+◇ Test partialNotesNeverLeakAfterMalformedChain() started.
+◇ Test realChartAnalysis() started.
+◇ Test timingsAndEndMarker() started.
+◇ Test pseudoEachRegressionEdit80() started.
+◇ Test subdivisionPreservesRhythm() started.
+◇ Test unicodeLocationsAreUTF16() started.
+◇ Test malformedInputIsDiagnostic(_:) started.
+◇ Test multiPressUsesRegionsAndSustainedHoldsNotTouchCount() started.
+◇ Test longSlideSurvivesEndMarker() started.
+◇ Test zeroDivisionRegression138() started.
+◇ Test shortHoldRoundingAndDenseAutomaticClicks() started.
+◇ Test tempoAndDividerDoNotResetMusicalPhase() started.
+◇ Test transformPreservesTimingAndComments() started.
+◇ Test frozenDragAndZoomAnchor() started.
+◇ Test caretMapsDirectivesCommentsCommasAndEnd() started.
+◇ Test gridSpansAllBarsAndRespondsToMeter() started.
+◇ Test case passing 1 argument input → "(0){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120" to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(-120){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "{4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(NaN){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1-5[4:0" to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1h[0:1]," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1-2[4:1]," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1w4[4:1]," to malformedInputIsDiagnostic(_:) started.
+✔ Test headTimingWindowsAndEX() passed after 0.002 seconds.
+✔ Test areaQueueRequiresOrderReleaseAndAlternatives() passed after 0.002 seconds.
+✔ Test buttonModeStillAllowsEarlyTouchToJudgeTap() passed after 0.002 seconds.
+✔ Test metadataRoundtrip() passed after 0.002 seconds.
+✔ Test shortPressRemainsVisibleWithoutExtendingLogicalInput() passed after 0.002 seconds.
+✔ Test heldInputAndCompetingHeadsHaveConcreteCauses() passed after 0.002 seconds.
+✔ Test heldRegionCannotHitAgainAndButtonsCannotHitTouch() passed after 0.002 seconds.
+✔ Test fixedStepDoesNotHighlightPastEndMarker() passed after 0.002 seconds.
+✔ Test buttonDoesNotLightOrCompleteTouchPanel() passed after 0.002 seconds.
+✔ Test partialNotesNeverLeakAfterMalformedChain() passed after 0.002 seconds.
+✔ Test fullCellsRestsUnicodeAndReverseSeek() passed after 0.002 seconds.
+✔ Test holdReleaseAndTouchGroupMajority() passed after 0.002 seconds.
+✔ Test timingsAndEndMarker() passed after 0.002 seconds.
+✔ Test independentButtonAndTouchAtSameInstant() passed after 0.002 seconds.
+✔ Test unicodeLocationsAreUTF16() passed after 0.002 seconds.
+✔ Test pseudoEachRegressionEdit80() passed after 0.002 seconds.
+✔ Test malformedInputIsDiagnostic(_:) with 9 test cases passed after 0.002 seconds.
+✔ Test zeroDivisionRegression138() passed after 0.002 seconds.
+✔ Test shortHoldRoundingAndDenseAutomaticClicks() passed after 0.002 seconds.
+✔ Test tempoAndDividerDoNotResetMusicalPhase() passed after 0.002 seconds.
+✔ Test mixedRoutingReleasesATouchDuringHold() passed after 0.002 seconds.
+✔ Test transformPreservesTimingAndComments() passed after 0.002 seconds.
+✔ Test frozenDragAndZoomAnchor() passed after 0.002 seconds.
+✔ Test gridSpansAllBarsAndRespondsToMeter() passed after 0.002 seconds.
+✔ Test caretMapsDirectivesCommentsCommasAndEnd() passed after 0.003 seconds.
+✔ Suite TimelineTests passed after 0.003 seconds.
+✔ Test subdivisionPreservesRhythm() passed after 0.003 seconds.
+✔ Test wifiNeedsAllThreePaths() passed after 0.004 seconds.
+✔ Test multiPressUsesRegionsAndSustainedHoldsNotTouchCount() passed after 0.004 seconds.
+✔ Test polygonsAndBoundaryContacts() passed after 0.004 seconds.
+✔ Test finalCellWithoutCommaAndConnectedSlides() passed after 0.004 seconds.
+✔ Suite PlaybackSourceTests passed after 0.005 seconds.
+✔ Test connectedSlidesAndIndependentWifi() passed after 0.004 seconds.
+✔ Test newDurationIssue103() passed after 0.005 seconds.
+✔ Test allKindsAndFlags() passed after 0.004 seconds.
+✔ Test longSlideSurvivesEndMarker() passed after 0.004 seconds.
+✔ Test allSlideShapesUseOriginalCoordinates() passed after 0.005 seconds.
+REGION fixture [0: MajdataCore.JudgeResult(noteID: 0, time: 3.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 0.9999999999999999), 5: MajdataCore.JudgeResult(noteID: 5, time: 3.2708333333333335, grade: MajdataCore.JudgeGrade.good, difference: -1.0791666666666662, coverage: 1.0), 4: MajdataCore.JudgeResult(noteID: 4, time: 3.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0), 3: MajdataCore.JudgeResult(noteID: 3, time: 3.2708333333333335, grade: MajdataCore.JudgeGrade.critical, difference: -0.0382575757575756, coverage: 1.0), 1: MajdataCore.JudgeResult(noteID: 1, time: 2.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0), 2: MajdataCore.JudgeResult(noteID: 2, time: 2.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0)]
+✔ Test deterministicSimulationAndAllSlideShapes() passed after 0.011 seconds.
+✔ Suite JudgementTests passed after 0.011 seconds.
+✔ Test launchOverlapFutureSlideAndReleasedEndpointAreNotConflicts() passed after 0.012 seconds.
+✔ Test slideEntryMustActuallyTriggerAnEarlyJudgement() passed after 0.013 seconds.
+✔ Test deterministicFuzzNoCrashesOrInfinities() passed after 0.021 seconds.
+✔ Suite SimaiTests passed after 0.021 seconds.
+INPUT COMPARISON diff=5 notes=675 inner=16 outer=16 buttonResolved=2 mixed=14
+✔ Test compareUserProvidedChart() passed after 0.189 seconds.
+✔ Suite ButtonInputTests passed after 0.189 seconds.
+ANALYSIS REAL inputConflicts=0 multiPressHints=0 results=2222
+ANALYSIS VERIFIED time=16.0 note=18 head=Optional(MajdataCore.JudgeGrade.critical)
+ANALYSIS VERIFIED time=18.0 note=21 head=Optional(MajdataCore.JudgeGrade.critical)
+ANALYSIS VERIFIED time=21.5 note=32 head=Optional(MajdataCore.JudgeGrade.critical)
+ANALYSIS VERIFIED time=21.5 note=33 head=Optional(MajdataCore.JudgeGrade.critical)
+✔ Test realChartAnalysis() passed after 0.456 seconds.
+✔ Suite AnalysisTests passed after 0.456 seconds.
+✔ Test run with 41 tests in 6 suites passed after 0.457 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite TimelineInteractionTests started.
+◇ Suite RenderTests started.
+◇ Suite AudioAndSensorTests started.
+◇ Suite MediaTests started.
+◇ Suite EditorAndAnalysisTests started.
+◇ Test playDuringPreparationCanBeQueuedAndCancelled() started.
+◇ Test completeWorkspaceSurvivesWindowResizing() started.
+◇ Test edgeDragContinuesBeyondVisibleRange() started.
+◇ Test sourceAudioRouting() started.
+◇ Test importedSourceGeometryAndAnimations() started.
+✔ Test sourceAudioRouting() passed after 0.001 seconds.
+◇ Test sensorGeometryAndSeekState() started.
+✔ Test sensorGeometryAndSeekState() passed after 0.004 seconds.
+◇ Test liveChannelsAndExportVolumes() started.
+✔ Test edgeDragContinuesBeyondVisibleRange() passed after 0.021 seconds.
+◇ Test dragDoesNotChasePlayheadAndBackgroundIsCached() started.
+✔ Test importedSourceGeometryAndAnimations() passed after 0.074 seconds.
+◇ Test timingAndEachRegressions() started.
+✔ Test timingAndEachRegressions() passed after 0.001 seconds.
+◇ Test visualProofFrames() started.
+✔ Test dragDoesNotChasePlayheadAndBackgroundIsCached() passed after 0.578 seconds.
+✔ Suite TimelineInteractionTests passed after 0.600 seconds.
+✔ Test visualProofFrames() passed after 0.535 seconds.
+◇ Test intervalIndexMatchesFullScanAfterSeeking() started.
+20,000-note interval query, 600 frames: 0.011361292 seconds
+✔ Test intervalIndexMatchesFullScanAfterSeeking() passed after 0.087 seconds.
+◇ Test demonstrationMovie() started.
+✔ Test demonstrationMovie() passed after 0.001 seconds.
+✔ Suite RenderTests passed after 0.698 seconds.
+✔ Test completeWorkspaceSurvivesWindowResizing() passed after 0.803 seconds.
+◇ Test hostedEditorFollowsPlaybackUpdates() started.
+STEM CLOCK times=[0.076, 0.076, 0.076, 0.076, 0.076, 0.076, 0.076, 0.076, 0.076]
+✔ Test liveChannelsAndExportVolumes() passed after 1.187 seconds.
+◇ Test userChartValidation() started.
+✔ Test hostedEditorFollowsPlaybackUpdates() passed after 0.389 seconds.
+◇ Test editorAndAnalysisProof() started.
+REAL CHART difficulty=2 notes=600 duration=259.1659537438055 errors=[]
+REAL CHART difficulty=3 notes=1000 duration=259.16595374380483 errors=[]
+REAL CHART difficulty=4 notes=1357 duration=259.1659537438121 errors=[]
+REAL CHART difficulty=5 notes=2181 duration=259.16595374380694 errors=[]
+REAL CHART difficulty=6 notes=2222 duration=259.16595374380563 errors=[]
+REAL REGION duration=0.044766042 seconds results=2181 sensorChanges=5551 grades=[MajdataCore.JudgeGrade.critical: 2181]
+✔ Test userChartValidation() passed after 0.527 seconds.
+✔ Suite AudioAndSensorTests passed after 1.720 seconds.
+✔ Test editorAndAnalysisProof() passed after 0.527 seconds.
+◇ Test playbackHighlightDoesNotMoveSelectionOrChangeText() started.
+✔ Test playbackHighlightDoesNotMoveSelectionOrChangeText() passed after 0.019 seconds.
+◇ Test analysisIsInvalidatedByEditsAndDifficultyChanges() started.
+✔ Test analysisIsInvalidatedByEditsAndDifficultyChanges() passed after 0.258 seconds.
+✔ Suite EditorAndAnalysisTests passed after 1.998 seconds.
+✔ Test playDuringPreparationCanBeQueuedAndCancelled() passed after 2.396 seconds.
+◇ Test audioAndFixedSizeMovie() started.
+✔ Test audioAndFixedSizeMovie() passed after 1.028 seconds.
+◇ Test repeatSeekAndPlayback() started.
+✔ Test repeatSeekAndPlayback() passed after 1.566 seconds.
+✔ Suite MediaTests passed after 4.992 seconds.
+✔ Test run with 19 tests in 5 suites passed after 4.992 seconds.

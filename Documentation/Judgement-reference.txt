@@ -1,0 +1,146 @@
+判定区域与判定规则核对 — 2026-10-09
+
+使用的配置
+  本版本采用“MajdataView 判定规则 + MajdataPlay 物理分区”的明确组合。
+  这是可检查的原生兼容实现，不称为 SEGA 机台判定的官方规格。
+
+区域形状
+  A/B/D/E 各 8 区；中心 C 有两个物理面，输入合并为一个逻辑区域。
+  因此是 34 个物理区域、33 个逻辑区域，不是 33 个圆形。
+  A 是外侧宽区域，B 是内侧区域，D 位于外侧间隙，E 是内侧间隙，C 在中心。
+  实际轮廓由 MajdataPlay 的 JudgeAreas.fbx 边界提取，再应用 Init.unity 的
+  缩放和 45° 旋转。绘制与接触检测读取同一份 sensor-polygons.json。
+  接触检测支持点和圆盘与多边形边界相交。自动 Slide 轨迹默认使用 0.4 世界
+  单位半径（100 PPU 下 40 px），是模拟输入参数，不是实测手掌尺寸。
+  外框按键和 A 区触摸分别记录，按键不能代替 Touch 的区域输入。
+
+为何还保留 sensors.json 的圆
+  旧 MajdataView SampleScene 用 CircleCollider2D 生成滑条区域序列，并计算
+  末区的参考判定时间。这是原版程序的近似。为了保留原版队列定义，本地将
+  它用于 SlideJudgePlan 的生成；实际显示和输入接触使用多边形。
+  若删除这一区别，只画正确形状但仍按时间直接判 CP，判定行为仍然不正确。
+
+事件与状态
+  Tap/Touch 需要新按下事件；同一块区域一直按住不会重复击中后续短音符。
+  Slide 按区域队列推进；一般中间区域需要进入后离开，末区进入即可。
+  可跳区域只允许检查紧邻的下一阶段；关键拐点有不可跳过约束。
+  同一阶段的 A 或 B 备选分别记录进入/离开，不能混用 A 的进入和 B 的离开。
+  WiFi 的左、中、右三条队列都要完成。组合 Slide 按连接关系启用下一段。
+  轨道消失、判定贴图、计分和判定音效均读取该引擎的记录。
+
+时间窗口（秒，按归档 MajdataView 源码配置）
+  Tap/Hold 头：绝对偏差 < 1/60 为 CP；< 2/60、< 3/60 为两级 Perfect；
+  < 4/60、< 5/60、< 6/60 为三级 Great；< 9/60 为 Good，之后 Miss。
+  EX 在非 Miss 的头判定中提升到 CP；Hold 的持续按住情况另算。
+  Touch：CP < 0.15；Perfect < 0.20；Great < 0.25；Good < 0.316667。
+  注意旧 View 只在提前 0.15 秒开始监听，因此早侧可接收范围并不对称。
+  部分现代社区资料的 Touch Good 是 0.30 秒，本版没有混入另一套配置。
+  普通 Slide 参考时间：沿路径 85% 到 99% 搜索进入末区的时刻，找不到用 90%。
+  WiFi 参考时间：原版 (11 - 2.1) / 11。窗口随末区驻留时间扩展。
+  完美窗口半宽 min(0.4666667 + min(驻留/4, 0.733333), 1.2) / 2。
+  滑条结束后 0.6 秒超时；全部分支只剩末区时为 Good，否则 Miss。
+  Hold 从头后 0.1 秒到尾前 0.2 秒累计覆盖，TouchHold 从头后 0.25 秒开始；
+  迟按缩短有效窗口，最终依据头判定和覆盖率降判。短条窗口按零长度处理。
+  多个相邻同刻 Touch 按原版邻接表分组，超过一半成功后为其余成员补判。
+
+明确修正的旧行为或本地缺陷
+  修复自动点击保持 50 ms 阻挡下一音符，改为独立短脉冲并显式加入松开时刻。
+  修复恰好 0.3 秒 Hold 因浮点残差被错误判为需要持续覆盖。
+  Tap Great 最外层使用 Great3，修正旧源该分支错误回到 Great1 的枚举值。
+  WiFi 的超时条件检查三分支剩余阶段，修正旧实现不能命中的计数条件。
+
+验证范围与边界
+  自动模拟使用 240 Hz 基础步进，另加入精确短音符/松开时间；不是物理硬件采样。
+  单元测试直接注入按下/保持/松开/缺分支等输入，验证可以产生低判和 Miss。
+  Xaleid◆scopiX 五个难度完整模拟用于真实谱面回归。自动全 CP 是该模拟轨迹
+  的结果，不能当作真人游玩可行性证明或机台判定完全一致的证明。
+  尚未连接键盘/鼠标手动游玩和实体触控板。端到端输入、声音、屏幕延迟未标定。
+
+来源（固定版本见 NOTICE.txt）
+  https://github.com/LingFeng-bbben/MajdataView/blob/master/Assets/Scripts/JudgeArea.cs
+  https://github.com/LingFeng-bbben/MajdataView/tree/master/Assets/Scripts
+  https://github.com/TeamMajdata/MajdataPlay/blob/main/Assets/Models/JudgeAreas.fbx
+  https://github.com/TeamMajdata/MajdataPlay/blob/main/Assets/Scenes/Init.unity
+  https://github.com/TeamMajdata/MajdataPlay/blob/main/Assets/Scripts/Global/DummyTouchPanelRenderer.cs
+  https://github.com/Minepig/MaiMuriDX/blob/master/docs/开发笔记.md
+  https://maimai.sega.com/play/howto/ （官方仅用于音符基本操作交叉核对）
+
+0.3.1 检查逻辑修正 — 2026-10-09
+  旧检查按“音符到点时距滑条 < 0.23”报警，且允许在起滑前/结束后 150 ms
+  查询被截断的路径坐标。这既没有验证 OFF→ON，也没有验证输入是否真的
+  被音符消费，因此会把正常同刻起滑、尚未起滑和已完成的滑条都列为风险。
+  新检查直接读取与播放同一份 RegionRecording，记录每次按下的音符来源。
+  提前触发只有在头判定实际非 Critical 时报告；EX 的升判和 Touch 组补判
+  由现有判定引擎处理。同区保持导致漏判和同刻重复音符争用也单独报告。
+  每项包含目标与来源的源码位置、区域、发生时间、提前量或缺少新事件原因。
+  固定区域多押仅统计同刻 Tap/Hold 加未进入尾部宽限的持续 Hold，合并区域；
+  这是区域数量提示，不是“超过两手”的判决，不统计 Touch 群的音符数量。
+  检查异步执行；编辑、切换难度、载入文件后旧结果失效，避免错指另一谱面。
+
+Xaleid◆scopiX Re:MASTER 核对
+  旧算法：95 条，包括距离提示和直接计数的多押提示。
+  16.000 s A5 / 18.000 s A4：Hold 与 Slide 起滑同刻同区，头判定 CP。
+  21.500 s A8：相关 Slide 到 21.625 s 才起滑，原提示使用了起点截断坐标。
+  新算法：2,222 个判定，0 个输入冲突，0 个固定外圈多区域提示。
+  测试另构造提前 80 ms 的 Slide 入区，确实报告 Great2 和来源；保持区域
+  阻挡后续点击、同区重复音符也有正向用例，未通过一律隐藏警告消除问题。
+
+显示与输入分离
+  原始自动点击仍为 0.1 ms；显示查询把每次真实按下的高亮保留 80 ms。
+  不延长引擎按住状态，不生成额外输入，不修改计分、音效或检测结果。
+  可在 20/30/60/120 Hz 下看到短按；倒退定位不沿用未来帧的高亮。
+
+本轮补充查阅
+  SEGA 官方教程仅公布基本操作，不公布此实现的完整时间窗与区域队列。
+  https://maimai.sega.com/play/howto/
+  MajdataPlay 作者 Wiki 介绍现代配置与 Hold 容错；与归档 View 存在差异，
+  未将现代说明中的零散阈值直接混入旧 View 配置。
+  https://github.com/TeamMajdata/MajdataPlay/wiki/高级
+  原检查器作者明确限制为非 DX，并列出重叠 Slide 的多押误报；本地同时检查
+  了 MajdataEdit/SubWindow/MuriCheck.xaml.cs 的源实现。
+  https://github.com/Moying-moe/maimaiMuriDetector
+  MaiMuriDX 作者笔记用于理解输入边沿、Touch 组和手掌模拟假设；未复制其
+  未附许可证仓库的代码或素材。上述输入模型仍未实现真人手掌离屏延迟、
+  WiFi 双手解法求解及完整 Muri 分析；没有把本次“0 冲突”写成真人可打结论。
+  https://github.com/Minepig/MaiMuriDX/blob/master/docs/开发笔记.md
+
+0.3.2 外键与触屏对比 — 2026-10-09
+  原代码已区分 SensorFrame.buttons 与 sensors，但自动输入只生成了 sensors。
+  新版生成独立按键事件；外键不能触发 Touch 或推进 Slide，也不伪装成 A 区高亮。
+  原 View 的 InputManager.Update 先执行 CheckButton，再处理触摸；BindArea 同时
+  绑定外键和 A 区，BindSensor 仅绑定触屏。本地同一时间戳也先处理外键，保证
+  Tap 与 A 区 Touch 同刻时可以分别被两个独立输入判定。
+
+  三种确定性输入方案：
+  - 全内屏：原有方案，Tap/Hold/Touch 全部在触屏，Slide 按既定路径。
+  - Tap/Hold 全外键：所有 Tap/Hold 使用外键，Touch/Slide 仍使用触屏。
+  - 内外配合（默认）：只将覆盖同一 A 区 Touch 时刻的 Tap/Hold 改为外键。
+    这是一种局部路由，不求解同区多条 Hold、全部交替打法或全谱双手动作。
+  检查页同时复算三种方案；播放和导出使用右侧所选方案。输入窗口没有放宽，
+  不把已发生的早判改成 Critical，也不把未解决项静默隐藏。
+
+  Ultima Aria（用户提供，675 音符）复现与结论：
+  - 全内屏：16 非 Critical，其中 2 MISS。
+  - A5 Touch 68.157895 s 被 67.368421 s 开始的 Hold 占住；A4 Touch 69.210526 s
+    被 68.421053 s 开始的 Hold 占住。对应 Hold 改用外键后两个 Touch 都为 CP。
+  - 内外配合：14 非 Critical，0 MISS。其余是既定 Slide 轨迹提前触发 Tap，
+    例如 38.421053 s 的 A2 在 38.300 s 入区被判 Good，提前约 121.1 ms。
+    已经被 A 区消费的 Tap 不能在稍后的外键按下时再次判定。
+  - 全外键：仍有 16 非 Critical，0 MISS；虽消除上述两项，但在 30.526316 s
+    和 89.473684 s 的 A1 出现另外两项早判。这说明“全部改外键”不等于全局解法。
+  这些是所设轨迹和接触半径下的复算，不是街机实测，不能称为绝对无解。
+
+  进一步核对来源：
+  https://github.com/LingFeng-bbben/MajdataView/blob/5786452b45647eb15229ad601dab959288c0d88a/Assets/Scripts/Misc/InputManager.cs
+  https://github.com/LingFeng-bbben/MajdataView/blob/5786452b45647eb15229ad601dab959288c0d88a/Assets/Scripts/Notes/TapDrop.cs
+  https://github.com/LingFeng-bbben/MajdataView/blob/5786452b45647eb15229ad601dab959288c0d88a/Assets/Scripts/Notes/TouchDrop.cs
+  https://github.com/Minepig/MaiMuriDX/blob/master/docs/开发笔记.md
+  https://www.bilibili.com/opus/694985211225571337
+  社区作者说明用于交叉核对，不标成 SEGA 官方规格。
+
+时间轴节拍
+  simai 的 {n} 改变逗号时值，四分音符拍长是 60 / BPM。小节显示按独立的
+  每小节拍数累计，BPM 切换保留累计拍相位，分音变化不重新计小节。
+  https://w.atwiki.jp/simai/pages/1003.html
+  原 Edit/MainWindowCore.cs 的波形同时绘制 strongBeat、weakBeat、timinglist；
+  本地对应全视窗小节、拍、分音三层，缩小时自动减少密集刻度而非只绘制一小节。

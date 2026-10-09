@@ -1,0 +1,1429 @@
+[
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/AudioTimeProvider.cs",
+    "lines": 63,
+    "sha256": "1105c79f8af2a4391906c31013dd3f1e9c2d352b7ce709e962889ba691da2572",
+    "types": [
+      "AudioTimeProvider"
+    ],
+    "methods": [
+      "Update",
+      "GetFrame",
+      "SetStartTime",
+      "ResetStartTime"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/HttpHandler.cs",
+    "lines": 160,
+    "sha256": "73b445866c8781e45a673ff3e30db5712377ff2b57ee530ca39a60949b12465a",
+    "types": [
+      "HttpHandler"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "OnDestroy",
+      "httpListen",
+      "getChartLength"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/IFlasher.cs",
+    "lines": 8,
+    "sha256": "4760c5c0b3b676d19828e759cd3805a0dce1c13419ae484a7bf991ebc50ccbb0",
+    "types": [
+      "IFlasher"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Interfaces/INote.cs",
+    "lines": 13,
+    "sha256": "f97a64cbe08aa9a5b79339c5b4a01f76d5c857d57d0137f621989a1d357cecf3",
+    "types": [
+      "INote"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/JsonDataLoader.cs",
+    "lines": 1553,
+    "sha256": "fb0a233f8983df4b0dbfd47323d880ada695bfeb4025b53766f2f27c061a996a",
+    "types": [
+      "JsonDataLoader"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "LoadJson",
+      "CountNoteSum",
+      "CountNoteCount",
+      "InstantiateStarGroup",
+      "InstantiateWifi",
+      "InstantiateStar",
+      "detectJustType",
+      "detectShapeFromText",
+      "isUpperHalf",
+      "isRightHalf",
+      "MirrorKeys"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/JudgeArea.cs",
+    "lines": 141,
+    "sha256": "6fb43181f9c70307d662f78ec542116a45106260ae0e89e98b7c006d0ce1be7d",
+    "types": [
+      "Area",
+      "JudgeAreaGroup",
+      "JudgeArea"
+    ],
+    "methods": [
+      "Judge",
+      "Reset",
+      "Judge",
+      "GetSensorTypes",
+      "GetAreas",
+      "GetSensorTypes",
+      "SetIsLast",
+      "SetNonLast",
+      "Judge",
+      "AddArea",
+      "Reset"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/LoadJustSprite.cs",
+    "lines": 65,
+    "sha256": "4fa9d04c5dc0befb670fdee60ceaa63ad91ff02ff07c4dec751d24d33b8c81ac",
+    "types": [
+      "LoadJustSprite"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "setR",
+      "setL",
+      "setFastGr",
+      "setFastGd",
+      "setLateGr",
+      "setLateGd",
+      "setMiss",
+      "refreshSprite"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Majson.cs",
+    "lines": 104,
+    "sha256": "08bd920077aba38cc74975ea1e3329b44d4b7c8ae9b458b9808bcf98f6c4bc1a",
+    "types": [
+      "Majson",
+      "SimaiTimingPoint",
+      "SimaiNoteType",
+      "SimaiNote",
+      "EditRequestjson",
+      "EditorComboIndicator",
+      "EditorControlMethod",
+      "EditorPlayMethod"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/DestroySelf.cs",
+    "lines": 22,
+    "sha256": "4a4701e1fc9a50a7bb17949428cbb35ea29e6a65d46db6fbbf23584acb9f71fb",
+    "types": [
+      "DestroySelf"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/DontDestroyOnLoad.cs",
+    "lines": 9,
+    "sha256": "183e53aa07a01d9df9b52f29f92f16116b84ff6deeb4931d31553ea07f9e9330",
+    "types": [
+      "DontDestroyOnLoad"
+    ],
+    "methods": [
+      "Start"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/InputManager.cs",
+    "lines": 292,
+    "sha256": "85039576ba779bbb7a87465d240a71e9dd418695a5858fa943b53e9f62ea09df",
+    "types": [
+      "InputManager"
+    ],
+    "methods": [
+      "BindSensor",
+      "UnbindSensor",
+      "BindArea",
+      "UnbindArea",
+      "CheckAreaStatus",
+      "CheckSensorStatus",
+      "CheckButtonStatus",
+      "ClickSensor",
+      "SetBusy",
+      "SetIdle",
+      "IsIdle",
+      "GetButton",
+      "GetSensor",
+      "SetBusying",
+      "IsBusying"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/NoteManager.cs",
+    "lines": 92,
+    "sha256": "943e997d83327e363e626a48d91842bf87b2d744ec19a1a2db9b2dc9fa8370bc",
+    "types": [
+      "NoteManager"
+    ],
+    "methods": [
+      "Clear",
+      "AddNote",
+      "AddTouch",
+      "Refresh",
+      "GetOrder",
+      "CanJudge",
+      "CanJudge"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/PlayAllPerfect.cs",
+    "lines": 27,
+    "sha256": "075e26b280c033bed0cd286a9178bbd5ebd87efbaff2d8a5fe485194ed33e281",
+    "types": [
+      "PlayAllPerfect"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Misc/SpriteLoader.cs",
+    "lines": 26,
+    "sha256": "d60e30907c5763ab55237386050154e6d41f04111fc9ef6619fd71a0d4af4c29",
+    "types": [
+      "SpriteLoader"
+    ],
+    "methods": [
+      "LoadSpriteFromFile",
+      "LoadSpriteFromFile"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/BreakShineController.cs",
+    "lines": 30,
+    "sha256": "38356240f30999f908885b85f6e8d64a98aa7f75ccd152b78d0ac542d76cd8b6",
+    "types": [
+      "BreakShineController"
+    ],
+    "methods": [
+      "OnEnable"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/EachLineDrop.cs",
+    "lines": 45,
+    "sha256": "b09ab4283bc05973747340a6defaeb91d47fd0dc151c640da022d71c49a4fd98",
+    "types": [
+      "EachLineDrop"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/HoldDrop.cs",
+    "lines": 432,
+    "sha256": "95951578ff5ef1bf39c41e12b3d168579e8b7e87f1148d94075bb60d134522f2",
+    "types": [
+      "HoldDrop"
+    ],
+    "methods": [
+      "Start",
+      "FixedUpdate",
+      "Update",
+      "OnDestroy",
+      "PlayHoldEffect",
+      "StopHoldEffect"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/MultTouchHandler.cs",
+    "lines": 59,
+    "sha256": "71785666d665fbb0804bd76707694820de32c47a8f11b482eb92386fcf069e7c",
+    "types": [
+      "MultTouchHandler"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "getAreaIndex",
+      "clearSlots",
+      "registerTouch",
+      "cancelTouch"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteDrop.cs",
+    "lines": 100,
+    "sha256": "56e4cdeb416459c6c9fb50e5f88faef8c9a3eaf0e2b55346954b1be51155c1e4",
+    "types": [
+      "NoteDrop",
+      "NoteLongDrop"
+    ],
+    "methods": [
+      "GetJudgeTiming",
+      "getPositionFromDistance",
+      "getPositionFromDistance",
+      "GetRemainingTime",
+      "PlayHoldEffect",
+      "StopHoldEffect"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/NoteEffectManager.cs",
+    "lines": 200,
+    "sha256": "85a73b74cf3e28c1784358eef60114e350d2e4b0a5dfec834b57b3dc6e93053a",
+    "types": [
+      "NoteEffectManager"
+    ],
+    "methods": [
+      "Start",
+      "LoadSkin",
+      "PlayEffect",
+      "PlayFastLate",
+      "PlayFastLate",
+      "ResetEffect"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/SlideDrop.cs",
+    "lines": 814,
+    "sha256": "cf31d4e5e78d7c80caa183afc5a2fa00b4022bf2663fbeaaae6c02c0803271e3",
+    "types": [
+      "SlideDrop"
+    ],
+    "methods": [
+      "Initialize",
+      "ForceFinish",
+      "Start",
+      "FixedUpdate",
+      "Update",
+      "GetSlideLength",
+      "Check",
+      "Check",
+      "setSlideBarAlpha",
+      "applyStarRotation",
+      "GetSlideBars",
+      "CanShine"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/StarDrop.cs",
+    "lines": 163,
+    "sha256": "b8234e9560031082c62dddb371b170b9c0fcf4d969a28baf543e49751a748987",
+    "types": [
+      "StarDrop"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "OnDestroy"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapBase.cs",
+    "lines": 226,
+    "sha256": "99b8b1b86015f49787e8b14ead256bbec4a980ee7d30cf17ad57aca345ae2b4b",
+    "types": [
+      "TapBase"
+    ],
+    "methods": [
+      "PreLoad",
+      "FixedUpdate",
+      "Update",
+      "Check",
+      "Judge",
+      "OnDestroy"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/TapDrop.cs",
+    "lines": 43,
+    "sha256": "315673329926647576368b5034e1e22b87d108470464fdfb8777d4a320a450bd",
+    "types": [
+      "TapDrop"
+    ],
+    "methods": [
+      "Start"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchBase.cs",
+    "lines": 47,
+    "sha256": "afe16f12a12f9fb3e6606307a830bdbddbc09a7315db66550bcfdb86687854a8",
+    "types": [
+      "TouchBase"
+    ],
+    "methods": [
+      "GetRoation",
+      "GetSensor",
+      "GetSensor"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchDrop.cs",
+    "lines": 406,
+    "sha256": "c97eee10ffdb045b787ff4de4e47e50801bff59fd491bc52ed6bccaf7d608816",
+    "types": [
+      "TouchDrop"
+    ],
+    "methods": [
+      "FixedUpdate",
+      "Update",
+      "OnDestroy",
+      "setLayer",
+      "layerDown",
+      "GetAngle",
+      "GetAreaPos",
+      "SetfanColor",
+      "SetfanSprite"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/TouchHoldDrop.cs",
+    "lines": 378,
+    "sha256": "171c70d64dc72075891c6078b2be6eea85f19ac19d4019719381c2a8f8a5c396",
+    "types": [
+      "TouchHoldDrop"
+    ],
+    "methods": [
+      "Start",
+      "FixedUpdate",
+      "Update",
+      "OnDestroy",
+      "PlayHoldEffect",
+      "StopHoldEffect",
+      "GetAngle",
+      "SetfanColor"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Notes/WifiDrop.cs",
+    "lines": 592,
+    "sha256": "43521dc0ca76d347e6368e1b8d3a36722dfe900bbf859c6f5b64b204bfb19ddf",
+    "types": [
+      "WifiDrop"
+    ],
+    "methods": [
+      "Start",
+      "FixedUpdate",
+      "Check",
+      "Update",
+      "CanShine",
+      "setSlideBarAlpha"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/ScreenRecorder.cs",
+    "lines": 133,
+    "sha256": "3f077c0badeb3227394acb1b8d0724f1b7b73179765966b874f1713e8581ad50",
+    "types": [
+      "ScreenRecorder"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "StartRecording",
+      "StopRecording",
+      "CaptureScreen"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Sensor.cs",
+    "lines": 113,
+    "sha256": "ea0b014ad2ad847e1fadf75253ae40562aae103174c582902a0a0ec6964d7059",
+    "types": [
+      "Sensor"
+    ],
+    "methods": [
+      "SetOn",
+      "SetOff",
+      "Click"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/SensorManager.cs",
+    "lines": 43,
+    "sha256": "3deb105d1c5e6fb69dad0662dbe629c866a12652d867893fcd92f8f1e94c762a",
+    "types": [
+      "SensorManager"
+    ],
+    "methods": [
+      "FixedUpdate",
+      "SetSensorOn",
+      "SetSensorOff",
+      "GetSensorStatus",
+      "GetSensors",
+      "GetSensor"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Types/ConnSlideInfo.cs",
+    "lines": 80,
+    "sha256": "70e8b266d54b7000450a5c3df63525889857af8e9dfb36882ff2c4791efe024d",
+    "types": [
+      "ConnSlideInfo"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Types/Enums.cs",
+    "lines": 96,
+    "sha256": "19719cb8bd868346de6125cd2b8d9d0bb53a05eb5f53deb75baed7e7a879e7a0",
+    "types": [
+      "NoteLoaderStatus",
+      "SensorStatus",
+      "SensorType",
+      "SensorGroup",
+      "JudgeType",
+      "NoteStatus",
+      "AutoPlayMode"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Types/Input.cs",
+    "lines": 37,
+    "sha256": "d764158d4355c41d82fd7448b28f47b30d667fd4f15a3275974352f82bb15bd3",
+    "types": [
+      "Button"
+    ],
+    "methods": [
+      "PushEvent"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Types/NoteScore.cs",
+    "lines": 18,
+    "sha256": "3a6f87cdbfdc71cbc96734b633003571f979cb3797d4eeb103fb552c24b98b0f",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/Types/TouchGroup.cs",
+    "lines": 32,
+    "sha256": "aad2d9c3e0ab328f6384731ac663a3125a9861c410a71b3994663c6ed385e232",
+    "types": [
+      "TouchGroup"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/BGManager.cs",
+    "lines": 139,
+    "sha256": "d4773d1f886c95ef251a4471d9466eca95edd1ad295a8ceb515b10506cf015f5",
+    "types": [
+      "BGManager"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "PlaySongDetail",
+      "PauseVideo",
+      "ContinueVideo",
+      "LoadBGFromPath",
+      "loadPic",
+      "loadVideo",
+      "waitFumenStart"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/CustomSkin.cs",
+    "lines": 185,
+    "sha256": "d8321ccf452be02cbf4bc2e2d650391e20bee6b60eed1454d4ff51b931fbd001",
+    "types": [
+      "CustomSkin"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/Floating.cs",
+    "lines": 25,
+    "sha256": "9a4fc3d0b4447c6ee0bf89a4d5fbda0b8ea5f5ad312bfe46217377485999049f",
+    "types": [
+      "Floating"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/ObjectCounter.cs",
+    "lines": 701,
+    "sha256": "1f05e667d93aad64b9226036f4226bec52a899bf9ace91fbba9943edcac68af1",
+    "types": [
+      "ObjectCounter"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "UpdateOutput",
+      "ReportResult",
+      "NextNote",
+      "NextTouch",
+      "UpdateMainOutput",
+      "UpdateSideOutput",
+      "UpdateState",
+      "UpdateAchievementColor",
+      "ComboSetActive",
+      "ComboSetActive",
+      "FiSumScore",
+      "FiNowScore",
+      "FiNowBreakScore",
+      "DxSumScore",
+      "DxNowScore",
+      "DxExSumScore",
+      "DxExNowScore",
+      "DeDxNowScore",
+      "DeDxNowBreakScore",
+      "BreakRate"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/TImeDisplayer.cs",
+    "lines": 42,
+    "sha256": "78dc78befc8277b379ecfa2431328b1847b3f2effeeb9197ed0a7ac3fbb841b4",
+    "types": [
+      "TImeDisplayer"
+    ],
+    "methods": [
+      "Start",
+      "Update"
+    ]
+  },
+  {
+    "project": "MajdataView",
+    "path": "Assets/Scripts/UI/ToggleFullScreen.cs",
+    "lines": 72,
+    "sha256": "6c66a569b5ec33f46f20979575134472f378f3672ac727192f06002194c9a271",
+    "types": [
+      "ToggleFullScreen"
+    ],
+    "methods": [
+      "Start",
+      "Update",
+      "ToggleFullscreen",
+      "DisplayDropdown",
+      "SetResolution"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "App.xaml",
+    "lines": 470,
+    "sha256": "c80fa72f99cdc48787f1bd9be06d6823bba3779d8cd9b6589033de147b457718",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "App.xaml.cs",
+    "lines": 34,
+    "sha256": "9a7c3729e00d96d4809cb07f51976177e7c0aea5a230794e3be42e4587e3b738",
+    "types": [
+      "App"
+    ],
+    "methods": [
+      "Application_DispatcherUnhandledException"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveExceptions.cs",
+    "lines": 50,
+    "sha256": "0aab10127af93b65418126f7646229027207e7e6d8863cdcd35150614d642da1",
+    "types": [
+      "AutoSaveIndexNotReadyException",
+      "LocalDirNotOpenYetException"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveIndex.cs",
+    "lines": 40,
+    "sha256": "1831262287dbb14fa2d4d5f047344de460e238db5fb8539ef547d2126b3e39ae",
+    "types": [
+      "AutoSaveIndex",
+      "FileInfo"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveIndexManager.cs",
+    "lines": 193,
+    "sha256": "508e3351c52debf865d1b68ddbf617bc3a0e89644e9fdbdba06650fd2f06d54b",
+    "types": [
+      "AutoSaveIndexManager"
+    ],
+    "methods": [
+      "ChangePath",
+      "GetFileCount",
+      "GetMaxAutoSaveCount",
+      "GetNewAutoSaveFileName",
+      "IsReady",
+      "RefreshIndex",
+      "SetMaxAutoSaveCount",
+      "LoadOrCreateIndexFile",
+      "CreateDirectoryIfNotExists",
+      "KeepDirectoryHidden",
+      "UpdateIndexFile",
+      "LoadIndexFromFile",
+      "GetCurrentTimeString"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveManager.cs",
+    "lines": 116,
+    "sha256": "f4e7071fc0f3d33b9a7d876a038c5e8696540a8b34020722a00932a2e47cfb0e",
+    "types": [
+      "AutoSaveManager"
+    ],
+    "methods": [
+      "GetAutoSaveTimerInterval",
+      "SetAutoSaveTimerInterval",
+      "SetFileChanged",
+      "autoSaveTimer_Elapsed",
+      "SetAutoSaveEnable",
+      "Of"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/AutoSaveRecoverer.cs",
+    "lines": 106,
+    "sha256": "2aa3af3491ec583598dfc038cb83ff62948c8d99b214ba64ff684d7b01c01a0c",
+    "types": [
+      "AutoSaveRecoverer"
+    ],
+    "methods": [
+      "GetFumenInfos",
+      "RecoverFile"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/FumenInfos.cs",
+    "lines": 99,
+    "sha256": "6bbafc7e4e663278e6bc8ca348b735ebd965ac00cedd4f3f7556329f6b58fa6b",
+    "types": [
+      "FumenInfos"
+    ],
+    "methods": [
+      "FromFile",
+      "GetValue"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/GlobalAutoSave.cs",
+    "lines": 34,
+    "sha256": "5df4ef9b2d45deb1d3dc63724dccf9ef540e837ba3cb2313c79bcb8fc6dfedc9",
+    "types": [
+      "GlobalAutoSave"
+    ],
+    "methods": [
+      "DoAutoSave"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/GlobalAutoSaveContext.cs",
+    "lines": 17,
+    "sha256": "2357eeaddd680fd65e6167d60154b08b115666cf25213012a98bb6992871c41a",
+    "types": [
+      "GlobalAutoSaveContext"
+    ],
+    "methods": [
+      "GetSavePath"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSave.cs",
+    "lines": 19,
+    "sha256": "6d644f206280bfb47842b8ff66edf025d5a90870bc5f29b9b3becd339088121d",
+    "types": [
+      "IAutoSave"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveContext.cs",
+    "lines": 19,
+    "sha256": "920dacefd6b5d98882aa2065a2c694e7e3494b4e4b5b5e4307ad6be4b0b6b09d",
+    "types": [
+      "IAutoSaveContext"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveIndexManager.cs",
+    "lines": 59,
+    "sha256": "5677b68949e9c143ad5e00f0b591114c53a7836f26f4cc014e154e3418a3e254",
+    "types": [
+      "IAutoSaveIndexManager"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/IAutoSaveRecoverer.cs",
+    "lines": 41,
+    "sha256": "8e25a3deccace03635d459f6be89c9367254b58fe69bff9c4079e21eff8f7c66",
+    "types": [
+      "IAutoSaveRecoverer"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/LocalAutoSave.cs",
+    "lines": 36,
+    "sha256": "e148c8c9e1c1e76181c4445a35347b62f8d30b71fe54a6b4017312e53a8632c5",
+    "types": [
+      "LocalAutoSave"
+    ],
+    "methods": [
+      "DoAutoSave"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/LocalAutoSaveContext.cs",
+    "lines": 20,
+    "sha256": "506f539e01e80379f1ea7301c2eb069151fda6b91398021500bb4a9ea64fe084",
+    "types": [
+      "LocalAutoSaveContext"
+    ],
+    "methods": [
+      "GetSavePath"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "AutoSaveModule/SafeTerminationDetector.cs",
+    "lines": 65,
+    "sha256": "09c8f6ff181cc0c7b65397d8330cdb4b20df4b99116fa5e0e81348d86204e46d",
+    "types": [
+      "SafeTerminationDetector"
+    ],
+    "methods": [
+      "IsLastTerminationSafe",
+      "RecordProgramStart",
+      "ChangePath",
+      "RecordProgramClose",
+      "Of"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Langs/Langs.Designer.cs",
+    "lines": 72,
+    "sha256": "6f021e2c39b7918804a8076bfbf3573780b63d681d6767ab301d7b81c7b7621a",
+    "types": [
+      "Langs"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Langs/Langs.en-US.Designer.cs",
+    "lines": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Langs/Langs.ja.Designer.cs",
+    "lines": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Langs/Langs.zh-CN1.Designer.cs",
+    "lines": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "MainWindow.xaml",
+    "lines": 293,
+    "sha256": "7c0c773ebf2b6a441a0784249bcc9eb3f0c00c31268eb31b3c218032d36c3d24",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "MainWindow.xaml.cs",
+    "lines": 655,
+    "sha256": "77d1580f32d005ac0e355af8d6a46a0093fdc853ff74311c188a7e20020fa2fd",
+    "types": [
+      "MainWindow"
+    ],
+    "methods": [
+      "Window_Loaded",
+      "SetWindowPosTimer_Elapsed",
+      "Window_Closing",
+      "Grid_DragEnter",
+      "Grid_Drop",
+      "FindClose_MouseDown",
+      "Menu_New_Click",
+      "Menu_Open_Click",
+      "Menu_Save_Click",
+      "Menu_SaveAs_Click",
+      "Menu_ExportRender_Click",
+      "MirrorLeftRight_MenuItem_Click",
+      "MirrorUpDown_MenuItem_Click",
+      "Mirror180_MenuItem_Click",
+      "Mirror45_MenuItem_Click",
+      "MirrorCcw45_MenuItem_Click",
+      "BPMtap_MenuItem_Click",
+      "MenuItem_InfomationEdit_Click",
+      "MenuItem_Majnet_Click",
+      "MenuItem_GitHub_Click",
+      "MenuItem_SoundSetting_Click",
+      "MuriCheck_Click_1",
+      "SyntaxCheckButton_Click",
+      "SyntaxCheckButton_Click",
+      "MenuItem_EditorSetting_Click",
+      "Menu_ResetViewWindow",
+      "MenuFind_Click",
+      "CheckUpdate_Click",
+      "Menu_AutosaveRecover_Click",
+      "PlayAndPause_CanExecute",
+      "StopPlaying_CanExecute",
+      "SaveFile_Command_CanExecute",
+      "SendToView_CanExecute",
+      "IncreasePlaybackSpeed_CanExecute",
+      "DecreasePlaybackSpeed_CanExecute",
+      "PlbHideTimer_Elapsed",
+      "FindCommand_CanExecute",
+      "MirrorLRCommand_CanExecute",
+      "MirrorUDCommand_CanExecute",
+      "Mirror180Command_CanExecute",
+      "Mirror45Command_CanExecute",
+      "MirrorCcw45Command_CanExecute",
+      "PlayAndPauseButton_Click",
+      "StopButton_Click",
+      "ComboBox_SelectionChanged",
+      "LevelTextBox_TextChanged",
+      "OffsetTextBox_TextChanged",
+      "OffsetTextBox_MouseWheel",
+      "FollowPlayCheck_Click",
+      "Op_Button_Click",
+      "SettingLabel_MouseUp",
+      "FumenContent_SelectionChanged",
+      "FumenContent_TextChanged",
+      "FumenContent_OnPreviewKeyDown",
+      "WaveViewZoomIn_Click",
+      "WaveViewZoomOut_Click",
+      "MusicWave_MouseWheel",
+      "MusicWave_PreviewMouseLeftButtonDown",
+      "MusicWave_MouseMove",
+      "MusicWave_SizeChanged"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "MainWindowCore.cs",
+    "lines": 1568,
+    "sha256": "116df6ee946b1e1af442002386e3e7db262aeac0487213a4055fd25cfa7f345f",
+    "types": [
+      "MainWindow",
+      "PlayMethod"
+    ],
+    "methods": [
+      "GetRawFumenText",
+      "SetRawFumenText",
+      "GetRawFumenPosition",
+      "SeekTextFromTime",
+      "SeekTextFromIndex",
+      "ScrollToFumenContentSelection",
+      "Find_icon_MouseDown",
+      "Replace_icon_MouseDown",
+      "GetTextRangeFromPosition",
+      "FindAndScroll",
+      "initFromFile",
+      "SyntaxCheck",
+      "ReadWaveFromFile",
+      "SetSavedState",
+      "AskSave",
+      "SaveFumen",
+      "SaveSetting",
+      "ReadSetting",
+      "CreateNewFumen",
+      "CreateEditorSetting",
+      "ReadEditorSetting",
+      "SaveEditorSetting",
+      "AddGesture",
+      "VisualEffectRefreshTimer_Elapsed",
+      "ChartChangeTimer_Elapsed",
+      "DrawFFT",
+      "InitWave",
+      "DrawWave",
+      "CurrentTimeRefreshTimer_Elapsed",
+      "UpdateTimeDisplay",
+      "ScrollWave",
+      "GetLocalizedString",
+      "TogglePlay",
+      "TogglePause",
+      "ToggleStop",
+      "TogglePlayAndPause",
+      "TogglePlayAndStop",
+      "SetPlaybackSpeed",
+      "GetPlaybackSpeed",
+      "SetBgmPosition",
+      "sendRequestStop",
+      "sendRequestPause",
+      "sendRequestContinue",
+      "sendRequestRun",
+      "FindWindow",
+      "MoveWindow",
+      "ShowWindow",
+      "SwitchToThisWindow",
+      "CheckAndStartView",
+      "GetViewerWorkingDirectory",
+      "InternalSwitchWindow",
+      "InternalMoveWindow",
+      "SetWindowGoldenPosition",
+      "SwitchFumenOverwriteMode",
+      "CheckUpdate",
+      "GetWindowsTitleString",
+      "GetWindowsTitleString",
+      "OpenFile"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Majson.cs",
+    "lines": 117,
+    "sha256": "4be1a02aa69cddfa9a7ff6928ba43aac187a3052b2502ad8c2c5e910e4764d30",
+    "types": [
+      "Majson",
+      "EditRequestjson",
+      "EditorPlayMethod",
+      "EditorComboIndicator",
+      "EditorControlMethod",
+      "MajSetting",
+      "EditorSetting"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Mirror.cs",
+    "lines": 306,
+    "sha256": "f7e4edcba04c87f7662a50e54479e3cf20bf65f7685375d16ab5509f2abb36d8",
+    "types": [
+      "Mirror",
+      "HandleType"
+    ],
+    "methods": [
+      "NoteMirrorHandle",
+      "NoteMirrorPart",
+      "NormalMirrorPart"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Properties/AssemblyInfo.cs",
+    "lines": 26,
+    "sha256": "0d75958ef3f496f7f52e5bb42c6169a9a32af4150dcf54d9150c1178ef2b7085",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Properties/Resources.Designer.cs",
+    "lines": 82,
+    "sha256": "807d8f4c543e2232b0dc72eb99f7c509fc167efcb1183ddfd3ce72075b223314",
+    "types": [
+      "Resources"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "Properties/Settings.Designer.cs",
+    "lines": 25,
+    "sha256": "092a4eaa548d1b1793cdeabec4b5315a9acb4b4ccae91a263281e3ede0940475",
+    "types": [
+      "Settings"
+    ],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SimaiProcess.cs",
+    "lines": 671,
+    "sha256": "805db6cca6e42fb98489593fe61460af3a676d67c11f43a3a95b75111749022d",
+    "types": [
+      "SimaiProcess",
+      "SimaiTimingPoint",
+      "SimaiNoteType",
+      "SimaiNote"
+    ],
+    "methods": [
+      "ClearData",
+      "ReadData",
+      "SaveData",
+      "GetValue",
+      "Serialize",
+      "ClearNoteListPlayedState",
+      "isNote",
+      "GetDifficultyText",
+      "getNotes",
+      "getSameHeadSlide",
+      "getSingleNote",
+      "isSlideNote",
+      "isTouchNote",
+      "getTimeFromBeats",
+      "getStarWaitTime"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SoundEffect.cs",
+    "lines": 935,
+    "sha256": "e5846b3f235c1bb7b59bd7759021d2700d8c28c0c4a459ad1d9fc91e383c7637",
+    "types": [
+      "MainWindow",
+      "SoundEffectTiming",
+      "SoundBank",
+      "SoundDataType"
+    ],
+    "methods": [
+      "WaveStopMonitorTimer_Elapsed",
+      "ReadSoundEffect",
+      "timeBeginPeriod",
+      "timeEndPeriod",
+      "StartSELoop",
+      "SoundEffectUpdate",
+      "GetAllPerfectStartTime",
+      "generateSoundEffectList",
+      "renderSoundEffect",
+      "CreateWaveFileHeader",
+      "WaveStopMonitorUpdate",
+      "Reassign",
+      "InitializeSampleData",
+      "InitializeRawSample",
+      "Free",
+      "FrequencyCheck",
+      "In"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/AutoSaveRecover.xaml",
+    "lines": 95,
+    "sha256": "4fdab9d9405325d6f1ed67dc80fd4df962670fb35548aa717e2ff2faf7f5e0d0",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/AutoSaveRecover.xaml.cs",
+    "lines": 249,
+    "sha256": "6932ae8ba541cd5b3cf775e6ace633656389f1b7e38ab5e52c012696faf88536",
+    "types": [
+      "AutoSaveRecover"
+    ],
+    "methods": [
+      "InitializeAutosaveList",
+      "AddNewItem",
+      "ListBoxItem_Selected",
+      "GetItemDisplayText",
+      "FormatUnixTime",
+      "SetRtbFumenContent",
+      "Btn_Easy_Click",
+      "Btn_Basic_Click",
+      "Btn_Advance_Click",
+      "Btn_Expert_Click",
+      "Btn_Master_Click",
+      "Btn_ReMaster_Click",
+      "Btn_Original_Click",
+      "Btn_Recover_Click",
+      "Btn_Cancel_Click"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/BPMtap.xaml",
+    "lines": 29,
+    "sha256": "b2e5be0042784a30311e2b21ac1154a53eb2791c7a533f7657f25b7e62ed9404",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/BPMtap.xaml.cs",
+    "lines": 42,
+    "sha256": "5811d065057a52fbf8daeb64ec2982424095a9a3cb618e7a6e9d76cad04ca16e",
+    "types": [
+      "BPMtap"
+    ],
+    "methods": [
+      "Tap_Button_Click",
+      "Reset_Button_Click"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/EditorSettingPanel.xaml",
+    "lines": 186,
+    "sha256": "0293e747119095e9f402725df9dfd53319cabc708420bdc49b80be19322a1d1d",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/EditorSettingPanel.xaml.cs",
+    "lines": 163,
+    "sha256": "a90001493e5e68a14bc28ec152c5c80be1a4322ee71c020b7fc22a9dfe20e3b3",
+    "types": [
+      "EditorSettingPanel"
+    ],
+    "methods": [
+      "Window_Loaded",
+      "LanguageComboBox_SelectionChanged",
+      "RenderModeComboBox_OnSelectionChanged",
+      "ViewerCover_MouseWheel",
+      "ViewerSpeed_MouseWheel",
+      "ViewerTouchSpeed_MouseWheel",
+      "Save_Button_Click",
+      "Cancel_Button_Click",
+      "Window_Closing"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/Infomation.xaml",
+    "lines": 51,
+    "sha256": "fe0c3bcef6537c2b9d273362f5e87d7a713757a4acf61b705bfbcc8c3da53da1",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/Infomation.xaml.cs",
+    "lines": 144,
+    "sha256": "2ba026321d9bbf234a03293c83b945e883ffeebadb385e25ee285dabe810527b",
+    "types": [
+      "Infomation"
+    ],
+    "methods": [
+      "OKButton_Click",
+      "InfomationWindow_Loaded",
+      "LoadImageFromDefault",
+      "LoadImageFromByte",
+      "ReadMetadata",
+      "ReadTrackButton_Click",
+      "ReadFileButton_Click",
+      "SaltImage_MouseDown",
+      "DelBGs",
+      "CancelButton_Click"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/MuriCheck.xaml",
+    "lines": 76,
+    "sha256": "e8637a4da4c34eb817b30d71b403642348cb23523a8952475b51dfabe35cdab5",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/MuriCheck.xaml.cs",
+    "lines": 516,
+    "sha256": "5b6d8551dbca496e8d0d7022e54fee8a0a17940c8b50f4e91f35f4741e792ba9",
+    "types": [
+      "MaimaiOperationMultNote",
+      "MaimaiOperationSlide",
+      "MuriCheck"
+    ],
+    "methods": [
+      "ReadMuriCheckSlideTime",
+      "notePos",
+      "StartCheck_Button_Click",
+      "addWarning",
+      "multNoteDetect",
+      "slideDetect",
+      "BeatmapMuriCheck",
+      "Window_Loaded",
+      "Window_Initialized"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/MuriCheckResult.xaml",
+    "lines": 32,
+    "sha256": "df341e8e20628d295bd2f6eba911ced1c717247d1cb3c4ff30935cddd4133ea9",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/MuriCheckResult.xaml.cs",
+    "lines": 39,
+    "sha256": "d7d7e8d16325335e027cd7740a1e0192369d82e1725f71b3f1a387d566b462d6",
+    "types": [
+      "ErrorInfo",
+      "MuriCheckResult"
+    ],
+    "methods": [
+      "ListBoxItem_PreviewMouseDoubleClick"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/SoundSetting.xaml",
+    "lines": 156,
+    "sha256": "a973b4830415b83c45de6b8887a6fbfd15b16fb133600d5c154582f6b4635e23",
+    "types": [],
+    "methods": []
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SubWindow/SoundSetting.xaml.cs",
+    "lines": 153,
+    "sha256": "0a5983c3688887bb1c0689b55d344b799b55f2900501d67979bb39b2ec211398",
+    "types": [
+      "SoundSetting"
+    ],
+    "methods": [
+      "SoundSettingWindow_Loaded",
+      "UpdateLevelTimer_Elapsed",
+      "UpdateProgressBar",
+      "SetSlider",
+      "SoundSettingWindow_Closing",
+      "BtnSetDefault_Click",
+      "BtnSetToDefault_Click"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "SyntaxModule/SyntaxCheck.cs",
+    "lines": 999,
+    "sha256": "b893dddbc38bc79a3d4e23833de36ba02b4be9ad0e6027fdfe15b0fdad699888",
+    "types": [
+      "InfomationLevel",
+      "DirectionType",
+      "SimaiErrorInfo",
+      "SyntaxChecker"
+    ],
+    "methods": [
+      "GetErrorCount",
+      "ScanAsync",
+      "Scan",
+      "SpecialSyntaxCheck",
+      "FindHSpeedBody",
+      "BodySyntaxCheck",
+      "NoteSyntaxCheck",
+      "HoldSyntaxCheck",
+      "SlideSyntaxCheck",
+      "SlidePathCheck",
+      "GetPointIndex",
+      "GetPointInterval",
+      "PointCompare",
+      "RatioSyntaxCheck",
+      "IsNote",
+      "IsTap",
+      "IsHold",
+      "IsSlide",
+      "IsTouch",
+      "IsNum",
+      "IsInteger",
+      "IsFloat",
+      "PointCheck"
+    ]
+  },
+  {
+    "project": "MajdataEdit",
+    "path": "WebControl.cs",
+    "lines": 44,
+    "sha256": "d0dac969652e395dc87c245b8d92f1399c095906b14bcf7234841971b75804ed",
+    "types": [
+      "WebControl"
+    ],
+    "methods": [
+      "RequestPOST",
+      "RequestGETAsync"
+    ]
+  }
+]

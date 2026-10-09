@@ -1,0 +1,135 @@
+Building for production...
+[2 / 7] MajdataCore
+[3 / 8] MajdataCore
+[12 / 18] MajdataMac-product
+[13 / 20] MajdataMac-product
+[15 / 20] MajdataAppTests-product
+[16 / 21] MajdataCoreTests-product
+[19 / 26] MajdataCoreTests-product
+[22 / 25] MajdataAppTests-product
+[26 / 30] MajdataAppTests-product
+[28 / 30] MajdataAppTests-product
+Build complete! (8.46 sec.)
+Test Suite 'All tests' started at 2026-10-09 13:55:20.464.
+Test Suite 'All tests' passed at 2026-10-09 13:55:20.465.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' started at 2026-10-09 13:55:20.588.
+Test Suite 'All tests' passed at 2026-10-09 13:55:20.590.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite JudgementTests started.
+◇ Suite SimaiTests started.
+◇ Test holdReleaseAndTouchGroupMajority() started.
+◇ Test wifiNeedsAllThreePaths() started.
+◇ Test shortHoldRoundingAndDenseAutomaticClicks() started.
+◇ Test malformedInputIsDiagnostic(_:) started.
+◇ Test polygonsAndBoundaryContacts() started.
+◇ Test deterministicSimulationAndAllSlideShapes() started.
+◇ Test headTimingWindowsAndEX() started.
+◇ Test areaQueueRequiresOrderReleaseAndAlternatives() started.
+◇ Test subdivisionPreservesRhythm() started.
+◇ Test heldRegionCannotHitAgainAndButtonsCannotHitTouch() started.
+◇ Test zeroDivisionRegression138() started.
+◇ Test allSlideShapesUseOriginalCoordinates() started.
+◇ Test partialNotesNeverLeakAfterMalformedChain() started.
+◇ Test deterministicFuzzNoCrashesOrInfinities() started.
+◇ Test longSlideSurvivesEndMarker() started.
+◇ Test unicodeLocationsAreUTF16() started.
+◇ Test timingsAndEndMarker() started.
+◇ Test newDurationIssue103() started.
+◇ Test transformPreservesTimingAndComments() started.
+◇ Test connectedSlidesAndIndependentWifi() started.
+◇ Test metadataRoundtrip() started.
+◇ Test case passing 1 argument input → "(120" to malformedInputIsDiagnostic(_:) started.
+◇ Test allKindsAndFlags() started.
+◇ Test case passing 1 argument input → "(-120){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(NaN){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "{4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test pseudoEachRegressionEdit80() started.
+◇ Test case passing 1 argument input → "(0){4}1," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1h[0:1]," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1-5[4:0" to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1-2[4:1]," to malformedInputIsDiagnostic(_:) started.
+◇ Test case passing 1 argument input → "(120){4}1w4[4:1]," to malformedInputIsDiagnostic(_:) started.
+✔ Test unicodeLocationsAreUTF16() passed after 0.001 seconds.
+✔ Test headTimingWindowsAndEX() passed after 0.001 seconds.
+✔ Test areaQueueRequiresOrderReleaseAndAlternatives() passed after 0.001 seconds.
+✔ Test metadataRoundtrip() passed after 0.001 seconds.
+✔ Test transformPreservesTimingAndComments() passed after 0.001 seconds.
+✔ Test partialNotesNeverLeakAfterMalformedChain() passed after 0.001 seconds.
+✔ Test zeroDivisionRegression138() passed after 0.001 seconds.
+✔ Test timingsAndEndMarker() passed after 0.001 seconds.
+✔ Test malformedInputIsDiagnostic(_:) with 9 test cases passed after 0.001 seconds.
+✔ Test heldRegionCannotHitAgainAndButtonsCannotHitTouch() passed after 0.001 seconds.
+✔ Test pseudoEachRegressionEdit80() passed after 0.001 seconds.
+✔ Test holdReleaseAndTouchGroupMajority() passed after 0.001 seconds.
+✔ Test shortHoldRoundingAndDenseAutomaticClicks() passed after 0.001 seconds.
+✔ Test subdivisionPreservesRhythm() passed after 0.004 seconds.
+✔ Test wifiNeedsAllThreePaths() passed after 0.004 seconds.
+✔ Test polygonsAndBoundaryContacts() passed after 0.004 seconds.
+✔ Test longSlideSurvivesEndMarker() passed after 0.005 seconds.
+✔ Test allKindsAndFlags() passed after 0.005 seconds.
+✔ Test newDurationIssue103() passed after 0.005 seconds.
+✔ Test connectedSlidesAndIndependentWifi() passed after 0.005 seconds.
+✔ Test allSlideShapesUseOriginalCoordinates() passed after 0.005 seconds.
+REGION fixture [1: MajdataCore.JudgeResult(noteID: 1, time: 2.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0), 4: MajdataCore.JudgeResult(noteID: 4, time: 3.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0), 2: MajdataCore.JudgeResult(noteID: 2, time: 2.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 1.0), 0: MajdataCore.JudgeResult(noteID: 0, time: 3.0, grade: MajdataCore.JudgeGrade.critical, difference: 0.0, coverage: 0.9999999999999999), 3: MajdataCore.JudgeResult(noteID: 3, time: 3.2708333333333335, grade: MajdataCore.JudgeGrade.critical, difference: -0.0382575757575756, coverage: 1.0), 5: MajdataCore.JudgeResult(noteID: 5, time: 3.2708333333333335, grade: MajdataCore.JudgeGrade.good, difference: -1.0791666666666662, coverage: 1.0)]
+✔ Test deterministicSimulationAndAllSlideShapes() passed after 0.009 seconds.
+✔ Suite JudgementTests passed after 0.009 seconds.
+✔ Test deterministicFuzzNoCrashesOrInfinities() passed after 0.017 seconds.
+✔ Suite SimaiTests passed after 0.017 seconds.
+✔ Test run with 23 tests in 2 suites passed after 0.018 seconds.
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite AudioAndSensorTests started.
+◇ Suite MediaTests started.
+◇ Suite RenderTests started.
+◇ Test audioAndFixedSizeMovie() started.
+◇ Test importedSourceGeometryAndAnimations() started.
+◇ Test sourceAudioRouting() started.
+✔ Test sourceAudioRouting() passed after 0.001 seconds.
+◇ Test sensorGeometryAndSeekState() started.
+✔ Test sensorGeometryAndSeekState() passed after 0.004 seconds.
+◇ Test liveChannelsAndExportVolumes() started.
+✔ Test importedSourceGeometryAndAnimations() passed after 0.059 seconds.
+◇ Test timingAndEachRegressions() started.
+✔ Test timingAndEachRegressions() passed after 0.001 seconds.
+◇ Test visualProofFrames() started.
+✔ Test visualProofFrames() passed after 0.407 seconds.
+◇ Test intervalIndexMatchesFullScanAfterSeeking() started.
+20,000-note interval query, 600 frames: 0.011657083 seconds
+✔ Test intervalIndexMatchesFullScanAfterSeeking() passed after 0.063 seconds.
+◇ Test demonstrationMovie() started.
+✔ Test demonstrationMovie() passed after 0.023 seconds.
+✔ Suite RenderTests passed after 0.556 seconds.
+STEM CLOCK times=[0.068, 0.068, 0.068, 0.068, 0.068, 0.068, 0.068, 0.068, 0.068]
+✔ Test liveChannelsAndExportVolumes() passed after 1.097 seconds.
+◇ Test userChartValidation() started.
+REAL CHART difficulty=2 notes=600 duration=259.1659537438055 errors=[]
+REAL CHART difficulty=3 notes=1000 duration=259.16595374380483 errors=[]
+REAL CHART difficulty=4 notes=1357 duration=259.1659537438121 errors=[]
+REAL CHART difficulty=5 notes=2181 duration=259.16595374380694 errors=[]
+REAL CHART difficulty=6 notes=2222 duration=259.16595374380563 errors=[]
+REAL REGION duration=0.039576375 seconds results=2181 sensorChanges=5551 grades=[MajdataCore.JudgeGrade.critical: 2181]
+REAL CHART densest=253.5 visible=54
+REAL MOVIE 0%
+✔ Test audioAndFixedSizeMovie() passed after 5.431 seconds.
+◇ Test repeatSeekAndPlayback() started.
+✔ Test repeatSeekAndPlayback() passed after 0.714 seconds.
+✔ Suite MediaTests passed after 6.146 seconds.
+REAL MOVIE 10%
+REAL MOVIE 20%
+REAL MOVIE 30%
+REAL MOVIE 40%
+REAL MOVIE 50%
+REAL MOVIE 60%
+REAL MOVIE 70%
+REAL MOVIE 80%
+REAL MOVIE 90%
+REAL MOVIE 100%
+REAL MOVIE COMPLETE path=<local-private-export>/Xaleid-regions-v0.3.mp4 seconds=261.16595374380563
+✔ Test userChartValidation() passed after 358.800 seconds.
+✔ Suite AudioAndSensorTests passed after 359.903 seconds.
+✔ Test run with 11 tests in 3 suites passed after 359.903 seconds.

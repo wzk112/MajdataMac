@@ -1,0 +1,193 @@
+project	number	state	title	url	local_verification
+MajdataView	178	closed	MajdataView does not work, but BGM and SFX still plays	https://github.com/LingFeng-bbben/MajdataView/issues/178	尚未逐项复现或确认修复
+MajdataView	177	closed	Edit打开文件时报错	https://github.com/LingFeng-bbben/MajdataView/issues/177	尚未逐项复现或确认修复
+MajdataView	175	open	无法导出时渲染1920*1080视频	https://github.com/LingFeng-bbben/MajdataView/issues/175	本地原生导出实际验证 1920×1080、音视频轨道与时长；未修改上游录制器。
+MajdataView	174	closed	语法检查对于绝赞星星的问题	https://github.com/LingFeng-bbben/MajdataView/issues/174	尚未逐项复现或确认修复
+MajdataView	173	closed	i suddenly cant use majdata	https://github.com/LingFeng-bbben/MajdataView/issues/173	尚未逐项复现或确认修复
+MajdataView	172	open	Edit在启动一段时间后闪退	https://github.com/LingFeng-bbben/MajdataView/issues/172	尚未逐项复现或确认修复
+MajdataView	171	open	DJ Auto跳区判定问题	https://github.com/LingFeng-bbben/MajdataView/issues/171	尚未逐项复现或确认修复
+MajdataView	170	open	自定义皮肤的目录位置引用错误	https://github.com/LingFeng-bbben/MajdataView/issues/170	尚未逐项复现或确认修复
+MajdataView	169	open	在Edit按下播放按钮后快速按下ctrl+shift+c会导致View播放但Edit中时间序列不播放	https://github.com/LingFeng-bbben/MajdataView/issues/169	尚未逐项复现或确认修复
+MajdataView	168	open	Waveform doesn't move unless when the window is being stretched.	https://github.com/LingFeng-bbben/MajdataView/issues/168	尚未逐项复现或确认修复
+MajdataView	167	open	譜面無法撥放	https://github.com/LingFeng-bbben/MajdataView/issues/167	尚未逐项复现或确认修复
+MajdataView	166	open	无法打开View	https://github.com/LingFeng-bbben/MajdataView/issues/166	尚未逐项复现或确认修复
+MajdataView	165	open	Error Window Displayed When Clicking 'Timeline' After Typing in Majdataedit Chart Editor Text Box	https://github.com/LingFeng-bbben/MajdataView/issues/165	尚未逐项复现或确认修复
+MajdataView	164	open	背景视频仅播放一次	https://github.com/LingFeng-bbben/MajdataView/issues/164	尚未逐项复现或确认修复
+MajdataView	163	open	v4.4.0 DJ Auto模式下 多条扇形slide重叠时相关的判定问题	https://github.com/LingFeng-bbben/MajdataView/issues/163	尚未逐项复现或确认修复
+MajdataView	162	open	新解析器支持	https://github.com/LingFeng-bbben/MajdataView/issues/162	尚未逐项复现或确认修复
+MajdataView	161	open	4.40版本Edit以及View的崩溃以及其他功能性问题反馈	https://github.com/LingFeng-bbben/MajdataView/issues/161	尚未逐项复现或确认修复
+MajdataView	158	closed	[Majdata View Gamma 1.1]拍击音符在取得非完美判定(Miss除外)时，没有播放各自的音效	https://github.com/LingFeng-bbben/MajdataView/issues/158	尚未逐项复现或确认修复
+MajdataView	155	closed	谱面导出视频渲染有bug	https://github.com/LingFeng-bbben/MajdataView/issues/155	尚未逐项复现或确认修复
+MajdataView	153	closed	用@表示宴谱中的圆形星星头（如1@-5[4:1],）	https://github.com/LingFeng-bbben/MajdataView/issues/153	尚未逐项复现或确认修复
+MajdataView	152	open	希望编辑器加入将选中乐句的切分细化到n倍的功能	https://github.com/LingFeng-bbben/MajdataView/issues/152	尚未逐项复现或确认修复
+MajdataView	151	open	majdata对HEVC编码的bga的支持	https://github.com/LingFeng-bbben/MajdataView/issues/151	尚未逐项复现或确认修复
+MajdataView	150	open	majdataedit跳出报错并且无法正常打开谱面	https://github.com/LingFeng-bbben/MajdataView/issues/150	尚未逐项复现或确认修复
+MajdataView	149	closed	无法新建文件qaq	https://github.com/LingFeng-bbben/MajdataView/issues/149	尚未逐项复现或确认修复
+MajdataView	148	open	写谱界面对其他拍号的支持	https://github.com/LingFeng-bbben/MajdataView/issues/148	尚未逐项复现或确认修复
+MajdataView	146	open	Majdata on Wine	https://github.com/LingFeng-bbben/MajdataView/issues/146	尚未逐项复现或确认修复
+MajdataView	145	closed	MajdataView无法正常预览谱面	https://github.com/LingFeng-bbben/MajdataView/issues/145	尚未逐项复现或确认修复
+MajdataView	144	closed	[Bug] Break Star闪烁特效缺失，Break Note闪烁特效不同步	https://github.com/LingFeng-bbben/MajdataView/issues/144	尚未逐项复现或确认修复
+MajdataView	143	open	重新对准编辑器窗口在多显示器中工作异常	https://github.com/LingFeng-bbben/MajdataView/issues/143	尚未逐项复现或确认修复
+MajdataView	139	closed	使用编辑选择功能时无法正确变换	https://github.com/LingFeng-bbben/MajdataView/issues/139	尚未逐项复现或确认修复
+MajdataView	138	open	"[MajdataEdit] 分音设置为0，且其后方存在 "","" 时，MajdataEdit会直接崩溃"	https://github.com/LingFeng-bbben/MajdataView/issues/138	本地零分母输入返回诊断；zeroDivisionRegression138 回归通过。未等同于复现原 Unity 崩溃。
+MajdataView	137	open	MajdataView打开无响应	https://github.com/LingFeng-bbben/MajdataView/issues/137	尚未逐项复现或确认修复
+MajdataView	136	closed	majdataedit未响应	https://github.com/LingFeng-bbben/MajdataView/issues/136	尚未逐项复现或确认修复
+MajdataView	135	open	unknown hard error	https://github.com/LingFeng-bbben/MajdataView/issues/135	尚未逐项复现或确认修复
+MajdataView	134	closed	MajdataEdit无响应	https://github.com/LingFeng-bbben/MajdataView/issues/134	尚未逐项复现或确认修复
+MajdataView	133	closed	如果能支持触屏就好了	https://github.com/LingFeng-bbben/MajdataView/issues/133	尚未逐项复现或确认修复
+MajdataView	132	closed	Hold与Break闪烁样式不正确	https://github.com/LingFeng-bbben/MajdataView/issues/132	尚未逐项复现或确认修复
+MajdataView	130	open	MajdataView独立运行	https://github.com/LingFeng-bbben/MajdataView/issues/130	尚未逐项复现或确认修复
+MajdataView	129	open	检测谱面文件是否已经被其他程序更改	https://github.com/LingFeng-bbben/MajdataView/issues/129	尚未逐项复现或确认修复
+MajdataView	125	closed	ex-note的ex边框视效存在问题	https://github.com/LingFeng-bbben/MajdataView/issues/125	尚未逐项复现或确认修复
+MajdataView	124	closed	导出视频后的提示文本乱码	https://github.com/LingFeng-bbben/MajdataView/issues/124	尚未逐项复现或确认修复
+MajdataView	123	closed	视频生成中Break音效重叠错误	https://github.com/LingFeng-bbben/MajdataView/issues/123	尚未逐项复现或确认修复
+MajdataView	121	closed	在歌曲中间播放时谱面产生较大延迟	https://github.com/LingFeng-bbben/MajdataView/issues/121	尚未逐项复现或确认修复
+MajdataView	120	open	语法解析重构	https://github.com/LingFeng-bbben/MajdataView/issues/120	尚未逐项复现或确认修复
+MajdataView	119	closed	majdataedit使用报错	https://github.com/LingFeng-bbben/MajdataView/issues/119	尚未逐项复现或确认修复
+MajdataView	118	open	关于导出视频长度异常的BUG	https://github.com/LingFeng-bbben/MajdataView/issues/118	尚未逐项复现或确认修复
+MajdataView	117	closed	Track delay during playback	https://github.com/LingFeng-bbben/MajdataView/issues/117	尚未逐项复现或确认修复
+MajdataView	116	closed	播放速度	https://github.com/LingFeng-bbben/MajdataView/issues/116	尚未逐项复现或确认修复
+MajdataView	115	open	黃色箭頭跟隨bug	https://github.com/LingFeng-bbben/MajdataView/issues/115	尚未逐项复现或确认修复
+MajdataView	114	closed	Regarding time signature	https://github.com/LingFeng-bbben/MajdataView/issues/114	尚未逐项复现或确认修复
+MajdataView	113	closed	MajdataView对ex-hold的视觉效果错误	https://github.com/LingFeng-bbben/MajdataView/issues/113	尚未逐项复现或确认修复
+MajdataView	112	closed	未将对象引用设置到对象的实例	https://github.com/LingFeng-bbben/MajdataView/issues/112	尚未逐项复现或确认修复
+MajdataView	111	closed	使用Discord里找的粉色星星Skin的情况下，粉星星依然会携带一条蓝色弧线，而正确的现象应该是粉色弧线	https://github.com/LingFeng-bbben/MajdataView/issues/111	尚未逐项复现或确认修复
+MajdataView	110	closed	MajdataEdit的变速功能似乎没有上限	https://github.com/LingFeng-bbben/MajdataView/issues/110	尚未逐项复现或确认修复
+MajdataView	109	closed	[BUG]在歌曲中间开始预览谱面时，音乐可能和谱面无法同步	https://github.com/LingFeng-bbben/MajdataView/issues/109	尚未逐项复现或确认修复
+MajdataView	108	closed	Error	https://github.com/LingFeng-bbben/MajdataView/issues/108	尚未逐项复现或确认修复
+MajdataView	107	closed	MajdataEdit freeze upon pressing play button	https://github.com/LingFeng-bbben/MajdataView/issues/107	尚未逐项复现或确认修复
+MajdataView	106	closed	更丰富的bga名称设置	https://github.com/LingFeng-bbben/MajdataView/issues/106	尚未逐项复现或确认修复
+MajdataView	105	closed	预览谱面时majdataedit窗口卡住	https://github.com/LingFeng-bbben/MajdataView/issues/105	尚未逐项复现或确认修复
+MajdataView	104	closed	长星星提前结束了导出谱面	https://github.com/LingFeng-bbben/MajdataView/issues/104	尚未逐项复现或确认修复
+MajdataView	103	open	支援設定 Slide 延遲及時長的兩個新語法 / Support new ways to specify slide's delay and duration	https://github.com/LingFeng-bbben/MajdataView/issues/103	本地支持 ## 时长；newDurationIssue103 回归通过。
+MajdataView	102	closed	无法对存在变速语法的语句正确执行Note翻转	https://github.com/LingFeng-bbben/MajdataView/issues/102	尚未逐项复现或确认修复
+MajdataView	101	closed	无法对存在变速语法的语句正确执行Note翻转	https://github.com/LingFeng-bbben/MajdataView/issues/101	尚未逐项复现或确认修复
+MajdataView	99	closed	关于内录视频导出失败的BUG	https://github.com/LingFeng-bbben/MajdataView/issues/99	尚未逐项复现或确认修复
+MajdataView	95	closed	旧错新提。。	https://github.com/LingFeng-bbben/MajdataView/issues/95	尚未逐项复现或确认修复
+MajdataView	94	closed	点击播放键后无法加载背景视频和图片,也无法播放谱面,但可以播放音乐	https://github.com/LingFeng-bbben/MajdataView/issues/94	尚未逐项复现或确认修复
+MajdataView	93	closed	-选择音频后莫名出现报错	https://github.com/LingFeng-bbben/MajdataView/issues/93	尚未逐项复现或确认修复
+MajdataView	92	closed	无法正常导出视频	https://github.com/LingFeng-bbben/MajdataView/issues/92	尚未逐项复现或确认修复
+MajdataView	91	closed	Please open Majdataview by 强制软件渲染.bat iin the folder	https://github.com/LingFeng-bbben/MajdataView/issues/91	尚未逐项复现或确认修复
+MajdataView	89	closed	无法联网更新，无法连接到View	https://github.com/LingFeng-bbben/MajdataView/issues/89	尚未逐项复现或确认修复
+MajdataView	86	closed	0	https://github.com/LingFeng-bbben/MajdataView/issues/86	尚未逐项复现或确认修复
+MajdataView	84	closed	谱面播放器竖屏时显示不正常	https://github.com/LingFeng-bbben/MajdataView/issues/84	尚未逐项复现或确认修复
+MajdataView	83	closed	只有break音效与slide声音	https://github.com/LingFeng-bbben/MajdataView/issues/83	尚未逐项复现或确认修复
+MajdataView	82	closed	Increase editor size	https://github.com/LingFeng-bbben/MajdataView/issues/82	尚未逐项复现或确认修复
+MajdataView	81	closed	希望录制模式节拍器可以根据wholebpm速度决定	https://github.com/LingFeng-bbben/MajdataView/issues/81	尚未逐项复现或确认修复
+MajdataView	80	closed	全新的bug	https://github.com/LingFeng-bbben/MajdataView/issues/80	尚未逐项复现或确认修复
+MajdataView	79	closed	能否将NET Framework 4.x升级成NET 6以兼容Linux	https://github.com/LingFeng-bbben/MajdataView/issues/79	尚未逐项复现或确认修复
+MajdataView	78	closed	Break Slide音效不正确	https://github.com/LingFeng-bbben/MajdataView/issues/78	尚未逐项复现或确认修复
+MajdataView	77	closed	majSetting.json生成在错误的位置	https://github.com/LingFeng-bbben/MajdataView/issues/77	尚未逐项复现或确认修复
+MajdataView	74	closed	软件报错打不开	https://github.com/LingFeng-bbben/MajdataView/issues/74	尚未逐项复现或确认修复
+MajdataView	73	closed	语法检查功能	https://github.com/LingFeng-bbben/MajdataView/issues/73	尚未逐项复现或确认修复
+MajdataView	71	closed	Wifi和Touch皮肤化	https://github.com/LingFeng-bbben/MajdataView/issues/71	尚未逐项复现或确认修复
+MajdataView	70	closed	歌曲时间长了以后，底下的时间轴条会变全黄，看不到写了什么	https://github.com/LingFeng-bbben/MajdataView/issues/70	尚未逐项复现或确认修复
+MajdataView	69	closed	音符延遲	https://github.com/LingFeng-bbben/MajdataView/issues/69	尚未逐项复现或确认修复
+MajdataView	68	closed	无理检测无法正确判断类似Believe the Rainbow[Master]的Slide配置	https://github.com/LingFeng-bbben/MajdataView/issues/68	尚未逐项复现或确认修复
+MajdataView	67	closed	星星头的音效没了	https://github.com/LingFeng-bbben/MajdataView/issues/67	尚未逐项复现或确认修复
+MajdataView	66	closed	未将对象引用设置到对象的实例	https://github.com/LingFeng-bbben/MajdataView/issues/66	尚未逐项复现或确认修复
+MajdataView	65	closed	更好的自动更新检查	https://github.com/LingFeng-bbben/MajdataView/issues/65	尚未逐项复现或确认修复
+MajdataView	64	closed	无头星星在时间轴中显示不正常	https://github.com/LingFeng-bbben/MajdataView/issues/64	尚未逐项复现或确认修复
+MajdataView	63	closed	未将对象引用设置到对象的实例	https://github.com/LingFeng-bbben/MajdataView/issues/63	尚未逐项复现或确认修复
+MajdataView	62	closed	Support the notation grammar for the official Simai Release	https://github.com/LingFeng-bbben/MajdataView/issues/62	尚未逐项复现或确认修复
+MajdataView	61	closed	Edit莫名卡顿	https://github.com/LingFeng-bbben/MajdataView/issues/61	尚未逐项复现或确认修复
+MajdataView	60	closed	Break的Hold和Slide在时间轴内的颜色	https://github.com/LingFeng-bbben/MajdataView/issues/60	尚未逐项复现或确认修复
+MajdataView	59	closed	Slide判定条会被Slide所遮挡	https://github.com/LingFeng-bbben/MajdataView/issues/59	尚未逐项复现或确认修复
+MajdataView	58	open	更友好的节拍音设置	https://github.com/LingFeng-bbben/MajdataView/issues/58	尚未逐项复现或确认修复
+MajdataView	57	closed	AP音效不会播放	https://github.com/LingFeng-bbben/MajdataView/issues/57	尚未逐项复现或确认修复
+MajdataView	56	closed	AP特效不会播放	https://github.com/LingFeng-bbben/MajdataView/issues/56	尚未逐项复现或确认修复
+MajdataView	55	closed	4.0 snapshot的hold會全部被算進Break裡面	https://github.com/LingFeng-bbben/MajdataView/issues/55	尚未逐项复现或确认修复
+MajdataView	54	closed	希望编辑器增加拍号设置功能	https://github.com/LingFeng-bbben/MajdataView/issues/54	尚未逐项复现或确认修复
+MajdataView	53	closed	Festival的连续Slide仍会检测长度为1并报错	https://github.com/LingFeng-bbben/MajdataView/issues/53	尚未逐项复现或确认修复
+MajdataView	52	closed	BK hold問題	https://github.com/LingFeng-bbben/MajdataView/issues/52	尚未逐项复现或确认修复
+MajdataView	51	closed	DX SKIN	https://github.com/LingFeng-bbben/MajdataView/issues/51	尚未逐项复现或确认修复
+MajdataView	50	closed	pv无法显示	https://github.com/LingFeng-bbben/MajdataView/issues/50	尚未逐项复现或确认修复
+MajdataView	49	closed	短Hold音效	https://github.com/LingFeng-bbben/MajdataView/issues/49	尚未逐项复现或确认修复
+MajdataView	48	closed	组合Slide闪动问题	https://github.com/LingFeng-bbben/MajdataView/issues/48	尚未逐项复现或确认修复
+MajdataView	47	closed	view显示问题	https://github.com/LingFeng-bbben/MajdataView/issues/47	尚未逐项复现或确认修复
+MajdataView	46	closed	4.0更新后touch hold的hanabi effect似乎不能正常显示	https://github.com/LingFeng-bbben/MajdataView/issues/46	尚未逐项复现或确认修复
+MajdataView	45	closed	新一代maimai でらっくす更新	https://github.com/LingFeng-bbben/MajdataView/issues/45	尚未逐项复现或确认修复
+MajdataView	44	closed	关于新要素，New notes in the festival version.	https://github.com/LingFeng-bbben/MajdataView/issues/44	尚未逐项复现或确认修复
+MajdataView	43	closed	exnote顯示問題	https://github.com/LingFeng-bbben/MajdataView/issues/43	尚未逐项复现或确认修复
+MajdataView	42	closed	Translation/Localization required!	https://github.com/LingFeng-bbben/MajdataView/issues/42	尚未逐项复现或确认修复
+MajdataView	41	closed	開頭以及結束動畫	https://github.com/LingFeng-bbben/MajdataView/issues/41	尚未逐项复现或确认修复
+MajdataView	40	closed	要不要把Edit里的FFT曲线删了	https://github.com/LingFeng-bbben/MajdataView/issues/40	尚未逐项复现或确认修复
+MajdataView	39	closed	hanabi特效叠加问题	https://github.com/LingFeng-bbben/MajdataView/issues/39	尚未逐项复现或确认修复
+MajdataView	38	closed	skin網站無法下載	https://github.com/LingFeng-bbben/MajdataView/issues/38	尚未逐项复现或确认修复
+MajdataView	37	closed	Hold在按住的情况下会发光	https://github.com/LingFeng-bbben/MajdataView/issues/37	尚未逐项复现或确认修复
+MajdataView	36	closed	优化短Hold音效	https://github.com/LingFeng-bbben/MajdataView/issues/36	尚未逐项复现或确认修复
+MajdataView	35	closed	将音频播放功能移动至View中	https://github.com/LingFeng-bbben/MajdataView/issues/35	尚未逐项复现或确认修复
+MajdataView	33	closed	自touch流速commit后，TouchHold的外边框消失了	https://github.com/LingFeng-bbben/MajdataView/issues/33	尚未逐项复现或确认修复
+MajdataView	32	closed	touch叠加特效在多押下仍显示为蓝色	https://github.com/LingFeng-bbben/MajdataView/issues/32	尚未逐项复现或确认修复
+MajdataView	31	closed	Ctrl+方向键也可以选定进度，而readme没有写	https://github.com/LingFeng-bbben/MajdataView/issues/31	尚未逐项复现或确认修复
+MajdataView	30	open	建议增加一个专有扩展名的项目文件	https://github.com/LingFeng-bbben/MajdataView/issues/30	尚未逐项复现或确认修复
+MajdataView	29	closed	希望增加文本覆盖模式的支持	https://github.com/LingFeng-bbben/MajdataView/issues/29	尚未逐项复现或确认修复
+MajdataView	28	closed	请问可否在工具里内置节拍器	https://github.com/LingFeng-bbben/MajdataView/issues/28	尚未逐项复现或确认修复
+MajdataView	27	closed	WiFi星星头没有“等待启动”的星星头“不透明度增加、大小由小变大”的动画	https://github.com/LingFeng-bbben/MajdataView/issues/27	尚未逐项复现或确认修复
+MajdataView	26	closed	3.0版本PresentationCore报错后吃谱。	https://github.com/LingFeng-bbben/MajdataView/issues/26	尚未逐项复现或确认修复
+MajdataView	25	closed	Unable to find the specified file	https://github.com/LingFeng-bbben/MajdataView/issues/25	尚未逐项复现或确认修复
+MajdataView	24	closed	請問有考慮做MacOS的版本嗎	https://github.com/LingFeng-bbben/MajdataView/issues/24	尚未逐项复现或确认修复
+MajdataView	22	closed	支持maipad的变速语法	https://github.com/LingFeng-bbben/MajdataView/issues/22	尚未逐项复现或确认修复
+MajdataView	21	closed	编辑tab下的功能希望能全部加入快捷键设定	https://github.com/LingFeng-bbben/MajdataView/issues/21	尚未逐项复现或确认修复
+MajdataView	20	closed	添加直接导出视频的功能	https://github.com/LingFeng-bbben/MajdataView/issues/20	尚未逐项复现或确认修复
+MajdataView	19	closed	中央可以显示更多其他的内容	https://github.com/LingFeng-bbben/MajdataView/issues/19	尚未逐项复现或确认修复
+MajdataView	17	closed	关于视频播放	https://github.com/LingFeng-bbben/MajdataView/issues/17	尚未逐项复现或确认修复
+MajdataView	16	closed	好像没法设定不同难度不同谱师	https://github.com/LingFeng-bbben/MajdataView/issues/16	尚未逐项复现或确认修复
+MajdataView	15	closed	Hold尾部没有粉色的点	https://github.com/LingFeng-bbben/MajdataView/issues/15	尚未逐项复现或确认修复
+MajdataView	14	closed	Slide 重合跳动问题	https://github.com/LingFeng-bbben/MajdataView/issues/14	尚未逐项复现或确认修复
+MajdataView	13	closed	添加Combo显示	https://github.com/LingFeng-bbben/MajdataView/issues/13	尚未逐项复现或确认修复
+MajdataView	12	closed	建议加入按esc退出全屏功能	https://github.com/LingFeng-bbben/MajdataView/issues/12	尚未逐项复现或确认修复
+MajdataView	11	closed	Each的引导线不完整	https://github.com/LingFeng-bbben/MajdataView/issues/11	尚未逐项复现或确认修复
+MajdataView	10	closed	星星不能在超过360度的Slide上平滑旋转	https://github.com/LingFeng-bbben/MajdataView/issues/10	尚未逐项复现或确认修复
+MajdataView	6	closed	hold长度在特定状态下异常	https://github.com/LingFeng-bbben/MajdataView/issues/6	尚未逐项复现或确认修复
+MajdataView	5	closed	从谱面中途开始发到查看器播放，会出现异常，但还能正常播放	https://github.com/LingFeng-bbben/MajdataView/issues/5	尚未逐项复现或确认修复
+MajdataView	4	closed	在看谱器ui内显示时间	https://github.com/LingFeng-bbben/MajdataView/issues/4	尚未逐项复现或确认修复
+MajdataView	3	closed	[Bug] Music-playing process wouldn't stop on specific behaviours	https://github.com/LingFeng-bbben/MajdataView/issues/3	尚未逐项复现或确认修复
+MajdataView	2	closed	紫圣剑2的wifi夹星星挂了（	https://github.com/LingFeng-bbben/MajdataView/issues/2	尚未逐项复现或确认修复
+MajdataView	1	closed	MajdataEdit打开后未响应闪退	https://github.com/LingFeng-bbben/MajdataView/issues/1	尚未逐项复现或确认修复
+MajdataEdit	80	open	关于伪双押标记符「`」的间隔问题	https://github.com/LingFeng-bbben/MajdataEdit/issues/80	本地 1 ms 伪 EACH 解析与密集同区点击回归通过。
+MajdataEdit	79	open	支持更改编辑器字体	https://github.com/LingFeng-bbben/MajdataEdit/issues/79	尚未逐项复现或确认修复
+MajdataEdit	78	closed	支持设定每小节节拍数	https://github.com/LingFeng-bbben/MajdataEdit/issues/78	尚未逐项复现或确认修复
+MajdataEdit	77	open	顺滑slide选项仍然在菜单中	https://github.com/LingFeng-bbben/MajdataEdit/issues/77	尚未逐项复现或确认修复
+MajdataEdit	73	closed	无理检测暂不支持DX谱面	https://github.com/LingFeng-bbben/MajdataEdit/issues/73	尚未逐项复现或确认修复
+MajdataEdit	66	open	无法打开谱面文件	https://github.com/LingFeng-bbben/MajdataEdit/issues/66	尚未逐项复现或确认修复
+MajdataEdit	47	closed	majdata接受的谱面格式与simai语法不匹配	https://github.com/LingFeng-bbben/MajdataEdit/issues/47	尚未逐项复现或确认修复
+MajdataEdit	44	closed	有时底部时轴的分音线显示不正确	https://github.com/LingFeng-bbben/MajdataEdit/issues/44	尚未逐项复现或确认修复
+MajdataEdit	43	open	底部时轴显示时间频谱图	https://github.com/LingFeng-bbben/MajdataEdit/issues/43	尚未逐项复现或确认修复
+MajdataEdit	42	closed	无理检测的撞尾检测会忽略slide-tap，从而导致一些撞尾无法被检测	https://github.com/LingFeng-bbben/MajdataEdit/issues/42	尚未逐项复现或确认修复
+MajdataEdit	41	closed	使用软件渲染时的坐标溢出问题	https://github.com/LingFeng-bbben/MajdataEdit/issues/41	尚未逐项复现或确认修复
+MajdataEdit	38	closed	伪双语法（`符号）支持	https://github.com/LingFeng-bbben/MajdataEdit/issues/38	尚未逐项复现或确认修复
+MajdataEdit	37	closed	无理检测中，隔1个区的直线slide可能检测不到一些无理情况	https://github.com/LingFeng-bbben/MajdataEdit/issues/37	尚未逐项复现或确认修复
+MajdataEdit	36	open	关于note音性能的提案	https://github.com/LingFeng-bbben/MajdataEdit/issues/36	尚未逐项复现或确认修复
+MajdataEdit	35	closed	谱面无理检测界面文本需要日语翻译以及英文润色	https://github.com/LingFeng-bbben/MajdataEdit/issues/35	尚未逐项复现或确认修复
+MajdataEdit	34	closed	界面左上角的歌曲时间会显示出诸如0:60的内容	https://github.com/LingFeng-bbben/MajdataEdit/issues/34	尚未逐项复现或确认修复
+MajdataEdit	33	closed	录制模式播放片头时，点击停止键会使软件工作不符合预期	https://github.com/LingFeng-bbben/MajdataEdit/issues/33	尚未逐项复现或确认修复
+MajdataEdit	32	closed	切换难度后无法正常显示和播放谱面	https://github.com/LingFeng-bbben/MajdataEdit/issues/32	尚未逐项复现或确认修复
+MajdataEdit	31	closed	View在低分辨率中容易部分处于屏幕外	https://github.com/LingFeng-bbben/MajdataEdit/issues/31	尚未逐项复现或确认修复
+MajdataEdit	30	closed	变速星星的拍滑有概率被判定为无理	https://github.com/LingFeng-bbben/MajdataEdit/issues/30	尚未逐项复现或确认修复
+MajdataEdit	28	closed	播放时调节速度或位置，音乐的速度/位置会变化，note仍然是之前的设置	https://github.com/LingFeng-bbben/MajdataEdit/issues/28	尚未逐项复现或确认修复
+MajdataEdit	27	closed	改善tap音性能	https://github.com/LingFeng-bbben/MajdataEdit/issues/27	尚未逐项复现或确认修复
+MajdataEdit	26	closed	mp3文件不标准导致的音频时间定位不准或无法载入	https://github.com/LingFeng-bbben/MajdataEdit/issues/26	尚未逐项复现或确认修复
+MajdataEdit	25	closed	Hold释放音效无法和在同一时间的note对齐	https://github.com/LingFeng-bbben/MajdataEdit/issues/25	尚未逐项复现或确认修复
+MajdataEdit	24	closed	view窗口会在点击录制时变更大小	https://github.com/LingFeng-bbben/MajdataEdit/issues/24	尚未逐项复现或确认修复
+MajdataEdit	23	closed	谱面作者不能保存	https://github.com/LingFeng-bbben/MajdataEdit/issues/23	尚未逐项复现或确认修复
+MajdataEdit	21	closed	希望加入倍速播放功能	https://github.com/LingFeng-bbben/MajdataEdit/issues/21	尚未逐项复现或确认修复
+MajdataEdit	22	closed	变速的时候时间线错乱	https://github.com/LingFeng-bbben/MajdataEdit/issues/22	尚未逐项复现或确认修复
+MajdataEdit	20	closed	单头多星的星星头颜色问题	https://github.com/LingFeng-bbben/MajdataEdit/issues/20	尚未逐项复现或确认修复
+MajdataEdit	19	closed	Richtext box 控件在谱面已插入新的文字时不能通过pointer正常定位	https://github.com/LingFeng-bbben/MajdataEdit/issues/19	尚未逐项复现或确认修复
+MajdataEdit	18	closed	當譜面不是從第一行開始播放的時候，會有高機率出現音樂與譜面對不上的問題(即使原先譜面與音樂已對齊)	https://github.com/LingFeng-bbben/MajdataEdit/issues/18	尚未逐项复现或确认修复
+MajdataEdit	17	closed	双击【发送查看器】的时候View会自动上下高度最大化。	https://github.com/LingFeng-bbben/MajdataEdit/issues/17	尚未逐项复现或确认修复
+MajdataEdit	16	closed	播放到音乐结束的时候，按钮不会恢复，但也不处于播放状态	https://github.com/LingFeng-bbben/MajdataEdit/issues/16	尚未逐项复现或确认修复
+MajdataEdit	15	closed	自定义快捷键	https://github.com/LingFeng-bbben/MajdataEdit/issues/15	尚未逐项复现或确认修复
+MajdataEdit	14	closed	开启文本跟随的时候，无法在播放铺面的时候用快捷键跳到指定地点开始播放。	https://github.com/LingFeng-bbben/MajdataEdit/issues/14	尚未逐项复现或确认修复
+MajdataEdit	13	closed	铺面编辑器的行间距过大，单页信息量有点少。	https://github.com/LingFeng-bbben/MajdataEdit/issues/13	尚未逐项复现或确认修复
+MajdataEdit	12	closed	数字和逗号分开写的时候，波形图上不会显示tap。	https://github.com/LingFeng-bbben/MajdataEdit/issues/12	尚未逐项复现或确认修复
+MajdataEdit	11	closed	希望写谱的时候波形能随着光标移动。	https://github.com/LingFeng-bbben/MajdataEdit/issues/11	尚未逐项复现或确认修复
+MajdataEdit	10	closed	某种写法双押显示不出来	https://github.com/LingFeng-bbben/MajdataEdit/issues/10	尚未逐项复现或确认修复
+MajdataEdit	9	closed	方便写谱时镜像、旋转变换的加功能请求（	https://github.com/LingFeng-bbben/MajdataEdit/issues/9	尚未逐项复现或确认修复
+MajdataEdit	8	closed	发到查看器和Edit内的播放不兼容	https://github.com/LingFeng-bbben/MajdataEdit/issues/8	尚未逐项复现或确认修复
+MajdataEdit	7	open	暂停键显示成了一个大方块	https://github.com/LingFeng-bbben/MajdataEdit/issues/7	尚未逐项复现或确认修复
+MajdataEdit	6	closed	高分屏上使用Edit，自动打开的View会自动变小	https://github.com/LingFeng-bbben/MajdataEdit/issues/6	尚未逐项复现或确认修复
+MajdataEdit	5	closed	希望支持拖拽maidata.txt直接打开	https://github.com/LingFeng-bbben/MajdataEdit/issues/5	尚未逐项复现或确认修复
+MajdataEdit	4	closed	闪退相关	https://github.com/LingFeng-bbben/MajdataEdit/issues/4	尚未逐项复现或确认修复
+MajdataEdit	1	closed	MajdataEdit打开后未响应闪退	https://github.com/LingFeng-bbben/MajdataEdit/issues/1	尚未逐项复现或确认修复
