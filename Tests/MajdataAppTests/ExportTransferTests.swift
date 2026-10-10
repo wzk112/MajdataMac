@@ -34,7 +34,7 @@ struct ExportTransferTests {
         let style = StageStyle(showSensors: true)
         let info = StageChartInfo(title: "Export · 渲染", artist: "Artist", designer: "Designer", difficulty: 5, level: "15.0", notes: chart.notes.count, breaks: chart.breakCount)
         let intro = RecordingIntro(opening: RecordingOpening(chart: chart, clockCount: "0"), info: info)
-        let renderer = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: StageStatisticsTimeline.prepared(chart, recording: nil), width: 1280, height: 720, intro: intro)
+        let renderer = try ExportFrameRenderer(chart: chart, style: style, info: info, statistics: StageStatisticsTimeline.prepared(chart, recording: nil), width: 1280, height: 720, intro: intro)
         let cpu = ExportPixelTransfer(useMetal: false), metal = ExportPixelTransfer(useMetal: true)
         func buffer() throws -> CVPixelBuffer {
             var pixel: CVPixelBuffer?

@@ -131,7 +131,7 @@ import MajdataCore
         let info = StageChartInfo(title: "Export · 渲染", artist: "Artist", designer: "Designer", difficulty: 5, level: "15", notes: chart.notes.count, breaks: chart.breakCount)
         let statistics = StageStatisticsTimeline.prepared(chart, recording: nil)
         let width = 1280, height = 720
-        let optimized = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height)
+        let optimized = try ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height)
         func context() throws -> CGContext {
             try #require(CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
                 space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.noneSkipFirst.rawValue))
