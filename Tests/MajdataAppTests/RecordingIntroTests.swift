@@ -20,7 +20,7 @@ import MajdataCore
             let (width, height) = resolution.dimensions
             let info = StageChartInfo(title: "中文曲名 · Xaleid◆scopiX", artist: "作曲者 / Artist", designer: "谱师 / Note Designer", difficulty: 5, level: "15.0", notes: 2, breaks: 0)
             let style = StageStyle()
-            let frame = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: nil, width: width, height: height,
+            let frame = try ExportFrameRenderer(chart: chart, style: style, info: info, statistics: nil, width: width, height: height,
                 intro: RecordingIntro(opening: opening, info: info))
             let image = try frame.image(time: -3, style: style)
             #expect(image.width == width && image.height == height)
@@ -31,7 +31,7 @@ import MajdataCore
                 artist: "Composer A feat. Composer B / 作曲与编曲", designer: "Note Designer A × Designer B / 合作谱面", difficulty: difficulty,
                 level: difficulty == 6 ? "" : "14+", notes: 2, breaks: 0)
             let style = StageStyle()
-            let frame = ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: 720, height: 720,
+            let frame = try ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: 720, height: 720,
                 intro: RecordingIntro(opening: opening, info: info))
             try proof(frame.image(time: -3, style: style), "difficulty-\(difficulty)")
         }
@@ -106,8 +106,8 @@ import MajdataCore
         }
         for (width, height) in [(720,720),(1280,720)] {
             let style = StageStyle()
-            let renderer = ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: width, height: height, intro: intro)
-            let normal = ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: width, height: height)
+            let renderer = try ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: width, height: height, intro: intro)
+            let normal = try ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: width, height: height)
             var previous: Data?
             for time in [-4.9, -4.4, -3, -0.95, -0.7, -0.4, 0, 1] {
                 let actual = try context(width,height)

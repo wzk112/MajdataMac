@@ -40,6 +40,7 @@ struct RecordingIntroManifest: Decodable {
     let manifest: RecordingIntroManifest
     let images: [String: NSImage]
     let fontName: String
+    let font: CGFont
     private init() {
         let root = StudioModel.resourceURL.appendingPathComponent("RecordingIntro")
         do { manifest = try JSONDecoder().decode(RecordingIntroManifest.self, from: Data(contentsOf: root.appendingPathComponent("intro.json"))) }
@@ -48,6 +49,10 @@ struct RecordingIntroManifest: Decodable {
             $0[$1] = NSImage(contentsOf: root.appendingPathComponent($1 + ($1 == "bg_dummy" ? ".jpg" : ".png")))
         }
         let fontURL = root.appendingPathComponent("Minimoon.ttf") as CFURL
+        guard let provider = CGDataProvider(url: fontURL), let bundledFont = CGFont(provider) else {
+            fatalError("Bundled recording intro font is invalid")
+        }
+        font = bundledFont
         CTFontManagerRegisterFontsForURL(fontURL, .process, nil)
         let descriptors = CTFontManagerCreateFontDescriptorsFromURL(fontURL) as? [CTFontDescriptor]
         fontName = descriptors?.first.flatMap { CTFontDescriptorCopyAttribute($0, kCTFontNameAttribute) as? String } ?? "Helvetica-Bold"
@@ -58,6 +63,7 @@ struct RecordingIntroManifest: Decodable {
 /// Animation follows the export clock, never wall time or SwiftUI implicit animations.
 struct RecordingIntroView: View {
     let intro: RecordingIntro
+    let text: RecordingIntroText
     let cover: NSImage?
     let time: Double
     var body: some View {
@@ -92,45 +98,9 @@ struct RecordingIntroView: View {
                     c.addFilter(.colorMatrix(matrix))
                     c.draw(Image(nsImage: image), in: CGRect(x: -n.width/2, y: -n.height/2, width: n.width, height: n.height))
                 }
-                if let field = n.field {
-                    let text: String
-                    switch field {
-                    case "level": text = intro.info.level.isEmpty ? "—" : intro.info.level
-                    case "difficulty": text = intro.info.difficultyName
-                    case "title": text = intro.info.title
-                    case "artist": text = intro.info.artist
-                    case "designer": text = intro.info.designer
-                    default: text = field
-                    }
-                    // Unity's BestFit and CoreText have different font metrics. Keep long
-                    // difficulty names clear of the adjacent LV. label and fit levels in the badge.
-                    let fontSize = field == "level" ? min(3.6, n.fontSize) : n.fontSize
-                    let textWidth = field == "level" ? min(7.6, n.width) : (field == "difficulty" ? min(14.8, n.width) : n.width)
-                    var resolved = c.resolve(Text(text).font(.custom(assets.fontName, size: fontSize * 10)).foregroundStyle(.white))
-                    let measured = resolved.measure(in: CGSize(width: CGFloat.infinity, height: CGFloat.infinity))
-                    if field == "title", measured.width > textWidth * 10 {
-                        // Long titles use the card's full two-line area before shrinking.
-                        // Measure every candidate at the final width so CJK/emoji wrap safely.
-                        var lower = 0.01, upper = fontSize
-                        for _ in 0..<12 {
-                            let candidate = (lower + upper) / 2
-                            let value = c.resolve(Text(text).font(.custom(assets.fontName, size: candidate * 10)).foregroundStyle(.white))
-                            let size = value.measure(in: CGSize(width: textWidth * 10, height: .infinity))
-                            if size.height <= n.height * 10 { lower = candidate } else { upper = candidate }
-                        }
-                        resolved = c.resolve(Text(text).font(.custom(assets.fontName, size: lower * 10)).foregroundStyle(.white))
-                        c.scaleBy(x: 0.1, y: 0.1)
-                        c.draw(resolved, in: CGRect(x: -textWidth * 5, y: -n.height * 5, width: textWidth * 10, height: n.height * 10))
-                        continue
-                    }
-                    let fit = min(1, textWidth * 10 / max(0.001, measured.width), n.height * 10 / max(0.001, measured.height))
-                    resolved = c.resolve(Text(text).font(.custom(assets.fontName, size: fontSize * fit * 10)).foregroundStyle(.white))
-                    let horizontal = n.alignment % 3, vertical = n.alignment / 3
-                    let anchor = UnitPoint(x: Double(horizontal)/2, y: Double(vertical)/2)
-                    if field == "level" { c.translateBy(x: 0.74, y: 0) }
-                    c.scaleBy(x: 0.1, y: 0.1)
-                    if n.shadow { c.addFilter(.shadow(color: .black, radius: 0, x: 2, y: -2)) }
-                    c.draw(resolved, at: CGPoint(x: (anchor.x - 0.5)*n.width*10, y: (anchor.y - 0.5)*n.height*10), anchor: anchor)
+                if let label = text.labels[n.path] {
+                    if n.shadow { c.addFilter(.shadow(color: .black, radius: 0, x: 0.2, y: -0.2)) }
+                    c.draw(Image(decorative: label.image, scale: 1), in: label.bounds)
                 }
             }
             // Keep the original circular wipe, with the requested black surround.

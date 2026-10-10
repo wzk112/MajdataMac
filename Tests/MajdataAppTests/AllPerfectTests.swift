@@ -36,7 +36,7 @@ import MajdataCore
         #expect(assets.manifest.animation.value(":ifDestroy", at: 2.85, default: 0) == 1)
         let chart = SimaiParser.parse("(120){4}1,E")
         let style = StageStyle()
-        let renderer = ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: 720, height: 720)
+        let renderer = try ExportFrameRenderer(chart: chart, style: style, info: nil, statistics: nil, width: 720, height: 720)
         func pixels(_ time: Double) throws -> (CGImage, Data) {
             let image = try renderer.image(time: time, style: style)
             let context = try #require(CGContext(data: nil, width: 720, height: 720, bitsPerComponent: 8, bytesPerRow: 720*4,
