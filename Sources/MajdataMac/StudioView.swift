@@ -10,6 +10,7 @@ struct StudioView: View {
     @AppStorage("sidebarPanelWidth") private var sidebarPanelWidth = 205.0
     @AppStorage("inspectorPanelWidth") private var inspectorPanelWidth = 255.0
     @AppStorage("showSidebar") private var showSidebar = true
+    @AppStorage("editorMode") private var editorMode = EditorMode.visual
     var body: some View {
         GeometryReader { outer in
         let sidebarLimit = max(185, min(420, outer.size.width - 600 - (model.showInspector ? 249 : 7)))
@@ -64,6 +65,7 @@ struct StudioView: View {
             VStack(spacing: 0) {
                 if selection == "analysis" { AnalysisView(model: model) { selection = "studio" } }
                 else if selection == "help" { HelpView() }
+                else if editorMode == .visual { visualWorkspace }
                 else { workspace }
                 Divider()
                 HStack(spacing: 8) {
@@ -79,6 +81,11 @@ struct StudioView: View {
             .toolbar {
                 ToolbarItem(placement: .navigation) {
                     Button("侧栏", systemImage: "sidebar.left") { showSidebar.toggle() }
+                }
+                ToolbarItem(placement: .principal) {
+                    Picker("编辑模式", selection: Binding(get: { editorMode }, set: { editorMode = $0; selection = "studio" })) {
+                        ForEach(EditorMode.allCases, id: \.self) { Text($0.title).tag($0) }
+                    }.pickerStyle(.segmented).labelsHidden().frame(width: 230).help("可视化编辑 ⌘1 · 代码编辑 ⌘2")
                 }
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button("保存", systemImage: "square.and.arrow.down") { model.save() }.help("保存 ⌘S")
@@ -109,6 +116,13 @@ struct StudioView: View {
                 Text(model.exportStatus).font(.caption).foregroundStyle(.secondary)
                 Button("取消", role: .cancel) { model.exportTask?.cancel() }
             }.padding(32)
+        }
+    }
+    var visualWorkspace: some View {
+        VStack(spacing: 0) {
+            VisualWorkspace(model: model) { editorMode = .code }
+            Divider()
+            TransportBar(model: model).padding(.horizontal, 16).padding(.vertical, 12)
         }
     }
     var workspace: some View {
@@ -259,6 +273,7 @@ struct InspectorView: View {
                     let misses = recording.results.values.filter { $0.grade == .miss }.count
                     Text("模拟结果：\(misses) MISS / \(recording.results.count) 个判定").font(.caption).foregroundStyle(.secondary)
                 }
+                Toggle("判定区底纹", isOn: $model.showSensorPattern).help("在舞台上用细线画出 34 块判定区；只影响预览，不进导出视频。")
                 Toggle("显示判定区", isOn: $model.showSensors)
                 if model.showSensors {
                     Toggle("判定区按压高亮", isOn: $model.showSensorPresses)
@@ -445,6 +460,10 @@ struct HelpView: View {
                 Text("使用说明").font(.largeTitle.bold())
                 Text("打开包含 maidata.txt 与 track.mp3 / track.wav 的文件夹。左侧选择难度，在源码中编写 simai，右侧实时预览。").foregroundStyle(.secondary)
                 GroupBox("常用语法") { Text("(120){4} 1,2,3,4,\n1/5, 2b, 3x, 4h[4:2],\n1-5[4:1], 1w5[4:1],\nA1, C, Ch[4:1],\n1-3-5[4:1], 1-5*^3[4:1],\nE").font(.system(.body, design: .monospaced)).textSelection(.enabled).padding().frame(maxWidth: .infinity, alignment: .leading) }
+                GroupBox("可视化编辑（⌘1）") {
+                    Text("竖谱里时间从下往上走，左边是键 8，右边是键 1，再往右是 Touch 列和 BPM 列。先选分音，再选工具：\n1 Tap：点一下放一个。\n2 Hold：按住往上拖出长度。\n3 Slide：在竖谱上点星星头，再到右边舞台按住左键画到终点的键，经过的判定区决定形状。\n4 Touch / 5 TouchHold：在舞台上点判定区，时间取当前播放位置。\nV 选择 · 右键删除 · ⌫ 删除选中 · B 绝赞 · X 保护 · F 烟花 · W 扇形 · ⌘Z 撤销 · 空格播放。\n每次操作只改 simai 文本里对应的那一处，切到代码编辑（⌘2）随时能看到结果。")
+                        .font(.callout).padding().frame(maxWidth: .infinity, alignment: .leading)
+                }
                 Text("⌘O 打开  ·  ⌘S 保存  ·  ⇧⌘C 播放/暂停  ·  ⇧⌘X 停止  ·  ⌘F 查找  ·  ⇧⌘P 独立舞台  ·  ⌥⌘←/→ 逐帧").font(.callout)
                 Text("选中文字后可镜像、旋转或细分。时间轴可拖动定位，循环模式下点击 A / B 设置区间。源码中青色标记当前播放单元，橙色标记仍在持续的 Hold/Slide；跟随滚动不会移动编辑光标。修改每 15 秒保存到本地恢复目录，可通过文件菜单恢复。").foregroundStyle(.secondary)
                 Text("区域模式先生成按压和滑动，再按区域队列判定；可在检查与分析中定位非 Critical 的结果。关闭区域模式后使用自动全 PERFECT。⇧⌘J 显示判定区，⇧⌘M 打开九路混音器。仍在开发的功能和兼容差异见 Documentation/Feature-audit.txt。").font(.callout).foregroundStyle(.secondary)

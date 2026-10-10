@@ -115,6 +115,22 @@ enum PreviewJudgementMode: String, CaseIterable {
     var timelineFollow = true
     var timelineBeatsPerBar = 4
     var timelineSnap = false
+    /// Seconds visible in the vertical track and the time at its bottom edge.
+    var trackSpan = 4.0
+    var trackStart = 0.0
+    var trackTool = TrackTool.select { didSet { if trackTool != .slide { pendingSlide = nil } } }
+    /// Grid of the vertical track: clicks land on the nearest 1/trackDivisor point.
+    var trackDivisor = 8
+    /// 分音:拍数 written into new slides and touch holds.
+    var slideLength = "4:1"
+    /// Head flags (b, x, f, w) armed for the next placed notes.
+    var placementFlags: Set<Character> = []
+    var pendingSlide: PendingSlide?
+    var visualUndo: [VisualSnapshot] = []
+    var visualRedo: [VisualSnapshot] = []
+    var showSensorPattern = UserDefaults.standard.object(forKey: "showSensorPattern") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showSensorPattern, forKey: "showSensorPattern") }
+    }
     var ffmpegPath = UserDefaults.standard.string(forKey: "ffmpegPath") ?? "/opt/homebrew/bin/ffmpeg"
     private var parseTask: Task<Void, Never>?
     private var prepareTask: Task<Void, Never>?
@@ -125,7 +141,12 @@ enum PreviewJudgementMode: String, CaseIterable {
     private let audioOutputEnabled: Bool
     let recoveryDirectory: URL
     let cacheDirectory: URL
-    static var resourceURL: URL { Bundle.module.resourceURL!.appendingPathComponent("Resources") }
+    // .app bundles resolve resourceURL to Contents/Resources (copied folder nested inside);
+    // SwiftPM's flat test bundle already resolves to the copied Resources folder itself.
+    static var resourceURL: URL {
+        let base = Bundle.module.resourceURL!, nested = base.appendingPathComponent("Resources")
+        return FileManager.default.fileExists(atPath: nested.appendingPathComponent("Original").path) ? nested : base
+    }
 
     init(audioOutputEnabled: Bool = true) {
         self.audioOutputEnabled = audioOutputEnabled
@@ -150,6 +171,8 @@ enum PreviewJudgementMode: String, CaseIterable {
     var stageStyle: StageStyle {
         StageStyle(noteSpeed: noteSpeed, touchSpeed: touchSpeed, dim: backgroundDim, center: centerDisplay, skin: skinImages, background: background, showSensors: showSensors, sensorLabels: showSensorLabels, sensorOpacity: sensorOpacity, recording: regionJudgement ? recording : nil, showFireworks: showFireworks, showHitEffects: showHitEffects, showHoldParticles: showHoldParticles, showSensorPresses: showSensorPresses)
     }
+    /// Live previews add the zone pattern; exports keep using `stageStyle` so the video stays clean.
+    var previewStageStyle: StageStyle { var style = stageStyle; style.sensorPattern = showSensorPattern; return style }
     func stepFrame(_ direction: Int) { pause(); seek(currentTime + Double(direction) / 60) }
     var rangeStart: Double { min(0, prepared?.startTime ?? (chart.notes.first?.time ?? 0) - 1) }
     var rangeEnd: Double {
@@ -214,7 +237,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     func selectDifficulty(_ value: Int) {
         parseTask?.cancel(); invalidateAnalysis()
         document.setChart(source, difficulty: difficulty)
-        difficulty = value; source = document.chart(value); selectedRange = NSRange(location: 0, length: 0)
+        difficulty = value; source = document.chart(value); selectedRange = NSRange(location: 0, length: 0); visualUndo = []; visualRedo = []; pendingSlide = nil
         revision += 1; invalidateAudio(); chart = SimaiParser.parse(source, offset: document.offset); currentTime = 0
     }
     func allowReplacing() -> Bool {
@@ -242,7 +265,7 @@ enum PreviewJudgementMode: String, CaseIterable {
             pause(); parseTask?.cancel(); invalidateAnalysis(); revision += 1
             document = ChartDocument(text: text); fileURL = file
             difficulty = (0..<7).last(where: { !document.chart($0).isEmpty }) ?? 4
-            source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset)
+            source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset); visualUndo = []; visualRedo = []; pendingSlide = nil
             currentTime = min(0, chart.notes.first?.time ?? 0); isDirty = false
             invalidateAudio(); loadMedia(file.deletingLastPathComponent())
             fileDate = modificationDate(file)
@@ -262,7 +285,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     func newDocument() {
         guard allowReplacing() else { return }
         invalidateAnalysis()
-        pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4
+        pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4; visualUndo = []; visualRedo = []; pendingSlide = nil
         fileURL = nil; musicURL = nil; videoURL = nil; videoPlayer = nil; background = nil; backgroundURL = nil
         invalidateAudio(); chart = SimaiParser.parse(source); currentTime = 0; isDirty = false
     }
