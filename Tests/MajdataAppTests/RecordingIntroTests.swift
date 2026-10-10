@@ -1,5 +1,6 @@
 import Testing
 import SwiftUI
+import CoreText
 import AVFoundation
 import MajdataCore
 @testable import MajdataMac
@@ -95,7 +96,7 @@ import MajdataCore
         let intro = RecordingIntro(opening: opening, info: info)
         let assets = RecordingIntroAssets.shared
         #expect(assets.images.count == 4 && assets.manifest.nodes.count == 16)
-        #expect(NSFont(name: assets.fontName, size: 24) != nil)
+        #expect((CTFontCopyPostScriptName(HarmonyOSFont.coreText(size: 24)) as String).contains("HarmonyOS"))
         let entry = try #require(assets.manifest.animations["Entry"])
         #expect(abs(entry.duration - 50.0/60) < 0.00001)
         #expect(entry.value("SongDetail:m_Color.a", at: 0.41666666, default: 1) == 0)

@@ -35,9 +35,7 @@ import CoreText
             default: .center
             }
             func string(_ fontSize: Double) -> NSAttributedString {
-                // Bind the bundled font data directly, independent of name registration
-                // and any installed font with the same PostScript name.
-                let font = CTFontCreateWithGraphicsFont(assets.font, fontSize * scale, nil, nil)
+                let font = HarmonyOSFont.coreText(size: fontSize * scale, bold: field == "title" || field == "level" || field == "difficulty")
                 var alignment = alignment
                 let paragraph = withUnsafePointer(to: &alignment) {
                     let setting = CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: $0)

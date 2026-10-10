@@ -24,7 +24,7 @@ swift test -c release
 
 ## GitHub Release
 
-1. 检查 `git diff --check`，提交源码和文档，并推送 main。
+1. 检查 `git diff --check`，将源码和文档提交至修复分支，通过 PR 审查和回归后合并到 main；发布以合并后的提交为准。
 2. 创建与准确提交对应的版本标签；先建立 draft Release，上传 DMG、ZIP、INSTALL.txt、SHA256SUMS.txt。
 3. 下载 draft 资产，核对所有 SHA-256，解压或挂载检查签名、架构、最低系统版本和资源。
 4. Release 正文写明系统/芯片要求、首次打开步骤、签名/公证状态、功能和已知限制。

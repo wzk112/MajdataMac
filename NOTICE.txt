@@ -4,6 +4,13 @@ This Swift/SwiftUI port and its GPL-derived data are distributed under GNU GPL v
 See LICENSE. This distribution includes editable source, resources, importer
 scripts and tests. No SEGA affiliation or official approval is implied.
 
+HarmonyOS Sans SC — Copyright 2021 Huawei Device Co., Ltd.
+Track metadata and recording intro text use bundled, unmodified Regular/Bold
+font files from https://developer.huawei.com/images/download/general/HarmonyOS-Sans.zip
+The fonts are licensed separately under the HarmonyOS Sans Fonts License Agreement,
+not GPL-3.0. Original license: Resources/Fonts/LICENSE.txt; readable copy:
+Documentation/HarmonyOS-Sans-License.txt. Reproduction: Scripts/import-harmonyos-fonts.py.
+
 MajdataView — bbben and contributors
 https://github.com/LingFeng-bbben/MajdataView
 Source commit: 5786452b45647eb15229ad601dab959288c0d88a

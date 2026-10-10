@@ -1,5 +1,4 @@
 import SwiftUI
-import CoreText
 import MajdataCore
 
 /// Recording alone adds the upstream five-second OP. Chart/PV timestamps stay unchanged.
@@ -39,8 +38,6 @@ struct RecordingIntroManifest: Decodable {
     static let shared = RecordingIntroAssets()
     let manifest: RecordingIntroManifest
     let images: [String: NSImage]
-    let fontName: String
-    let font: CGFont
     private init() {
         let root = StudioModel.resourceURL.appendingPathComponent("RecordingIntro")
         do { manifest = try JSONDecoder().decode(RecordingIntroManifest.self, from: Data(contentsOf: root.appendingPathComponent("intro.json"))) }
@@ -48,14 +45,7 @@ struct RecordingIntroManifest: Decodable {
         images = ["color", "1080Circle_Shaped", "JacketInfo", "bg_dummy"].reduce(into: [:]) {
             $0[$1] = NSImage(contentsOf: root.appendingPathComponent($1 + ($1 == "bg_dummy" ? ".jpg" : ".png")))
         }
-        let fontURL = root.appendingPathComponent("Minimoon.ttf") as CFURL
-        guard let provider = CGDataProvider(url: fontURL), let bundledFont = CGFont(provider) else {
-            fatalError("Bundled recording intro font is invalid")
-        }
-        font = bundledFont
-        CTFontManagerRegisterFontsForURL(fontURL, .process, nil)
-        let descriptors = CTFontManagerCreateFontDescriptorsFromURL(fontURL) as? [CTFontDescriptor]
-        fontName = descriptors?.first.flatMap { CTFontDescriptorCopyAttribute($0, kCTFontNameAttribute) as? String } ?? "Helvetica-Bold"
+
     }
 }
 

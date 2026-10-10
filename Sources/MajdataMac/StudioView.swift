@@ -71,7 +71,7 @@ struct StudioView: View {
                     Text(model.status).lineLimit(1)
                     Spacer()
                     if model.isDirty { Text("未保存").foregroundStyle(.orange) }
-                    Text("UTF-8 · SIMAI").foregroundStyle(.tertiary)
+                    Text(model.sourceEncoding.hasPrefix("UTF-8") ? "UTF-8 · SIMAI" : "\(model.sourceEncoding) → UTF-8 · SIMAI").foregroundStyle(.tertiary)
                 }.font(.system(size: 10)).padding(.horizontal, 16).frame(height: 28)
             }
             .frame(minWidth: 600, maxWidth: .infinity, maxHeight: .infinity)
@@ -448,6 +448,7 @@ struct HelpView: View {
                 Text("⌘O 打开  ·  ⌘S 保存  ·  ⇧⌘C 播放/暂停  ·  ⇧⌘X 停止  ·  ⌘F 查找  ·  ⇧⌘P 独立舞台  ·  ⌥⌘←/→ 逐帧").font(.callout)
                 Text("选中文字后可镜像、旋转或细分。时间轴可拖动定位，循环模式下点击 A / B 设置区间。源码中青色标记当前播放单元，橙色标记仍在持续的 Hold/Slide；跟随滚动不会移动编辑光标。修改每 15 秒保存到本地恢复目录，可通过文件菜单恢复。").foregroundStyle(.secondary)
                 Text("区域模式先生成按压和滑动，再按区域队列判定；可在检查与分析中定位非 Critical 的结果。关闭区域模式后使用自动全 PERFECT。⇧⌘J 显示判定区，⇧⌘M 打开九路混音器。仍在开发的功能和兼容差异见 Documentation/Feature-audit.txt。").font(.callout).foregroundStyle(.secondary)
+                Text("曲目信息使用内置 HarmonyOS Sans（鸿蒙字体）。Copyright 2021 Huawei Device Co., Ltd.；完整字体许可随应用附带。谱面保存为 UTF-8，读入支持 UTF-8 及带 BOM 的 UTF-16/UTF-32。").font(.caption).foregroundStyle(.secondary)
                 Link("simai 官方语法文档", destination: URL(string: "https://w.atwiki.jp/simai/pages/1003.html")!)
                 Link("Majdata 原项目", destination: URL(string: "https://github.com/LingFeng-bbben/MajdataView")!)
             }.padding(32).frame(maxWidth: 800, alignment: .leading)
