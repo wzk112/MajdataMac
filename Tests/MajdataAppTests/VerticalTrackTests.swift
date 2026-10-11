@@ -3,7 +3,7 @@ import AppKit
 import MajdataCore
 @testable import MajdataMac
 
-@Suite struct VerticalTrackTests {
+@Suite(.serialized) struct VerticalTrackTests {
     private func layout(start: Double = 0, span: Double = 4) -> VerticalTrackLayout {
         // 8 lanes of 40 pt: 34 + 320 + 46 + 46.
         VerticalTrackLayout(size: CGSize(width: 446, height: 400), viewport: TimelineViewport(lower: 0, upper: 16, zoom: 16 / span, start: start))
@@ -38,6 +38,17 @@ import MajdataCore
         #expect(canvas.layout.note(at: point, in: model.chart.notes)?.id == note.id)
         #expect(model.source[Range(NSRange(location: note.location.offset, length: note.location.length), in: model.source)!] == "5")
     }
+    @Test func touchesAtTheSameInstantSitSideBySide() throws {
+        let chart = SimaiParser.parse("(120){4}B2/B6/C,E4,E")
+        var layout = layout()
+        layout.touchSlots = VerticalTrackLayout.touchSlots(for: chart.notes)
+        let group = chart.notes.filter { $0.time == 0 }, alone = try #require(chart.notes.first { $0.area == "E" })
+        #expect(group.count == 3 && layout.touchSlots[alone.id] == nil && layout.center(of: alone).x == layout.touchX)
+        let centers = group.map { layout.center(of: $0).x }
+        #expect(centers == centers.sorted() && Set(centers).count == 3 && centers[0] > layout.keysEnd)
+        // Each one is hit at its own centre, not whichever was drawn first.
+        for note in group { #expect(layout.note(at: layout.center(of: note), in: chart.notes)?.id == note.id) }
+    }
     @MainActor private func model(_ source: String) -> StudioModel {
         let model = StudioModel(audioOutputEnabled: false)
         model.source = source; model.chart = SimaiParser.parse(source)
@@ -68,6 +79,21 @@ import MajdataCore
         model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 1, end: 5), end: 5)
         #expect(model.source == "(120){4}1,B3,5,1-5[4:1],E" && model.pendingSlide == nil)
         #expect(model.chart.diagnostics.isEmpty && model.chart.notes.contains { $0.kind == .slide })
+    }
+    @Test @MainActor func aSecondTailJoinsTheSameStarHead() throws {
+        let model = model("(120){4}1-5[4:1],,3,,E")
+        model.trackTool = .slide; model.place(lane: 1, at: 0)
+        model.finishSlide(zones: SlideMatching.zones(shape: "^", start: 1, end: 3), end: 3)
+        #expect(model.source == "(120){4}1-5[4:1]*^3[4:1],,3,,E")
+        #expect(model.chart.diagnostics.isEmpty)
+        // One head, two tails.
+        #expect(model.chart.notes.filter { $0.kind == .slide && $0.time == 0 }.count == 2)
+        #expect(model.chart.notes.filter { $0.kind == .tap && $0.isStar && $0.time == 0 }.count == 1)
+        model.place(lane: 1, at: 0)
+        model.finishSlide(zones: SlideMatching.zones(shape: "v", start: 1, end: 7), end: 7)
+        #expect(model.source == "(120){4}1-5[4:1]*^3[4:1]*v7[4:1],,3,,E" && model.chart.diagnostics.isEmpty)
+        model.undoVisualEdit()
+        #expect(model.source == "(120){4}1-5[4:1]*^3[4:1],,3,,E")
     }
     @Test @MainActor func flagsAndDeleteActOnTheSelectedNotes() throws {
         let model = model("(120){4}1/5,3,E")
@@ -130,5 +156,50 @@ import MajdataCore
         #expect(model.chart.notes.contains { $0.lane == 8 && abs($0.time - 6.5) < 1e-6 })
         for _ in 0..<6 { model.undoVisualEdit() }
         #expect(model.source == ChartDocument.blank.chart(4) && model.chart.notes.isEmpty)
+    }
+    @MainActor private func wait(_ seconds: Double, until done: () -> Bool) async throws {
+        let deadline = Date().addingTimeInterval(seconds)
+        while !done() && Date() < deadline { try await Task.sleep(for: .milliseconds(30)) }
+    }
+    @Test @MainActor func placingANoteKeepsPlaybackRunningAndSwapsTheMix() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        model.source = "(120){4}1,,5,,3,,7,,1,,5,,3,,7,,E"; model.chart = SimaiParser.parse(model.source)
+        model.prepareAudio(thenPlay: true)
+        try await wait(20) { model.isPlaying }
+        let first = try #require(model.prepared?.url)
+        #expect(model.isPlaying && !model.audioStale)
+        try await Task.sleep(for: .milliseconds(300))
+        model.trackTool = .tap; model.place(lane: 8, at: 2.5)
+        // The edit itself neither stops playback nor throws the playable mix away.
+        #expect(model.isPlaying && model.prepared?.url == first && model.audioStale && !model.isPreparing)
+        try await wait(20) { !model.audioStale }
+        let position = model.playbackTime
+        #expect(model.prepared?.url != first && model.isPlaying && !model.isPreparing)
+        #expect(position > 0.3 && position < 6)
+        #expect(!FileManager.default.fileExists(atPath: first.path))
+        model.pause()
+        // Paused edits wait for the new mix when play is pressed straight away.
+        model.place(lane: 2, at: 3.0); model.togglePlayback()
+        #expect(model.isPreparing && !model.isPlaying)
+        try await wait(20) { model.isPlaying }
+        #expect(model.isPlaying && !model.audioStale)
+        model.invalidateAudio()
+    }
+    @Test @MainActor func editingWhilePausedNeverStartsPlaybackOrMovesThePlayhead() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        model.source = ChartDocument.blank.chart(4); model.chart = SimaiParser.parse(model.source)
+        model.trackTool = .tap; model.place(lane: 3, at: 0.5); model.place(lane: 5, at: 1.25)
+        model.trackTool = .hold; model.place(lane: 7, at: 1.75, until: 2.75)
+        try await Task.sleep(for: .seconds(1.5)); model.tick()
+        #expect(!model.isPlaying && !model.isPreparing && model.currentTime == 0 && model.prepared == nil)
+        // With a mix already prepared and playback paused part-way through.
+        model.prepareAudio(thenPlay: false)
+        try await wait(20) { model.prepared != nil && !model.isPreparing }
+        model.seek(1.0)
+        model.trackTool = .tap; model.place(lane: 2, at: 2.0)
+        try await wait(20) { !model.audioStale }
+        try await Task.sleep(for: .milliseconds(500)); model.tick()
+        #expect(!model.audioStale && !model.isPlaying && !model.isPreparing && model.currentTime == 1.0)
+        model.invalidateAudio()
     }
 }

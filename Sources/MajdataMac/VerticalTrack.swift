@@ -6,8 +6,25 @@ import MajdataCore
 /// Columns of the vertical track: bar gutter | keys 8…1 | Touch | BPM. Time runs upward.
 struct VerticalTrackLayout: Equatable {
     static let gutter = 34.0, aux = 46.0
+    /// Place of a touch among the touches that share its instant; they sit side by side so each can be clicked.
+    struct TouchSlot: Equatable { var index: Int; var count: Int }
     var size: CGSize
     var viewport: TimelineViewport
+    var touchSlots: [Int: TouchSlot] = [:]
+    static func touchSlots(for notes: [Note]) -> [Int: TouchSlot] {
+        var slots: [Int: TouchSlot] = [:]
+        let touches = notes.filter { $0.kind == .touch || $0.kind == .touchHold }
+        for group in Dictionary(grouping: touches, by: { Int64(($0.time * 1_000_000).rounded()) }).values where group.count > 1 {
+            for (index, note) in group.sorted(by: { $0.id < $1.id }).enumerated() { slots[note.id] = TouchSlot(index: index, count: group.count) }
+        }
+        return slots
+    }
+    /// Glyph size of a touch: full size alone, narrower when it shares the column; three or more borrow the BPM column.
+    func touchSize(_ note: Note) -> Double {
+        let full = min(headSize, Self.aux - 10)
+        guard let slot = touchSlots[note.id] else { return full }
+        return min(full, ((slot.count <= 2 ? Self.aux : Self.aux * 2) - 4) / Double(slot.count) - 2)
+    }
     var laneWidth: Double { max(12, (size.width - Self.gutter - Self.aux * 2) / 8) }
     var keysEnd: Double { Self.gutter + laneWidth * 8 }
     var touchX: Double { keysEnd + Self.aux / 2 }
@@ -21,13 +38,17 @@ struct VerticalTrackLayout: Equatable {
         return (0..<8).contains(index) ? 8 - index : nil
     }
     func isTouch(_ note: Note) -> Bool { note.kind == .touch || note.kind == .touchHold }
-    func center(of note: Note) -> CGPoint { CGPoint(x: isTouch(note) ? touchX : x(lane: note.lane), y: y(note.time)) }
+    func center(of note: Note) -> CGPoint {
+        guard isTouch(note) else { return CGPoint(x: x(lane: note.lane), y: y(note.time)) }
+        guard let slot = touchSlots[note.id] else { return CGPoint(x: touchX, y: y(note.time)) }
+        let size = touchSize(note)
+        return CGPoint(x: keysEnd + 2 + (size + 2) * (Double(slot.index) + 0.5), y: y(note.time))
+    }
     /// The note under the pointer. Holds are hit along their whole body, everything else on its head.
     func note(at point: CGPoint, in notes: [Note]) -> Note? {
-        let reach = headSize / 2 + 3
         var best: (note: Note, distance: Double)?
         for note in notes {
-            let head = center(of: note)
+            let head = center(of: note), reach = (isTouch(note) ? touchSize(note) : headSize) / 2 + (touchSlots[note.id] == nil ? 3 : 1)
             guard abs(point.x - head.x) <= reach else { continue }
             let sustained = note.kind == .hold || note.kind == .touchHold
             let top = sustained ? y(note.endTime) : head.y
@@ -70,6 +91,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     private var link: CADisplayLink?
     private var musical: MusicalTimeline
     private var chartRevision: UUID
+    private var touchSlots: [Int: VerticalTrackLayout.TouchSlot]
     private var scrubbing = false
     private var resumeAfterScrub = false
     private var displayTime = 0.0
@@ -91,9 +113,17 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         let upper = model.rangeEnd + model.trackSpan * 2, length = max(0.001, upper - model.rangeStart)
         return TimelineViewport(lower: model.rangeStart, upper: upper, zoom: length / model.trackSpan, start: liveStart ?? model.trackStart)
     }
-    var layout: VerticalTrackLayout { VerticalTrackLayout(size: bounds.size, viewport: viewport) }
+    var layout: VerticalTrackLayout {
+        // A mouse edit reparses synchronously, before SwiftUI gets to call update().
+        if chartRevision != model.chart.renderRevision {
+            chartRevision = model.chart.renderRevision; musical = MusicalTimeline(model.chart)
+            touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
+        }
+        return VerticalTrackLayout(size: bounds.size, viewport: viewport, touchSlots: touchSlots)
+    }
     init(model: StudioModel) {
         self.model = model; musical = MusicalTimeline(model.chart); chartRevision = model.chart.renderRevision
+        touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
         super.init(frame: .zero)
         // AppKit views draw outside their bounds unless asked not to; long notes would spill over the transport bar.
         clipsToBounds = true
@@ -104,6 +134,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         self.model = model
         if chartRevision != model.chart.renderRevision {
             chartRevision = model.chart.renderRevision; musical = MusicalTimeline(model.chart)
+            touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
         }
         displayTime = model.playbackTime
         if !scrubbing { follow(displayTime) }
@@ -159,7 +190,13 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     override func mouseDown(with event: NSEvent) {
         window?.makeFirstResponder(self)
         let point = convert(event.locationInWindow, from: nil), layout = layout
-        if let note = note(at: point) { model.select(note); needsDisplay = true; return }
+        if let note = note(at: point) {
+            // With the Slide tool a click on a star starts another tail from the same head.
+            if model.trackTool == .slide, !layout.isTouch(note), model.slideHead(lane: note.lane, at: note.time) != nil {
+                model.place(lane: note.lane, at: note.time)
+            } else { model.select(note) }
+            needsDisplay = true; return
+        }
         // The bar-number gutter and the BPM column always scrub, whatever tool is active.
         if model.trackTool.placesNotes, let lane = layout.lane(atX: point.x) {
             let time = model.gridTime(layout.time(atY: point.y))
@@ -330,7 +367,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     private func drawTouchHoldBody(_ note: Note, _ layout: VerticalTrackLayout) {
         let top = layout.y(note.endTime), bottom = layout.y(note.time)
         NSColor.systemPurple.withAlphaComponent(0.55).setFill()
-        NSBezierPath(roundedRect: NSRect(x: layout.touchX - 3, y: top, width: 6, height: max(1, bottom - top)), xRadius: 3, yRadius: 3).fill()
+        NSBezierPath(roundedRect: NSRect(x: layout.center(of: note).x - 3, y: top, width: 6, height: max(1, bottom - top)), xRadius: 3, yRadius: 3).fill()
     }
     private func drawSlideTail(_ note: Note, _ layout: VerticalTrackLayout) {
         let x = layout.x(lane: note.lane), top = layout.y(note.endTime), bottom = layout.y(note.time)
@@ -344,7 +381,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         let center = layout.center(of: note), size = layout.headSize
         if layout.isTouch(note) {
             guard let image = sprite("touch", note) else { return }
-            let glyph = min(size, VerticalTrackLayout.aux - 10), w = glyph * 0.56, h = w * image.size.height / max(1, image.size.width)
+            let glyph = layout.touchSize(note), w = glyph * 0.56, h = w * image.size.height / max(1, image.size.width)
             for quarter in 0..<4 {
                 context.saveGState()
                 context.translateBy(x: center.x, y: center.y); context.rotate(by: Double(quarter) * .pi / 2)
@@ -367,11 +404,14 @@ private struct VerticalTrackSurface: NSViewRepresentable {
             guard let first = group.first else { continue }
             let names = group.map { $0.area + ($0.area == "C" ? "" : String($0.lane)) }
             let text = gridText.layout(names.joined(separator: "/"))
-            gridText.draw(text, at: CGPoint(x: layout.touchX + glyph / 2 - 2, y: layout.y(first.time) - glyph / 2 - 4), color: .labelColor, in: context)
+            // Alone: beside the glyph. Sharing the column: above the row, where the glyphs leave room.
+            let origin = group.count == 1 ? CGPoint(x: layout.touchX + glyph / 2 - 2, y: layout.y(first.time) - glyph / 2 - 4)
+                : CGPoint(x: layout.keysEnd + 3, y: layout.y(first.time) - layout.touchSize(first) / 2 - gridText.height - 1)
+            gridText.draw(text, at: origin, color: .labelColor, in: context)
         }
     }
     private func drawSelection(_ note: Note, _ layout: VerticalTrackLayout) {
-        let center = layout.center(of: note), size = layout.headSize + 8
+        let center = layout.center(of: note), size = (layout.isTouch(note) ? layout.touchSize(note) : layout.headSize) + 8
         let sustained = note.kind == .hold || note.kind == .touchHold
         let top = (sustained ? layout.y(note.endTime) : center.y) - size / 2
         let ring = NSBezierPath(roundedRect: NSRect(x: center.x - size / 2, y: top, width: size, height: center.y + size / 2 - top), xRadius: size / 2, yRadius: size / 2)

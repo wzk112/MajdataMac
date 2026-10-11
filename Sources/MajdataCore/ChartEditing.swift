@@ -75,6 +75,17 @@ public enum ChartEditing {
         return ChartEdit(text: text as String, selection: NSRange(location: end + (inserted as NSString).length - tokenLength - 1, length: tokenLength))
     }
 
+    /// Adds another tail to a star that already has one: simai's same-head form `1-5[4:1]*-3[4:1]`.
+    /// `tail` is the shape, end key and duration without the start key, e.g. `-3[4:1]`.
+    public static func addTail(_ tail: String, to slide: Note, in source: String) -> ChartEdit? {
+        let text = NSMutableString(string: source)
+        guard let token = slide.token, token.offset + token.length <= text.length, !tail.isEmpty,
+              text.substring(with: NSRange(location: token.offset, length: token.length)).contains(where: { "-^v<>Vpqszw".contains($0) }) else { return nil }
+        let at = token.offset + token.length
+        text.insert("*" + tail, at: at)
+        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: token.length + 1 + (tail as NSString).length))
+    }
+
     /// Removes the note's token and the separator that joined it to its neighbour.
     public static func remove(_ note: Note, from source: String) -> ChartEdit? {
         let text = NSMutableString(string: source)

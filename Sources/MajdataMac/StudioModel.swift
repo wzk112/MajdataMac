@@ -134,6 +134,9 @@ enum PreviewJudgementMode: String, CaseIterable {
     var ffmpegPath = UserDefaults.standard.string(forKey: "ffmpegPath") ?? "/opt/homebrew/bin/ffmpeg"
     private var parseTask: Task<Void, Never>?
     private var prepareTask: Task<Void, Never>?
+    private var audioRefreshTask: Task<Void, Never>?
+    /// The chart changed after the current mix was rendered; the mix keeps playing until its replacement is ready.
+    private(set) var audioStale = false
     private var timer: Timer?
     private var fileDate: Date?
     private var lastRecovery = Date.distantPast
@@ -210,10 +213,23 @@ enum PreviewJudgementMode: String, CaseIterable {
     func edited(_ text: String) {
         source = text; document.setChart(text, difficulty: difficulty); markDirty(); parse()
     }
-    func markDirty() { isDirty = true; revision += 1; invalidateAnalysis(); invalidateAudio() }
+    func markDirty() { isDirty = true; revision += 1; invalidateAnalysis(); audioEdited() }
+    /// Edits do not stop the music: the old mix stays until a new one is rendered in the background and swapped in.
+    private func audioEdited() {
+        guard prepared != nil || isPreparing else { return }
+        audioStale = true
+        audioRefreshTask?.cancel()
+        audioRefreshTask = Task { [weak self] in
+            // Lets a burst of clicks or keystrokes settle, and the debounced parse finish, before rendering once.
+            try? await Task.sleep(for: .milliseconds(450))
+            guard let self, !Task.isCancelled, self.audioStale, !self.chart.hasErrors else { return }
+            self.prepareAudio(thenPlay: self.playWhenReady, quiet: !self.isPreparing)
+        }
+    }
     func metadataChanged() { markDirty(); parse() }
     func invalidateAudio() {
-        pause(); prepareTask?.cancel(); isPreparing = false; playWhenReady = false; playback?.shutdown(); playback = nil
+        pause(); prepareTask?.cancel(); audioRefreshTask?.cancel(); audioStale = false
+        isPreparing = false; playWhenReady = false; playback?.shutdown(); playback = nil
         audioOutputName = "尚未连接"
         if let prepared {
             try? FileManager.default.removeItem(at: prepared.url)
@@ -321,10 +337,11 @@ enum PreviewJudgementMode: String, CaseIterable {
         let panel = NSOpenPanel(); panel.allowedContentTypes = [.audio]; panel.message = "选择谱面音乐"
         if panel.runModal() == .OK, let url = panel.url { musicURL = url; invalidateAudio(); prepareAudio(thenPlay: false) }
     }
-    func prepareAudio(thenPlay: Bool) {
+    /// `quiet` renders a replacement mix while the current one stays playable, without the preparing state.
+    func prepareAudio(thenPlay: Bool, quiet: Bool = false) {
         guard !chart.hasErrors else { status = "请先修正语法错误后再播放"; return }
-        prepareTask?.cancel(); isPreparing = true; playWhenReady = thenPlay
-        status = thenPlay ? "正在准备音频，完成后播放…" : "正在准备音频…"
+        prepareTask?.cancel(); playWhenReady = thenPlay
+        if !quiet { isPreparing = true; status = thenPlay ? "正在准备音频，完成后播放…" : "正在准备音频…" }
         let chart = chart, music = musicURL, settings = mix, resources = Self.resourceURL, rev = revision, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
         let destination = cacheDirectory.appendingPathComponent(UUID().uuidString + ".wav")
         prepareTask = Task {
@@ -341,10 +358,18 @@ enum PreviewJudgementMode: String, CaseIterable {
                 }
                 // Publish a complete playable state only after the graph is ready.
                 let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled, outputUID: audioOutputUID)
-                prepared = audio; recording = result; waveform = audio.waveform; connect(player)
+                // Replacing a mix that is still in use: carry the position and the play state across the swap.
+                let resume = isPlaying
+                if let old = prepared {
+                    if resume { currentTime = playbackTime }
+                    playback?.shutdown(); isPlaying = false
+                    try? FileManager.default.removeItem(at: old.url)
+                    try? FileManager.default.removeItem(at: old.url.deletingPathExtension().appendingPathExtension("stems"))
+                }
+                prepared = audio; recording = result; waveform = audio.waveform; connect(player); audioStale = false
                 playback?.rate = Float(rate); isPreparing = false
                 status = "音频已就绪 · 48 kHz · " + (regions ? "区域模拟（实验）" : "Classic 自动播放")
-                let requested = playWhenReady; playWhenReady = false
+                let requested = playWhenReady || resume; playWhenReady = false
                 if requested { play() }
             } catch {
                 try? FileManager.default.removeItem(at: destination)
@@ -428,6 +453,9 @@ enum PreviewJudgementMode: String, CaseIterable {
         if prepared == nil || playback == nil {
             if prepared != nil { invalidateAudio() }
             prepareAudio(thenPlay: true)
+        } else if audioStale {
+            // Starting playback right after an edit: wait for the new mix rather than play notes that are gone.
+            audioRefreshTask?.cancel(); prepareAudio(thenPlay: true)
         } else { play() }
     }
     func play() {

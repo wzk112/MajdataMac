@@ -187,7 +187,7 @@ private struct TrackToolPanel: View {
         case .select: "点音符选中，右键删除。拖左边的小节号一栏可以定位播放。"
         case .tap: "点一下放一个 Tap，落在最近的分音线上。"
         case .hold: "按住往上拖出长度，松手确认。"
-        case .slide: model.pendingSlide == nil ? "先在竖谱上点星星头，再到舞台上按住左键画星星尾。" : "到舞台上按住左键，从起点画到终点的键，经过的判定区决定形状。"
+        case .slide: model.pendingSlide == nil ? "先在竖谱上点星星头，再到舞台上按住左键画星星尾。点已有的星星可以再加一条尾巴（同头多尾）。" : "到舞台上按住左键，从起点画到终点的键，经过的判定区决定形状。"
         case .touch: "在舞台上点一个判定区，时间取当前播放位置。"
         case .touchHold: "在舞台上点一个判定区，时长用下面填的值。"
         }

@@ -467,7 +467,7 @@ struct HelpView: View {
                 Text("打开包含 maidata.txt 与 track.mp3 / track.wav 的文件夹。左侧选择难度，在源码中编写 simai，右侧实时预览。").foregroundStyle(.secondary)
                 GroupBox("常用语法") { Text("(120){4} 1,2,3,4,\n1/5, 2b, 3x, 4h[4:2],\n1-5[4:1], 1w5[4:1],\nA1, C, Ch[4:1],\n1-3-5[4:1], 1-5*^3[4:1],\nE").font(.system(.body, design: .monospaced)).textSelection(.enabled).padding().frame(maxWidth: .infinity, alignment: .leading) }
                 GroupBox("可视化编辑（⌘1）") {
-                    Text("竖谱里时间从下往上走，左边是键 8，右边是键 1，再往右是 Touch 列和 BPM 列。先选分音，再选工具：\n1 Tap：点一下放一个。\n2 Hold：按住往上拖出长度。\n3 Slide：在竖谱上点星星头，再到右边舞台按住左键画到终点的键，经过的判定区决定形状。\n4 Touch / 5 TouchHold：在舞台上点判定区，时间取当前播放位置。\nV 选择 · 右键删除 · ⌫ 删除选中 · B 绝赞 · X 保护 · F 烟花 · W 扇形 · ⌘Z 撤销 · 空格播放。\n每次操作只改 simai 文本里对应的那一处，切到代码编辑（⌘2）随时能看到结果。")
+                    Text("竖谱里时间从下往上走，左边是键 8，右边是键 1，再往右是 Touch 列和 BPM 列。先选分音，再选工具：\n1 Tap：点一下放一个。\n2 Hold：按住往上拖出长度。\n3 Slide：在竖谱上点星星头，再到右边舞台按住左键画到终点的键，经过的判定区决定形状；点已有的星星可以再加一条尾巴。\n4 Touch / 5 TouchHold：在舞台上点判定区，时间取当前播放位置。\nV 选择 · 右键删除 · ⌫ 删除选中 · B 绝赞 · X 保护 · F 烟花 · W 扇形 · ⌘Z 撤销 · 空格播放。\n每次操作只改 simai 文本里对应的那一处，切到代码编辑（⌘2）随时能看到结果。")
                         .font(.callout).padding().frame(maxWidth: .infinity, alignment: .leading)
                 }
                 Text("⌘O 打开  ·  ⌘S 保存  ·  ⇧⌘C 播放/暂停  ·  ⇧⌘X 停止  ·  ⌘F 查找  ·  ⇧⌘P 独立舞台  ·  ⌥⌘←/→ 逐帧").font(.callout)

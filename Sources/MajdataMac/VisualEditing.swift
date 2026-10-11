@@ -67,7 +67,8 @@ extension StudioModel {
             commit(ChartEditing.insert("\(lane)\(flags("bx"))h[\(trackDivisor):\(count)]", at: time, in: source, chart: chart))
         case .slide:
             pendingSlide = PendingSlide(lane: lane, time: time)
-            status = "星星头在键 \(lane)：到右边舞台上按住左键画星星尾，松手确认，Esc 取消"
+            status = slideHead(lane: lane, at: time) == nil ? "星星头在键 \(lane)：到右边舞台上按住左键画星星尾，松手确认，Esc 取消"
+                : "给键 \(lane) 这颗星星再加一条尾巴：到右边舞台上按住左键画，松手确认，Esc 取消"
         case .touch, .touchHold: status = "Touch 请在右边舞台上点判定区放置（时间取当前播放位置）"
         case .select: break
         }
@@ -85,7 +86,18 @@ extension StudioModel {
         guard let shape = fan ? "w" : SlideMatching.shape(start: pending.lane, end: end, drawn: zones) else {
             status = "键 \(pending.lane) 到键 \(end) 没有合法的星星形状"; NSSound.beep(); return
         }
-        if commit(ChartEditing.insert("\(pending.lane)\(flags("bx"))\(shape)\(end)\(slideLengthToken)", at: pending.time, in: source, chart: chart)) { pendingSlide = nil }
+        // A star that is already there gets a second tail on the same head (`*`), which is how overlapping stars are written.
+        let edit: ChartEdit?
+        if let existing = slideHead(lane: pending.lane, at: pending.time) {
+            edit = ChartEditing.addTail("\(shape)\(end)\(slideLengthToken)", to: existing, in: source)
+        } else {
+            edit = ChartEditing.insert("\(pending.lane)\(flags("bx"))\(shape)\(end)\(slideLengthToken)", at: pending.time, in: source, chart: chart)
+        }
+        if commit(edit) { pendingSlide = nil }
+    }
+    /// The slide starting on this key at this instant, if any.
+    func slideHead(lane: Int, at time: Double) -> Note? {
+        chart.notes.first { $0.kind == .slide && $0.lane == lane && abs($0.time - time) < 1e-6 && $0.token != nil }
     }
     func delete(_ note: Note) { commit(ChartEditing.remove(note, from: source), failure: "这个音符没有独立的源码位置，请到代码编辑里删。") }
     func deleteSelectedNotes() {
