@@ -77,6 +77,10 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     private var holdDrag: (lane: Int, start: Double, end: Double)?
     private var hover: CGPoint?
     private var tracking: NSTrackingArea?
+    /// Bottom-edge time while playback scrolls the track. Kept here so the model is not written every frame.
+    private var liveStart: Double?
+    /// Where the playhead sits while following: a quarter of the way up, with the coming notes above it.
+    static let playheadFraction = 0.25
     private let labelText = TimelineText(size: 10, bold: true)
     private let gridText = TimelineText(size: 9)
     override var isFlipped: Bool { true }
@@ -84,12 +88,14 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
     var viewport: TimelineViewport {
         let length = max(0.001, model.rangeEnd - model.rangeStart)
-        return TimelineViewport(lower: model.rangeStart, upper: model.rangeEnd, zoom: length / model.trackSpan, start: model.trackStart)
+        return TimelineViewport(lower: model.rangeStart, upper: model.rangeEnd, zoom: length / model.trackSpan, start: liveStart ?? model.trackStart)
     }
     var layout: VerticalTrackLayout { VerticalTrackLayout(size: bounds.size, viewport: viewport) }
     init(model: StudioModel) {
         self.model = model; musical = MusicalTimeline(model.chart); chartRevision = model.chart.renderRevision
         super.init(frame: .zero)
+        // AppKit views draw outside their bounds unless asked not to; long notes would spill over the transport bar.
+        clipsToBounds = true
         setAccessibilityElement(true); setAccessibilityLabel("竖谱：点击放置或选中音符，右键删除，拖动小节号一栏定位，滚动平移，Option 加滚动缩放")
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -119,11 +125,18 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         needsDisplay = true
     }
     func stop() { link?.invalidate(); link = nil }
-    /// Keeps the playhead in the lower part of the track, where the next notes are still ahead of it.
+    /// While playing the track scrolls under a fixed playhead; while paused it only moves when the playhead leaves the view.
     private func follow(_ time: Double) {
-        guard model.timelineFollow else { return }
+        guard model.timelineFollow else { settle(); return }
+        if model.isPlaying { liveStart = time - model.trackSpan * Self.playheadFraction; return }
+        settle()
         let view = viewport
-        if time < view.start || time > view.start + view.span * 0.9 { model.trackStart = time - view.span * 0.15 }
+        if time < view.start || time > view.start + view.span * 0.9 { model.trackStart = time - view.span * Self.playheadFraction }
+    }
+    /// Hands the scrolled position back to the model once playback stops driving it.
+    private func settle() {
+        guard let start = liveStart else { return }
+        liveStart = nil; model.trackStart = start
     }
     private func scrub(_ point: CGPoint) {
         let time = layout.time(atY: point.y)
@@ -196,6 +209,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     }
     private func zoom(by factor: Double, at point: CGPoint) {
         let anchor = layout.time(atY: point.y), fraction = 1 - min(1, max(0, point.y / max(1, bounds.height)))
+        liveStart = nil
         model.trackSpan = min(60, max(0.5, model.trackSpan * factor))
         model.trackStart = anchor - model.trackSpan * fraction
         model.timelineFollow = false; needsDisplay = true
@@ -207,6 +221,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
             zoom(by: exp(event.scrollingDeltaY * 0.015), at: convert(event.locationInWindow, from: nil)); return
         }
         let view = viewport, distance = event.scrollingDeltaY * (event.hasPreciseScrollingDeltas ? 1 : 12)
+        liveStart = nil
         // Content follows the fingers: dragging it down brings later bars in from the top.
         model.trackStart = TimelineViewport(lower: view.lower, upper: view.upper, zoom: (view.upper - view.lower) / view.span,
             start: view.start + distance / max(1, bounds.height) * view.span).start
