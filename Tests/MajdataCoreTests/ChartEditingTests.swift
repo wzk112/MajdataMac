@@ -25,7 +25,9 @@ import Foundation
         #expect(insert("3", at: 0, in: "(120){4}1,,5,E") == "(120){4}1/3,,5,E")
     }
     @Test func splitsACellWhenTheGridIsFiner() throws {
-        #expect(insert("7", at: 0.25, in: "(120){4}1,5,E") == "(120){4}{8}1,7,{4}5,E")
+        #expect(insert("7", at: 0.25, in: "(120){4}1,5,E") == "(120){8}1,7,{4}5,E")
+        #expect(insert("7", at: 0.25, in: "(120){4}1,{8}5,E") == "(120){8}1,7,{8}5,E")
+        #expect(insert("7", at: 0.75, in: "(120){4}1,5,3,E") == "(120){4}1,{8}5,7,{4}3,E")
         try check("(120){4}1,5,E", "7", at: 0.125)
         try check("(120){8}1,2,3,4,{4}5,6,E", "7", at: 1.0 + 1.0 / 3)
         try check("(120){4}\n1h[4:2],,\n3-7[4:1],,E", "7", at: 0.75)

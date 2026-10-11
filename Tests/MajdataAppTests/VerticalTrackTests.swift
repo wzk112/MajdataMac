@@ -52,7 +52,7 @@ import MajdataCore
         model.trackTool = .hold; model.place(lane: 7, at: 1.5, until: 2.0)
         #expect(model.source == "(120){4}1,3,5,7h[8:2],E")
         model.placementFlags = ["b"]; model.trackTool = .tap; model.place(lane: 2, at: 0.25)
-        #expect(model.source == "(120){4}{8}1,2b,{4}3,5,7h[8:2],E")
+        #expect(model.source == "(120){8}1,2b,{4}3,5,7h[8:2],E")
         model.undoVisualEdit()
         #expect(model.source == "(120){4}1,3,5,7h[8:2],E" && model.chart.notes.count == 4)
         model.redoVisualEdit()
@@ -106,5 +106,29 @@ import MajdataCore
         #expect(model.source == "(120){4}1,3,5,7h[4:2],E" && model.selectedNotes.map(\.lane) == [5])
         canvas.rightMouseDown(with: try event(.rightMouseDown, lane: 3, time: 0.5))
         #expect(model.source == "(120){4}1,,5,7h[4:2],E")
+    }
+    @Test @MainActor func aChartCanBeBuiltFromTheBlankDocumentWithTheMouse() throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        model.source = ChartDocument.blank.chart(4); model.chart = SimaiParser.parse(model.source)
+        model.trackSpan = 4; model.trackStart = 0; model.trackDivisor = 8; model.timelineFollow = false
+        let canvas = VerticalTrackCanvas(model: model)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 446, height: 400), styleMask: .borderless, backing: .buffered, defer: false)
+        window.contentView = canvas; canvas.frame = NSRect(x: 0, y: 0, width: 446, height: 400)
+        func click(lane: Int, time: Double) throws {
+            let location = CGPoint(x: canvas.layout.x(lane: lane), y: 400 - canvas.layout.y(time))
+            canvas.mouseDown(with: try #require(NSEvent.mouseEvent(with: .leftMouseDown, location: location, modifierFlags: [], timestamp: 0,
+                windowNumber: window.windowNumber, context: nil, eventNumber: 0, clickCount: 1, pressure: 1)))
+        }
+        model.trackTool = .tap
+        // Well past the two seconds an empty chart lasts: the track has to reach there.
+        for (lane, time) in [(1, 0.0), (5, 0.25), (3, 1.0), (7, 3.0), (2, 3.25)] { try click(lane: lane, time: time) }
+        #expect(model.chart.diagnostics.isEmpty)
+        #expect(model.chart.notes.map { [$0.time, Double($0.lane)] } == [[0, 1], [0.25, 5], [1, 3], [3, 7], [3.25, 2]])
+        // Scrolled to a later page the clicks still land where the pointer is.
+        model.trackStart = 4
+        try click(lane: 8, time: 6.5)
+        #expect(model.chart.notes.contains { $0.lane == 8 && abs($0.time - 6.5) < 1e-6 })
+        for _ in 0..<6 { model.undoVisualEdit() }
+        #expect(model.source == ChartDocument.blank.chart(4) && model.chart.notes.isEmpty)
     }
 }

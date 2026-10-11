@@ -41,6 +41,14 @@ extension StudioModel {
         chart = SimaiParser.parse(text, offset: document.offset)
         selectedRange = selection
     }
+    /// For edits that go through the older text commands (mirror, rotate, subdivide) so ⌘Z covers them too.
+    func undoable(_ change: () -> Void) {
+        let before = VisualSnapshot(source: source, selection: selectedRange)
+        change()
+        guard source != before.source else { return }
+        visualUndo.append(before); visualRedo.removeAll()
+        chart = SimaiParser.parse(source, offset: document.offset)
+    }
     func undoVisualEdit() {
         guard let last = visualUndo.popLast() else { NSSound.beep(); return }
         visualRedo.append(VisualSnapshot(source: source, selection: selectedRange)); apply(last.source, selection: last.selection)
@@ -66,7 +74,7 @@ extension StudioModel {
     }
     /// Stage click with a Touch tool: the zone comes from the stage, the time from the playhead.
     func placeTouch(zone: String) {
-        let time = gridTime(currentTime), firework = flags("f")
+        let time = gridTime(isPlaying ? playbackTime : currentTime), firework = flags("f")
         let token = trackTool == .touchHold ? zone + "h" + firework + slideLengthToken : zone + firework
         commit(ChartEditing.insert(token, at: time, in: source, chart: chart))
     }

@@ -87,8 +87,9 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     override var acceptsFirstResponder: Bool { true }
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
     var viewport: TimelineViewport {
-        let length = max(0.001, model.rangeEnd - model.rangeStart)
-        return TimelineViewport(lower: model.rangeStart, upper: model.rangeEnd, zoom: length / model.trackSpan, start: liveStart ?? model.trackStart)
+        // Two screens of empty track past the end, so a chart can grow there before any music sets its length.
+        let upper = model.rangeEnd + model.trackSpan * 2, length = max(0.001, upper - model.rangeStart)
+        return TimelineViewport(lower: model.rangeStart, upper: upper, zoom: length / model.trackSpan, start: liveStart ?? model.trackStart)
     }
     var layout: VerticalTrackLayout { VerticalTrackLayout(size: bounds.size, viewport: viewport) }
     init(model: StudioModel) {
@@ -277,7 +278,9 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         for note in notes where note.kind == .hold { drawHold(note, layout) }
         for note in notes where note.kind == .touchHold { drawTouchHoldBody(note, layout) }
         for note in notes where note.kind == .slide { drawSlideTail(note, layout) }
-        for note in notes where note.kind != .hold { drawHead(note, layout, context) }
+        // A slide's star is its head Tap; the slide note itself only owns the tail, so headless slides stay headless.
+        for note in notes where note.kind != .hold && note.kind != .slide { drawHead(note, layout, context) }
+        drawTouchLabels(notes, layout, context)
         for note in notes where model.isSelected(note) { drawSelection(note, layout) }
         drawGhosts(layout)
         if let time = musical.sourceTime(at: model.selectedRange.location) { cursor(time, layout, color: .systemPurple, dashed: true, context) }
@@ -349,14 +352,23 @@ private struct VerticalTrackSurface: NSViewRepresentable {
                 image.draw(in: NSRect(x: -w / 2, y: -glyph / 2, width: w, height: h), from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: false, hints: nil)
                 context.restoreGState()
             }
-            let text = gridText.layout(note.area + (note.area == "C" ? "" : String(note.lane)))
-            gridText.draw(text, at: CGPoint(x: center.x + glyph / 2 - 2, y: center.y - glyph / 2 - 4), color: .labelColor, in: context)
             return
         }
         let star = note.kind == .slide || note.isStar
         let rect = NSRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
         sprite(star ? "star" : "tap", note)?.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
         if note.isEX { model.skinImages[star ? "star_ex" : "tap_ex"]?.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil) }
+    }
+    /// One label per instant: touches that share a time share the Touch column, so their zones are listed together.
+    private func drawTouchLabels(_ notes: [Note], _ layout: VerticalTrackLayout, _ context: CGContext) {
+        let glyph = min(layout.headSize, VerticalTrackLayout.aux - 10)
+        let groups = Dictionary(grouping: notes.filter(layout.isTouch), by: { Int64(($0.time * 1_000_000).rounded()) })
+        for group in groups.values {
+            guard let first = group.first else { continue }
+            let names = group.map { $0.area + ($0.area == "C" ? "" : String($0.lane)) }
+            let text = gridText.layout(names.joined(separator: "/"))
+            gridText.draw(text, at: CGPoint(x: layout.touchX + glyph / 2 - 2, y: layout.y(first.time) - glyph / 2 - 4), color: .labelColor, in: context)
+        }
     }
     private func drawSelection(_ note: Note, _ layout: VerticalTrackLayout) {
         let center = layout.center(of: note), size = layout.headSize + 8

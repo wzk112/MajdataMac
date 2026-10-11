@@ -11,14 +11,20 @@ struct StudioView: View {
     @AppStorage("inspectorPanelWidth") private var inspectorPanelWidth = 255.0
     @AppStorage("showSidebar") private var showSidebar = true
     @AppStorage("editorMode") private var editorMode = EditorMode.visual
+    // The visual editor needs the width for tools, track and stage, so its side panels start closed and are remembered separately.
+    @AppStorage("visualShowSidebar") private var visualShowSidebar = false
+    @AppStorage("visualShowInspector") private var visualShowInspector = false
+    private var visual: Bool { editorMode == .visual }
+    private var sidebarShown: Bool { visual ? visualShowSidebar : showSidebar }
+    private var inspectorShown: Bool { visual ? visualShowInspector : model.showInspector }
     var body: some View {
         GeometryReader { outer in
-        let sidebarLimit = max(185, min(420, outer.size.width - 600 - (model.showInspector ? 249 : 7)))
+        let sidebarLimit = max(185, min(420, outer.size.width - 600 - (inspectorShown ? 249 : 7)))
         let sidebarWidth = min(sidebarLimit, max(185, sidebarPanelWidth))
-        let inspectorLimit = max(235, min(600, outer.size.width - 600 - (showSidebar ? sidebarWidth + 14 : 7)))
+        let inspectorLimit = max(235, min(600, outer.size.width - 600 - (sidebarShown ? sidebarWidth + 14 : 7)))
         let inspectorWidth = min(inspectorLimit, max(235, inspectorPanelWidth))
         HStack(spacing: 0) {
-        if showSidebar {
+        if sidebarShown {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 10) {
                     Image(systemName: "waveform.path").font(.title2).foregroundStyle(.cyan)
@@ -80,7 +86,7 @@ struct StudioView: View {
             .navigationTitle(model.title + (model.isDirty ? " •" : ""))
             .toolbar {
                 ToolbarItem(placement: .navigation) {
-                    Button("侧栏", systemImage: "sidebar.left") { showSidebar.toggle() }
+                    Button("侧栏", systemImage: "sidebar.left") { if visual { visualShowSidebar.toggle() } else { showSidebar.toggle() } }
                 }
                 ToolbarItem(placement: .principal) {
                     Picker("编辑模式", selection: Binding(get: { editorMode }, set: { editorMode = $0; selection = "studio" })) {
@@ -95,10 +101,10 @@ struct StudioView: View {
                         Button("导出谱面 JSON…") { model.exportJSON() }
                     } label: { Label("导出", systemImage: "square.and.arrow.up") }
                     Button("检查", systemImage: "checkmark.seal") { model.checkConflicts(); selection = "analysis" }
-                    Button("检查器", systemImage: "sidebar.right") { model.showInspector.toggle() }
+                    Button("检查器", systemImage: "sidebar.right") { if visual { visualShowInspector.toggle() } else { model.showInspector.toggle() } }
                 }
             }
-            if model.showInspector {
+            if inspectorShown {
                 PanelDivider(axis: .vertical, value: $inspectorPanelWidth, displayedValue: inspectorWidth,
                              limits: 235...inspectorLimit, label: "设置栏宽度分隔线", reverse: true)
                 InspectorView(model: model).frame(width: inspectorWidth)

@@ -33,9 +33,13 @@ struct VisualWorkspace: View {
     @AppStorage("trackPanelWidth") private var trackPanelWidth = 430.0
     var body: some View {
         GeometryReader { geometry in
-            let trackWidth = min(max(360, trackPanelWidth), max(360, geometry.size.width - 232 - 340))
+            // With both side panels open the tools shrink to a key rail so the stage keeps a usable size.
+            let compact = geometry.size.width < 900
+            let toolWidth = compact ? 56.0 : 232.0
+            let trackLimit = max(300, geometry.size.width - toolWidth - 300)
+            let trackWidth = min(max(300, trackPanelWidth), trackLimit)
             HStack(spacing: 0) {
-                TrackToolPanel(model: model).frame(width: 232)
+                TrackToolPanel(model: model, compact: compact).frame(width: toolWidth)
                 Divider()
                 VStack(spacing: 0) {
                     HStack(spacing: 10) {
@@ -55,7 +59,7 @@ struct VisualWorkspace: View {
                     VerticalTrackView(model: model)
                 }.frame(width: trackWidth)
                 PanelDivider(axis: .vertical, value: $trackPanelWidth, displayedValue: trackWidth,
-                             limits: 360...max(360, geometry.size.width - 232 - 340), label: "竖谱与舞台分隔线")
+                             limits: 300...trackLimit, label: "竖谱与舞台分隔线")
                 VStack(spacing: 0) {
                     HStack {
                         Text("MAJDATA RENDER").font(.system(size: 10, weight: .semibold)).tracking(1.7).foregroundStyle(.secondary)
@@ -68,7 +72,7 @@ struct VisualWorkspace: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     Divider().padding(.top, 12)
                     SelectionSummary(model: model, showCode: showCode).frame(height: 150)
-                }.frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity).background(Color.primary.opacity(0.025))
+                }.frame(minWidth: 240, maxWidth: .infinity, maxHeight: .infinity).background(Color.primary.opacity(0.025))
             }
         }
     }
@@ -117,7 +121,36 @@ private struct DivisorBar: View {
 
 private struct TrackToolPanel: View {
     @Bindable var model: StudioModel
+    var compact = false
     var body: some View {
+        if compact { rail } else { full }
+    }
+    /// Keys only; the labels live in the tooltips.
+    private var rail: some View {
+        ScrollView {
+            VStack(spacing: 4) {
+                ForEach(TrackTool.allCases) { tool in
+                    let selected = model.trackTool == tool
+                    Button { model.trackTool = tool } label: {
+                        Text(tool.key).font(.system(size: 13, weight: .bold, design: .monospaced)).frame(width: 40, height: 34)
+                            .foregroundStyle(selected ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
+                            .background(selected ? AnyShapeStyle(.tint) : AnyShapeStyle(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 7))
+                    }.buttonStyle(.plain).help(tool.title).accessibilityLabel(tool.title).accessibilityAddTraits(selected ? .isSelected : [])
+                }
+                Divider().padding(.vertical, 4)
+                ForEach(Array("bxfw"), id: \.self) { flag in
+                    let armed = model.selectedNotes.isEmpty && model.placementFlags.contains(flag)
+                    let title = ["b": "绝赞", "x": "保护", "f": "烟花", "w": "扇形"][flag] ?? ""
+                    Button { model.toggleFlag(flag) } label: {
+                        Text(String(flag).uppercased()).font(.system(size: 12, weight: .semibold, design: .monospaced)).frame(width: 40, height: 28)
+                            .foregroundStyle(armed ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
+                            .background(armed ? AnyShapeStyle(.tint) : AnyShapeStyle(Color.primary.opacity(0.08)), in: RoundedRectangle(cornerRadius: 6))
+                    }.buttonStyle(.plain).help(title).accessibilityLabel(title).accessibilityAddTraits(armed ? .isSelected : [])
+                }
+            }.padding(.vertical, 10).frame(maxWidth: .infinity)
+        }.background(Color.primary.opacity(0.025))
+    }
+    private var full: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 4) {
                 caption("工具")
@@ -143,9 +176,9 @@ private struct TrackToolPanel: View {
                 operation("撤销", "⌘Z", enabled: !model.visualUndo.isEmpty) { model.undoVisualEdit() }
                 operation("重做", "⇧⌘Z", enabled: !model.visualRedo.isEmpty) { model.redoVisualEdit() }
                 ForEach(ChartTransform.allCases, id: \.self) { transform in
-                    operation(transform.rawValue, "", enabled: model.selectedRange.length > 0) { model.transform(transform) }
+                    operation(transform.rawValue, "", enabled: model.selectedRange.length > 0) { model.undoable { model.transform(transform) } }
                 }
-                operation("选段分音细化 ×2", "", enabled: model.selectedRange.length > 0) { model.subdivide() }
+                operation("选段分音细化 ×2", "", enabled: model.selectedRange.length > 0) { model.undoable { model.subdivide() } }
             }.padding(10)
         }.background(Color.primary.opacity(0.025))
     }

@@ -43,12 +43,21 @@ public enum ChartEditing {
             // `{#seconds}` cells have no musical subdivision to refine.
             guard abs(step - 240 / cell.bpm / cell.subdivision) < 1e-9,
                   let part = fraction((time - cell.time) / step, limit: 64), part.n > 0, part.n < part.q else { return nil }
-            let commas = String(repeating: ",", count: part.n)
-            let tail = commas + token + String(repeating: ",", count: part.q - part.n) + "{\(format(cell.subdivision))}"
+            // Keep the text tidy: no restore when the next cell sets its own subdivision, and the finer
+            // subdivision replaces a `{n}` that sits directly in front of this cell instead of stacking on it.
+            let nextSets = end < length && text.character(at: end) == 0x7B // "{"
+            let tail = String(repeating: ",", count: part.n) + token + String(repeating: ",", count: part.q - part.n)
+                + (nextSets ? "" : "{\(format(cell.subdivision))}")
             text.replaceCharacters(in: NSRange(location: end - 1, length: 1), with: tail)
             let finer = "{\(format(cell.subdivision * Double(part.q)))}"
-            text.insert(finer, at: contentStart)
-            let shift = (finer as NSString).length
+            var replaced = NSRange(location: contentStart, length: 0)
+            if contentStart > 0, text.character(at: contentStart - 1) == 0x7D, // "}"
+               let open = ((cell.sourceStart ?? 0)..<contentStart).last(where: { text.character(at: $0) == 0x7B }),
+               text.substring(with: NSRange(location: open, length: contentStart - open)).range(of: "#") == nil {
+                replaced = NSRange(location: open, length: contentStart - open)
+            }
+            text.replaceCharacters(in: replaced, with: finer)
+            let shift = (finer as NSString).length - replaced.length
             return ChartEdit(text: text as String, selection: NSRange(location: end - 1 + shift + part.n, length: tokenLength))
         }
         guard index == chart.timings.count - 1 else { return nil }

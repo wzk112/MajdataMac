@@ -57,6 +57,8 @@ struct CodeEditor: NSViewRepresentable {
         func textDidChange(_ notification: Notification) {
             guard !updating, let textView else { return }
             clearPlaybackHighlight()
+            // Typing has its own undo in the text view; the visual history would rewind past it.
+            model.visualUndo = []; model.visualRedo = []
             model.selectedRange = textView.selectedRange(); model.edited(textView.string); colorize()
         }
         func textViewDidChangeSelection(_ notification: Notification) {
