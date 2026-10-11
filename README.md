@@ -8,6 +8,8 @@
 
 **1.0.0 安装包已修订为 build 16**：修复谱面提前结束导致音乐截断，加入最后一个音符完成时的原版 All Perfect 动画及音效。音乐尾段在预览和导出中完整保留；下载过 build 15 的用户请重新下载安装。
 
+开发分支（尚未发布）内置 HarmonyOS Sans SC 字体，加入中文示例和严格的 Unicode 编码检查。字体采用华为专用许可，原文件未经修改；详见[中文验证说明](Documentation/Chinese-text-validation.md)及[字体许可](Documentation/HarmonyOS-Sans-License.txt)。
+
 ## 下载与安装
 
 **[下载最新正式版](https://github.com/wzk112/MajdataMac/releases/latest)** · [v1.0.0 发布说明](https://github.com/wzk112/MajdataMac/releases/tag/v1.0.0)

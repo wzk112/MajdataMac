@@ -20,6 +20,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     private var parsedDuration = 0.0
     var source = ""
     var fileURL: URL?
+    var sourceEncoding = "UTF-8"
     var musicURL: URL?
     var backgroundURL: URL?
     var videoURL: URL?
@@ -279,9 +280,10 @@ enum PreviewJudgementMode: String, CaseIterable {
             var directory: ObjCBool = false
             FileManager.default.fileExists(atPath: url.path, isDirectory: &directory)
             let file = directory.boolValue ? url.appendingPathComponent("maidata.txt") : url
-            let text = try String(contentsOf: file, encoding: .utf8)
+            let decoded = try ChartTextCodec.decode(Data(contentsOf: file))
+            let text = decoded.text
             pause(); parseTask?.cancel(); invalidateAnalysis(); revision += 1
-            document = ChartDocument(text: text); fileURL = file
+            document = ChartDocument(text: text); fileURL = file; sourceEncoding = decoded.encoding
             difficulty = (0..<7).last(where: { !document.chart($0).isEmpty }) ?? 4
             source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset); visualUndo = []; visualRedo = []; pendingSlide = nil
             currentTime = min(0, chart.notes.first?.time ?? 0); isDirty = false
@@ -289,14 +291,14 @@ enum PreviewJudgementMode: String, CaseIterable {
             fileDate = modificationDate(file)
             recentFiles.removeAll { $0 == file.path }; recentFiles.insert(file.path, at: 0); recentFiles = Array(recentFiles.prefix(12))
             UserDefaults.standard.set(recentFiles, forKey: "recentCharts")
-            status = "已打开 \(file.lastPathComponent) · \(chart.notes.count) 个音符"
+            status = "已打开 \(file.lastPathComponent) · \(chart.notes.count) 个音符 · \(sourceEncoding)"
             prepareAudio(thenPlay: false)
         } catch { report(error) }
     }
     func loadDemo() {
         guard allowReplacing() else { return }
         let demo = Self.resourceURL.appendingPathComponent("Demo")
-        let dest = cacheDirectory.appendingPathComponent("Demo")
+        let dest = cacheDirectory.appendingPathComponent("Demo-Chinese-v1")
         if !FileManager.default.fileExists(atPath: dest.path) { try? FileManager.default.copyItem(at: demo, to: dest) }
         load(dest)
     }
@@ -304,7 +306,7 @@ enum PreviewJudgementMode: String, CaseIterable {
         guard allowReplacing() else { return }
         invalidateAnalysis()
         pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4; visualUndo = []; visualRedo = []; pendingSlide = nil
-        fileURL = nil; musicURL = nil; videoURL = nil; videoPlayer = nil; background = nil; backgroundURL = nil
+        fileURL = nil; sourceEncoding = "UTF-8"; musicURL = nil; videoURL = nil; videoPlayer = nil; background = nil; backgroundURL = nil
         invalidateAudio(); chart = SimaiParser.parse(source); currentTime = 0; isDirty = false
     }
     @discardableResult func save(as saveAs: Bool = false) -> Bool {
@@ -322,7 +324,7 @@ enum PreviewJudgementMode: String, CaseIterable {
         }
         do {
             try document.serialized.write(to: target, atomically: true, encoding: .utf8)
-            fileURL = target; fileDate = modificationDate(target); isDirty = false; status = "已保存 · \(target.lastPathComponent)"; return true
+            fileURL = target; sourceEncoding = "UTF-8"; fileDate = modificationDate(target); isDirty = false; status = "已保存 · \(target.lastPathComponent)"; return true
         } catch { report(error); return false }
     }
     func loadMedia(_ folder: URL) {

@@ -104,7 +104,7 @@ private struct StageMetadataPanel: View {
                 Spacer(minLength: 4)
                 Text(info.level.isEmpty ? "—" : info.level).font(.system(size: 30 * scale, weight: .bold, design: .rounded))
             }.foregroundStyle(info.color).lineLimit(1).minimumScaleFactor(0.6)
-            Text(info.title).font(.system(size: 28 * scale, weight: .bold)).lineLimit(3).minimumScaleFactor(0.6)
+            Text(info.title).font(HarmonyOSFont.swiftUI(size: 28 * scale, bold: true)).lineLimit(3).minimumScaleFactor(0.6)
                 .fixedSize(horizontal: false, vertical: true)
             field("ARTIST / 作曲", info.artist)
             field("NOTE DESIGN / 谱师", info.designer)
@@ -121,7 +121,7 @@ private struct StageMetadataPanel: View {
     private func field(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 4 * scale) {
             Text(label).font(.system(size: 12 * scale)).foregroundStyle(.white.opacity(0.55))
-            Text(value.isEmpty ? "—" : value).font(.system(size: 18 * scale, weight: .medium)).lineLimit(2).minimumScaleFactor(0.65)
+            Text(value.isEmpty ? "—" : value).font(HarmonyOSFont.swiftUI(size: 18 * scale)).lineLimit(2).minimumScaleFactor(0.65)
         }
     }
     private func row(_ label: String, _ value: String, color: Color) -> some View {

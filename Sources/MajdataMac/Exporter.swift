@@ -152,8 +152,8 @@ struct VideoRenderMetrics: Sendable {
         let statistics = info == nil ? nil : StageStatisticsTimeline.prepared(chart, recording: style.recording)
         let transfer = ExportPixelTransfer(useMetal: useMetalTransfer)
         let count = Int(ceil(audio.duration * 60))
-        let renderer = ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height, intro: intro)
         do {
+            let renderer = try ExportFrameRenderer(chart: chart, style: style, info: info, statistics: statistics, width: width, height: height, intro: intro)
             for frame in 0..<count {
                 try Task.checkCancellation()
                 var measured = ProcessInfo.processInfo.systemUptime

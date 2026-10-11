@@ -7,6 +7,7 @@ private struct ExportFrame: View {
     let statistics: StageStatisticsTimeline?
     let cover: NSImage?
     let intro: RecordingIntro?
+    let introText: RecordingIntroText?
     let width: Int
     let height: Int
     var time: Double
@@ -16,8 +17,8 @@ private struct ExportFrame: View {
         StagePresentation(info: info, cover: cover, statistics: statistics, time: time) {
             StageView(chart: chart, time: time, style: style)
                 .overlay {
-                    if let intro, time >= intro.opening.startTime, time < intro.opening.endTime {
-                        RecordingIntroView(intro: intro, cover: cover, time: time)
+                    if let intro, let introText, time >= intro.opening.startTime, time < intro.opening.endTime {
+                        RecordingIntroView(intro: intro, text: introText, cover: cover, time: time)
                     }
                 }
         }.frame(width: Double(width), height: Double(height))
@@ -28,8 +29,9 @@ private struct ExportFrame: View {
 /// Rendering this graph into a CGContext with render(rasterizationScale:renderer:) measured slower.
 @MainActor final class ExportFrameRenderer {
     private let renderer: ImageRenderer<ExportFrame>
-    init(chart: ParsedChart, style: StageStyle, info: StageChartInfo?, statistics: StageStatisticsTimeline?, width: Int, height: Int, intro: RecordingIntro? = nil) {
+    init(chart: ParsedChart, style: StageStyle, info: StageChartInfo?, statistics: StageStatisticsTimeline?, width: Int, height: Int, intro: RecordingIntro? = nil) throws {
         renderer = ImageRenderer(content: ExportFrame(chart: chart, info: info, statistics: statistics, cover: style.background, intro: intro,
+                                                     introText: try intro.map { try RecordingIntroText(info: $0.info, height: height) },
                                                      width: width, height: height, time: 0, style: style))
         renderer.scale = 1
         renderer.isOpaque = true
