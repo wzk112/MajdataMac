@@ -130,6 +130,22 @@ extension StudioModel {
         guard changed else { NSSound.beep(); return }
         commit(ChartEdit(text: text, selection: NSRange(location: min(selectedRange.location, (text as NSString).length), length: 0)))
     }
+    /// Notes whose length can be changed: holds, touch holds and slides.
+    var selectedSustained: [Note] { selectedNotes.filter { $0.kind == .hold || $0.kind == .touchHold || $0.kind == .slide } }
+    /// Writes `分音:拍数` into every selected hold, touch hold and slide.
+    func setSelectedDuration(_ duration: String) {
+        var text = source, seen: Set<Int> = [], selection = selectedRange
+        for note in selectedSustained.sorted(by: { range(of: $0).location > range(of: $1).location }) where seen.insert(range(of: note).location).inserted {
+            if let edit = ChartEditing.setDuration(duration, of: note, in: text) { selection.length += (edit.text as NSString).length - (text as NSString).length; text = edit.text }
+        }
+        guard text != source else { NSSound.beep(); return }
+        commit(ChartEdit(text: text, selection: NSRange(location: selection.location, length: max(0, selection.length))))
+    }
+    /// Dragging the far end of a hold or touch hold on the track: the new length in steps of the current grid.
+    func resize(_ note: Note, until time: Double) {
+        let step = gridStep(at: note.time), count = step > 0 ? max(1, Int(((time - note.time) / step).rounded())) : 1
+        commit(ChartEditing.setDuration("\(trackDivisor):\(count)", of: note, in: source))
+    }
     /// B / X / F: with notes selected the flag is toggled on them, otherwise it arms the next placements.
     func toggleFlag(_ flag: Character) {
         let notes = selectedNotes

@@ -106,6 +106,22 @@ public enum ChartEditing {
         return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: (body as NSString).length))
     }
 
+    /// Rewrites the `[分音:拍数]` of a hold, touch hold or slide; `duration` comes without brackets, e.g. `8:3`.
+    /// A slide keeps its wait prefix (`0##`), and only the first tail segment changes.
+    public static func setDuration(_ duration: String, of note: Note, in source: String) -> ChartEdit? {
+        let text = NSMutableString(string: source)
+        guard let token = note.token, token.offset + token.length <= text.length, !duration.isEmpty else { return nil }
+        let range = NSRange(location: token.offset, length: token.length)
+        var body = text.substring(with: range)
+        if let found = body.range(of: #"\[[^\]]*\]"#, options: .regularExpression) {
+            let old = body[found].dropFirst().dropLast()
+            let wait = old.range(of: "##").map { String(old[..<$0.upperBound]) } ?? ""
+            body.replaceSubrange(found, with: "[" + wait + duration + "]")
+        } else if body.contains("h") { body += "[" + duration + "]" } else { return nil }
+        text.replaceCharacters(in: range, with: body)
+        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: (body as NSString).length))
+    }
+
     /// Removes the note's token and the separator that joined it to its neighbour.
     public static func remove(_ note: Note, from source: String) -> ChartEdit? {
         let text = NSMutableString(string: source)

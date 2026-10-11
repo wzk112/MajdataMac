@@ -171,11 +171,14 @@ private struct TrackToolPanel: View {
                     HStack { Text("星星一拍后启动"); Spacer(minLength: 0); Text("O").font(.system(size: 10.5, design: .monospaced)).opacity(0.75) }
                 }.toggleStyle(.checkbox).font(.system(size: 12)).padding(.horizontal, 6)
                     .help("simai 的默认行为。关掉后新星星立即出发，时长写成 [0##分音:拍数]。")
-                caption("新 Slide / TouchHold 的时长").padding(.top, 10)
+                caption("时长 · 新的 Slide / TouchHold，或选中的音符").padding(.top, 10)
                 HStack(spacing: 6) {
                     TextField("4:1", text: $model.slideLength).textFieldStyle(.roundedBorder).controlSize(.small).frame(width: 70)
                     Text("分音:拍数 → \(model.slideLengthToken)").font(.system(size: 11, design: .monospaced)).foregroundStyle(.secondary)
                 }.padding(.horizontal, 6)
+                Button("把这个时长用到选中的音符") { model.setSelectedDuration(String(model.slideLengthToken.dropFirst().dropLast())) }
+                    .controlSize(.small).padding(.horizontal, 6).disabled(model.selectedSustained.isEmpty)
+                    .help("改选中的 Hold、TouchHold、Slide 的时长。Hold 和 TouchHold 也可以在竖谱上直接拖顶端。")
                 caption("音符操作").padding(.top, 10)
                 operation("删除选中", "⌫", enabled: !model.selectedNotes.isEmpty) { model.deleteSelectedNotes() }
                 operation("撤销", "⌘Z", enabled: !model.visualUndo.isEmpty) { model.undoVisualEdit() }
@@ -189,7 +192,7 @@ private struct TrackToolPanel: View {
     }
     private var hint: String {
         switch model.trackTool {
-        case .select: "点音符选中，右键删除。拖左边的小节号一栏可以定位播放。"
+        case .select: "点音符选中，右键删除。拖 Hold / TouchHold 的顶端改长度。拖左边的小节号一栏可以定位播放。"
         case .tap: "点一下放一个 Tap，落在最近的分音线上。"
         case .hold: "按住往上拖出长度，松手确认。"
         case .slide:

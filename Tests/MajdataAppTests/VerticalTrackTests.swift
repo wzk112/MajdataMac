@@ -44,10 +44,49 @@ import MajdataCore
         layout.touchSlots = VerticalTrackLayout.touchSlots(for: chart.notes)
         let group = chart.notes.filter { $0.time == 0 }, alone = try #require(chart.notes.first { $0.area == "E" })
         #expect(group.count == 3 && layout.touchSlots[alone.id] == nil && layout.center(of: alone).x == layout.touchX)
-        let centers = group.map { layout.center(of: $0).x }
-        #expect(centers == centers.sorted() && Set(centers).count == 3 && centers[0] > layout.keysEnd)
+        // Three or more become a small map of the stage: every zone at its own spot, C in the middle.
+        let centre = try #require(group.first { $0.area == "C" })
+        #expect(layout.inCluster(centre) && layout.center(of: centre) == CGPoint(x: layout.clusterX, y: layout.y(0)))
+        #expect(Set(group.map { "\(layout.center(of: $0))" }).count == 3)
         // Each one is hit at its own centre, not whichever was drawn first.
         for note in group { #expect(layout.note(at: layout.center(of: note), in: chart.notes)?.id == note.id) }
+    }
+    @Test func aPairSharesTheColumnAndEveryZoneAtOnceStaysDistinct() throws {
+        var layout = layout()
+        let pair = SimaiParser.parse("(120){4}B2/B6,E").notes
+        layout.touchSlots = VerticalTrackLayout.touchSlots(for: pair)
+        #expect(!layout.inCluster(pair[0]) && layout.center(of: pair[0]).x < layout.center(of: pair[1]).x)
+        let zones = ["C"] + "ABDE".flatMap { area in (1...8).map { "\(area)\($0)" } }
+        let full = SimaiParser.parse("(120){4}" + zones.joined(separator: "/") + ",E").notes
+        layout.touchSlots = VerticalTrackLayout.touchSlots(for: full)
+        #expect(full.count == 33)
+        #expect(Set(full.map { "\(layout.center(of: $0))" }).count == 33)
+        for note in full { #expect(layout.note(at: layout.center(of: note), in: full)?.id == note.id) }
+    }
+    @Test @MainActor func lengthsCanBeChangedAfterPlacing() throws {
+        let model = model("(120){4}Ch[4:1],,3h[4:1],,1-5[0##4:1],,,,E")
+        model.trackDivisor = 8
+        let touchHold = try #require(model.chart.notes.first { $0.kind == .touchHold })
+        model.select(touchHold); model.setSelectedDuration("2:1")
+        #expect(model.source == "(120){4}Ch[2:1],,3h[4:1],,1-5[0##4:1],,,,E")
+        // Dragging the far end of the hold from 1.5 s to 2.25 s: five eighth-note steps.
+        let canvas = VerticalTrackCanvas(model: model)
+        model.trackSpan = 4; model.trackStart = 0; model.timelineFollow = false
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 446, height: 400), styleMask: .borderless, backing: .buffered, defer: false)
+        window.contentView = canvas; canvas.frame = NSRect(x: 0, y: 0, width: 446, height: 400)
+        func event(_ type: NSEvent.EventType, time: Double) throws -> NSEvent {
+            try #require(NSEvent.mouseEvent(with: type, location: CGPoint(x: canvas.layout.x(lane: 3), y: 400 - canvas.layout.y(time)), modifierFlags: [], timestamp: 0,
+                                           windowNumber: window.windowNumber, context: nil, eventNumber: 0, clickCount: 1, pressure: 1))
+        }
+        canvas.mouseDown(with: try event(.leftMouseDown, time: 1.5))
+        canvas.mouseDragged(with: try event(.leftMouseDragged, time: 2.26))
+        canvas.mouseUp(with: try event(.leftMouseUp, time: 2.26))
+        #expect(model.source == "(120){4}Ch[2:1],,3h[8:5],,1-5[0##4:1],,,,E")
+        // A slide keeps its wait prefix.
+        model.select(try #require(model.chart.notes.first { $0.kind == .slide })); model.setSelectedDuration("8:3")
+        #expect(model.source == "(120){4}Ch[2:1],,3h[8:5],,1-5[0##8:3],,,,E" && model.chart.diagnostics.isEmpty)
+        model.undoVisualEdit(); model.undoVisualEdit(); model.undoVisualEdit()
+        #expect(model.source == "(120){4}Ch[4:1],,3h[4:1],,1-5[0##4:1],,,,E")
     }
     @MainActor private func model(_ source: String) -> StudioModel {
         let model = StudioModel(audioOutputEnabled: false)

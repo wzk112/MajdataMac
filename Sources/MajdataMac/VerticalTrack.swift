@@ -19,11 +19,16 @@ struct VerticalTrackLayout: Equatable {
         }
         return slots
     }
-    /// Glyph size of a touch: full size alone, narrower when it shares the column; three or more borrow the BPM column.
+    /// Three or more touches at one instant are drawn as a small map of the stage, one dot per zone:
+    /// no row of glyphs stays readable when a chart fills every zone at once.
+    func inCluster(_ note: Note) -> Bool { (touchSlots[note.id]?.count ?? 1) > 2 }
+    static let clusterRadius = aux - 5
+    var clusterX: Double { keysEnd + Self.aux }
+    /// Glyph size of a touch: full size alone, half the column for a pair, a dot inside a cluster.
     func touchSize(_ note: Note) -> Double {
         let full = min(headSize, Self.aux - 10)
         guard let slot = touchSlots[note.id] else { return full }
-        return min(full, ((slot.count <= 2 ? Self.aux : Self.aux * 2) - 4) / Double(slot.count) - 2)
+        return slot.count > 2 ? 8 : min(full, (Self.aux - 4) / 2 - 2)
     }
     var laneWidth: Double { max(12, (size.width - Self.gutter - Self.aux * 2) / 8) }
     var keysEnd: Double { Self.gutter + laneWidth * 8 }
@@ -41,6 +46,11 @@ struct VerticalTrackLayout: Equatable {
     func center(of note: Note) -> CGPoint {
         guard isTouch(note) else { return CGPoint(x: x(lane: note.lane), y: y(note.time)) }
         guard let slot = touchSlots[note.id] else { return CGPoint(x: touchX, y: y(note.time)) }
+        if slot.count > 2 {
+            // Same placement as on the stage: the outer A / D ring sits at 0.85 of the radius.
+            let zone = SlideGeometry.touch(note.area, lane: note.lane), scale = Self.clusterRadius / 0.95
+            return CGPoint(x: clusterX + zone.x * scale, y: y(note.time) + zone.y * scale)
+        }
         let size = touchSize(note)
         return CGPoint(x: keysEnd + 2 + (size + 2) * (Double(slot.index) + 0.5), y: y(note.time))
     }
@@ -97,6 +107,8 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     private var displayTime = 0.0
     /// Hold being dragged out: its key, where the button went down and where the pointer is now.
     private var holdDrag: (lane: Int, start: Double, end: Double)?
+    /// Hold or touch hold whose far end is being dragged to a new length.
+    private var resizeDrag: (note: Note, end: Double)?
     private var hover: CGPoint?
     private var tracking: NSTrackingArea?
     /// Bottom-edge time while playback scrolls the track. Kept here so the model is not written every frame.
@@ -190,6 +202,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     override func mouseDown(with event: NSEvent) {
         window?.makeFirstResponder(self)
         let point = convert(event.locationInWindow, from: nil), layout = layout
+        if let note = endHandle(at: point, layout) { model.select(note); resizeDrag = (note, note.endTime); needsDisplay = true; return }
         if let note = note(at: point) {
             // With the Slide tool a click on a star starts another tail from the same head.
             if model.trackTool == .slide, !layout.isTouch(note), model.slideHead(lane: note.lane, at: note.time) != nil {
@@ -206,12 +219,23 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         scrubbing = true; resumeAfterScrub = model.isPlaying
         model.pause(); scrub(point)
     }
+    /// The far end of a hold or touch hold, away from its head so a short note can still be clicked whole.
+    private func endHandle(at point: CGPoint, _ layout: VerticalTrackLayout) -> Note? {
+        let view = layout.viewport
+        return model.chart.notes.first { note in
+            guard note.kind == .hold || note.kind == .touchHold, !layout.inCluster(note), note.token != nil,
+                  note.endTime >= view.start, note.time <= view.start + view.span else { return false }
+            let head = layout.center(of: note), end = layout.y(note.endTime), size = layout.isTouch(note) ? layout.touchSize(note) : layout.headSize
+            return abs(point.x - head.x) <= size / 2 + 3 && abs(point.y - end) <= 8 && head.y - end > size * 0.75
+        }
+    }
     override func rightMouseDown(with event: NSEvent) {
         if let note = note(at: convert(event.locationInWindow, from: nil)) { model.delete(note); needsDisplay = true }
     }
     override func mouseDragged(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
-        if holdDrag != nil { holdDrag?.end = model.gridTime(layout.time(atY: point.y)); needsDisplay = true }
+        if resizeDrag != nil { resizeDrag?.end = model.gridTime(layout.time(atY: point.y)); needsDisplay = true }
+        else if holdDrag != nil { holdDrag?.end = model.gridTime(layout.time(atY: point.y)); needsDisplay = true }
         else if scrubbing { scrub(point) }
     }
     override func keyDown(with event: NSEvent) {
@@ -241,6 +265,11 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         needsDisplay = true
     }
     override func mouseUp(with event: NSEvent) {
+        if let drag = resizeDrag {
+            resizeDrag = nil
+            if abs(drag.end - drag.note.endTime) > 1e-6 { model.resize(drag.note, until: drag.end) }
+            needsDisplay = true; return
+        }
         if let drag = holdDrag {
             holdDrag = nil; model.place(lane: drag.lane, at: min(drag.start, drag.end), until: max(drag.start, drag.end)); needsDisplay = true; return
         }
@@ -320,8 +349,8 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         for note in notes where note.kind == .touchHold { drawTouchHoldBody(note, layout) }
         for note in notes where note.kind == .slide { drawSlideTail(note, layout) }
         // A slide's star is its head Tap; the slide note itself only owns the tail, so headless slides stay headless.
-        for note in notes where note.kind != .hold && note.kind != .slide { drawHead(note, layout, context) }
         drawTouchLabels(notes, layout, context)
+        for note in notes where note.kind != .hold && note.kind != .slide { drawHead(note, layout, context) }
         for note in notes where model.isSelected(note) { drawSelection(note, layout) }
         drawGhosts(layout)
         if let time = musical.sourceTime(at: model.selectedRange.location) { cursor(time, layout, color: .systemPurple, dashed: true, context) }
@@ -335,11 +364,17 @@ private struct VerticalTrackSurface: NSViewRepresentable {
             NSColor.controlAccentColor.setStroke(); path.lineWidth = 2
             if dashed { path.setLineDash([4, 3], count: 2, phase: 0) }; path.stroke()
         }
-        if let drag = holdDrag {
-            let top = layout.y(max(drag.start, drag.end)) - size / 2, bottom = layout.y(min(drag.start, drag.end)) + size / 2
-            let body = NSBezierPath(roundedRect: NSRect(x: layout.x(lane: drag.lane) - size / 2, y: top, width: size, height: bottom - top), xRadius: size / 2, yRadius: size / 2)
+        func span(_ x: Double, _ width: Double, from: Double, to: Double) {
+            let top = layout.y(max(from, to)) - width / 2, bottom = layout.y(min(from, to)) + width / 2
+            let body = NSBezierPath(roundedRect: NSRect(x: x - width / 2, y: top, width: width, height: bottom - top), xRadius: width / 2, yRadius: width / 2)
             NSColor.controlAccentColor.withAlphaComponent(0.25).setFill(); body.fill()
             NSColor.controlAccentColor.setStroke(); body.lineWidth = 2; body.stroke()
+        }
+        if let drag = resizeDrag {
+            let touch = layout.isTouch(drag.note)
+            span(layout.center(of: drag.note).x, touch ? layout.touchSize(drag.note) : size, from: drag.note.time, to: max(drag.end, drag.note.time))
+        } else if let drag = holdDrag {
+            span(layout.x(lane: drag.lane), size, from: drag.start, to: drag.end)
         } else if let pending = model.pendingSlide {
             let rect = NSRect(x: layout.x(lane: pending.lane) - size / 2, y: layout.y(pending.time) - size / 2, width: size, height: size)
             model.skinImages["star"]?.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 0.7, respectFlipped: true, hints: nil)
@@ -409,6 +444,12 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     }
     private func drawHead(_ note: Note, _ layout: VerticalTrackLayout, _ context: CGContext) {
         let center = layout.center(of: note), size = layout.headSize
+        if layout.inCluster(note) {
+            let dot = NSBezierPath(ovalIn: NSRect(x: center.x - 4, y: center.y - 4, width: 8, height: 8))
+            (note.kind == .touchHold ? NSColor.systemPurple : accent(note)).setFill(); dot.fill()
+            NSColor.textBackgroundColor.setStroke(); dot.lineWidth = 1; dot.stroke()
+            return
+        }
         if layout.isTouch(note) {
             guard let image = sprite("touch", note) else { return }
             let glyph = layout.touchSize(note), w = glyph * 0.56, h = w * image.size.height / max(1, image.size.width)
@@ -432,6 +473,16 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         let groups = Dictionary(grouping: notes.filter(layout.isTouch), by: { Int64(($0.time * 1_000_000).rounded()) })
         for group in groups.values {
             guard let first = group.first else { continue }
+            if group.count > 2 {
+                // The ring the dots sit in, drawn before them so they stay on top.
+                let r = VerticalTrackLayout.clusterRadius
+                let ring = NSBezierPath(ovalIn: NSRect(x: layout.clusterX - r, y: layout.y(first.time) - r, width: r * 2, height: r * 2))
+                NSColor.textBackgroundColor.withAlphaComponent(0.9).setFill(); ring.fill()
+                NSColor.labelColor.withAlphaComponent(0.35).setStroke(); ring.lineWidth = 1; ring.stroke()
+                let count = gridText.layout("\(group.count)")
+                gridText.draw(count, at: CGPoint(x: layout.clusterX - count.width / 2, y: layout.y(first.time) - r - gridText.height - 1), color: .labelColor, in: context)
+                continue
+            }
             let names = group.map { $0.area + ($0.area == "C" ? "" : String($0.lane)) }
             let text = gridText.layout(names.joined(separator: "/"))
             // Alone: beside the glyph. Sharing the column: above the row, where the glyphs leave room.
@@ -442,7 +493,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     }
     private func drawSelection(_ note: Note, _ layout: VerticalTrackLayout) {
         let center = layout.center(of: note), size = (layout.isTouch(note) ? layout.touchSize(note) : layout.headSize) + 8
-        let sustained = note.kind == .hold || note.kind == .touchHold
+        let sustained = (note.kind == .hold || note.kind == .touchHold) && !layout.inCluster(note)
         let top = (sustained ? layout.y(note.endTime) : center.y) - size / 2
         let ring = NSBezierPath(roundedRect: NSRect(x: center.x - size / 2, y: top, width: size, height: center.y + size / 2 - top), xRadius: size / 2, yRadius: size / 2)
         NSColor.controlAccentColor.withAlphaComponent(0.18).setFill(); ring.fill()
