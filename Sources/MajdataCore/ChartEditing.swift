@@ -75,15 +75,35 @@ public enum ChartEditing {
         return ChartEdit(text: text as String, selection: NSRange(location: end + (inserted as NSString).length - tokenLength - 1, length: tokenLength))
     }
 
-    /// Adds another tail to a star that already has one: simai's same-head form `1-5[4:1]*-3[4:1]`.
-    /// `tail` is the shape, end key and duration without the start key, e.g. `-3[4:1]`.
-    public static func addTail(_ tail: String, to slide: Note, in source: String) -> ChartEdit? {
+    static let slideShapes = "-^v<>Vpqszw"
+    /// Whether the note's token is a slide (its star head shares the token).
+    public static func isSlide(_ note: Note, in source: String) -> Bool {
+        let text = source as NSString
+        guard let token = note.token, token.offset + token.length <= text.length else { return false }
+        return text.substring(with: NSRange(location: token.offset, length: token.length)).contains(where: { slideShapes.contains($0) })
+    }
+    /// Extends a star that already has a tail. `tail` is shape, end key and duration without a start key, e.g. `-3[4:1]`.
+    /// Joined with `*` it is a second tail on the same head (`1-5[4:1]*-3[4:1]`); joined with nothing it
+    /// continues the last tail as one connected slide (`1-5[4:1]-3[4:1]`).
+    public static func addTail(_ tail: String, to slide: Note, in source: String, joiner: String = "*") -> ChartEdit? {
         let text = NSMutableString(string: source)
         guard let token = slide.token, token.offset + token.length <= text.length, !tail.isEmpty,
               text.substring(with: NSRange(location: token.offset, length: token.length)).contains(where: { "-^v<>Vpqszw".contains($0) }) else { return nil }
         let at = token.offset + token.length
-        text.insert("*" + tail, at: at)
-        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: token.length + 1 + (tail as NSString).length))
+        text.insert(joiner + tail, at: at)
+        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: token.length + ((joiner + tail) as NSString).length))
+    }
+
+    /// Break slide: a `b` between each segment's end key and its `[duration]`. All tails of the token change together.
+    public static func toggleSlideBreak(on note: Note, in source: String) -> ChartEdit? {
+        let text = NSMutableString(string: source)
+        guard isSlide(note, in: source), let token = note.token else { return nil }
+        let range = NSRange(location: token.offset, length: token.length)
+        var body = text.substring(with: range)
+        let marked = body.range(of: #"\db\["#, options: .regularExpression) != nil
+        body = body.replacingOccurrences(of: marked ? #"(\d)b\["# : #"(\d)\["#, with: marked ? "$1[" : "$1b[", options: .regularExpression)
+        text.replaceCharacters(in: range, with: body)
+        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: (body as NSString).length))
     }
 
     /// Removes the note's token and the separator that joined it to its neighbour.

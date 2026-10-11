@@ -73,7 +73,7 @@ struct StageInputSurface: NSViewRepresentable {
             (on ? NSColor.systemCyan : NSColor.white.withAlphaComponent(0.55)).setStroke(); shape.lineWidth = on ? 2 : 1; shape.stroke()
         }
         if let pending = model.pendingSlide {
-            let start = SlideGeometry.lane(pending.lane, radius: 4.8), size = unit * 1.1
+            let start = SlideGeometry.lane(pending.from ?? pending.lane, radius: 4.8), size = unit * 1.1
             let rect = NSRect(x: bounds.midX + start.x * unit - size / 2, y: bounds.midY + start.y * unit - size / 2, width: size, height: size)
             model.skinImages["star"]?.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
         }

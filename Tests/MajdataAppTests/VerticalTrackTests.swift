@@ -74,10 +74,13 @@ import MajdataCore
         model.trackTool = .touch; model.currentTime = 0.52; model.trackDivisor = 4
         model.placeTouch(zone: "B3")
         #expect(model.source == "(120){4}1,B3,5,,E")
+        // A second click on the same zone at the same instant does not stack a copy.
+        model.placeTouch(zone: "B3")
+        #expect(model.source == "(120){4}1,B3,5,,E" && model.selectedNotes.map(\.area) == ["B"])
         model.trackTool = .slide; model.place(lane: 1, at: 1.5)
         #expect(model.pendingSlide == PendingSlide(lane: 1, time: 1.5) && model.source == "(120){4}1,B3,5,,E")
         model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 1, end: 5), end: 5)
-        #expect(model.source == "(120){4}1,B3,5,1-5[4:1],E" && model.pendingSlide == nil)
+        #expect(model.source == "(120){4}1,B3,5,1-5[4:1],E" && model.pendingSlide == PendingSlide(lane: 1, time: 1.5, from: 5))
         #expect(model.chart.diagnostics.isEmpty && model.chart.notes.contains { $0.kind == .slide })
     }
     @Test @MainActor func aSecondTailJoinsTheSameStarHead() throws {
@@ -94,6 +97,46 @@ import MajdataCore
         #expect(model.source == "(120){4}1-5[4:1]*^3[4:1]*v7[4:1],,3,,E" && model.chart.diagnostics.isEmpty)
         model.undoVisualEdit()
         #expect(model.source == "(120){4}1-5[4:1]*^3[4:1],,3,,E")
+    }
+    @Test @MainActor func strokesAfterTheFirstConnectIntoOneSlide() throws {
+        let model = model("(120){4}1,,,,,,,,E")
+        model.trackTool = .slide; model.place(lane: 3, at: 0.5)
+        model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 3, end: 7), end: 7)
+        model.finishSlide(zones: SlideMatching.zones(shape: "^", start: 7, end: 1), end: 1)
+        model.finishSlide(zones: SlideMatching.zones(shape: "v", start: 1, end: 4), end: 4)
+        #expect(model.source == "(120){4}1,3-7[4:1]^1[4:1]v4[4:1],,,,,,,E")
+        #expect(model.chart.diagnostics.isEmpty)
+        let slide = try #require(model.chart.notes.first { $0.kind == .slide })
+        #expect(slide.segments.map { [$0.start, $0.end] } == [[3, 7], [7, 1], [1, 4]])
+        // Clicking the same star on the track starts a separate tail from the head instead.
+        model.place(lane: 3, at: 0.5)
+        #expect(model.pendingSlide == PendingSlide(lane: 3, time: 0.5))
+        model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 3, end: 6), end: 6)
+        #expect(model.source == "(120){4}1,3-7[4:1]^1[4:1]v4[4:1]*-6[4:1],,,,,,,E" && model.chart.diagnostics.isEmpty)
+    }
+    @Test @MainActor func starOptionsAreWrittenIntoTheToken() throws {
+        let model = model("(120){4}1,,,,,,,,E")
+        model.trackTool = .slide; model.placementFlags = ["h", "s"]; model.slideWaitsOneBeat = false
+        model.place(lane: 2, at: 0.5)
+        model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 2, end: 6), end: 6)
+        #expect(model.source == "(120){4}1,2?-6b[0##4:1],,,,,,,E" && model.chart.diagnostics.isEmpty)
+        let slide = try #require(model.chart.notes.first { $0.kind == .slide })
+        // Headless, break, and moving at once: no star head, no one-beat wait.
+        #expect(slide.isBreak && slide.segments[0].startTime == slide.time)
+        #expect(!model.chart.notes.contains { $0.kind == .tap && $0.isStar })
+        model.pendingSlide = nil; model.placementFlags = []
+        model.select(slide)
+        model.toggleFlag("s"); #expect(model.source == "(120){4}1,2?-6[0##4:1],,,,,,,E")
+        model.toggleFlag("h"); #expect(model.source == "(120){4}1,2-6[0##4:1],,,,,,,E")
+        model.toggleFlag("s"); #expect(model.source == "(120){4}1,2-6b[0##4:1],,,,,,,E" && model.chart.diagnostics.isEmpty)
+    }
+    @Test @MainActor func anEditThatWouldBreakTheChartIsNotWritten() throws {
+        // A hand-written connected slide with one total duration cannot take a per-segment one.
+        let model = model("(120){4}1-4-7[4:1],,,,E")
+        model.trackTool = .slide
+        model.pendingSlide = PendingSlide(lane: 1, time: 0, from: 7)
+        model.finishSlide(zones: SlideMatching.zones(shape: "-", start: 7, end: 3), end: 3)
+        #expect(model.source == "(120){4}1-4-7[4:1],,,,E" && model.visualUndo.isEmpty)
     }
     @Test @MainActor func flagsAndDeleteActOnTheSelectedNotes() throws {
         let model = model("(120){4}1/5,3,E")

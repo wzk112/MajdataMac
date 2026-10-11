@@ -138,9 +138,9 @@ private struct TrackToolPanel: View {
                     }.buttonStyle(.plain).help(tool.title).accessibilityLabel(tool.title).accessibilityAddTraits(selected ? .isSelected : [])
                 }
                 Divider().padding(.vertical, 4)
-                ForEach(Array("bxfw"), id: \.self) { flag in
+                ForEach(Array("bxfwhs"), id: \.self) { flag in
                     let armed = model.selectedNotes.isEmpty && model.placementFlags.contains(flag)
-                    let title = ["b": "绝赞", "x": "保护", "f": "烟花", "w": "扇形"][flag] ?? ""
+                    let title = ["b": "绝赞", "x": "保护", "f": "烟花", "w": "扇形", "h": "无头星星", "s": "绝赞星尾"][flag] ?? ""
                     Button { model.toggleFlag(flag) } label: {
                         Text(String(flag).uppercased()).font(.system(size: 12, weight: .semibold, design: .monospaced)).frame(width: 40, height: 28)
                             .foregroundStyle(armed ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
@@ -161,11 +161,16 @@ private struct TrackToolPanel: View {
                 tool(.touch); tool(.touchHold)
                 Text(hint).font(.caption).foregroundStyle(.secondary).padding(.horizontal, 6).padding(.top, 4).fixedSize(horizontal: false, vertical: true)
                 if model.pendingSlide != nil {
-                    Button("取消这颗星星", role: .cancel) { model.pendingSlide = nil }.controlSize(.small).padding(.horizontal, 6)
+                    Button(model.pendingSlide?.from == nil ? "取消这颗星星" : "完成这颗星星") { model.pendingSlide = nil }.controlSize(.small).padding(.horizontal, 6)
                 }
                 caption(model.selectedNotes.isEmpty ? "修饰 · 用于接下来放的音符" : "修饰 · 改选中的音符").padding(.top, 10)
                 HStack(spacing: 5) { flag("绝赞", "b"); flag("保护", "x") }
                 HStack(spacing: 5) { flag("烟花", "f"); flag("扇形", "w") }
+                HStack(spacing: 5) { flag("无头星星", "h"); flag("绝赞星尾", "s") }
+                Toggle(isOn: $model.slideWaitsOneBeat) {
+                    HStack { Text("星星一拍后启动"); Spacer(minLength: 0); Text("O").font(.system(size: 10.5, design: .monospaced)).opacity(0.75) }
+                }.toggleStyle(.checkbox).font(.system(size: 12)).padding(.horizontal, 6)
+                    .help("simai 的默认行为。关掉后新星星立即出发，时长写成 [0##分音:拍数]。")
                 caption("新 Slide / TouchHold 的时长").padding(.top, 10)
                 HStack(spacing: 6) {
                     TextField("4:1", text: $model.slideLength).textFieldStyle(.roundedBorder).controlSize(.small).frame(width: 70)
@@ -187,7 +192,10 @@ private struct TrackToolPanel: View {
         case .select: "点音符选中，右键删除。拖左边的小节号一栏可以定位播放。"
         case .tap: "点一下放一个 Tap，落在最近的分音线上。"
         case .hold: "按住往上拖出长度，松手确认。"
-        case .slide: model.pendingSlide == nil ? "先在竖谱上点星星头，再到舞台上按住左键画星星尾。点已有的星星可以再加一条尾巴（同头多尾）。" : "到舞台上按住左键，从起点画到终点的键，经过的判定区决定形状。"
+        case .slide:
+            if let pending = model.pendingSlide {
+                pending.from == nil ? "到舞台上按住左键，从起点画到终点的键，经过的判定区决定形状。" : "接着画下一段，会和上一段连成一条连续的星星。画完按回车或点「完成这颗星星」。"
+            } else { "先在竖谱上点星星头，再到舞台上按住左键画星星尾。点已有的星星可以再加一条尾巴（同头多尾）。" }
         case .touch: "在舞台上点一个判定区，时间取当前播放位置。"
         case .touchHold: "在舞台上点一个判定区，时长用下面填的值。"
         }

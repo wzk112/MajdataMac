@@ -126,6 +126,8 @@ enum PreviewJudgementMode: String, CaseIterable {
     /// Head flags (b, x, f, w) armed for the next placed notes.
     var placementFlags: Set<Character> = []
     var pendingSlide: PendingSlide?
+    /// Slides wait one beat before moving, as simai does by default; off writes `[0##…]`.
+    var slideWaitsOneBeat = true
     var visualUndo: [VisualSnapshot] = []
     var visualRedo: [VisualSnapshot] = []
     var showSensorPattern = UserDefaults.standard.object(forKey: "showSensorPattern") as? Bool ?? true {

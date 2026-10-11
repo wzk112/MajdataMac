@@ -2,7 +2,9 @@ import AppKit
 import MajdataCore
 
 /// A star head waiting for its tail to be drawn on the stage.
-struct PendingSlide: Equatable { var lane: Int; var time: Double }
+/// `lane` and `time` are the star head on the track. `from` is set once a tail exists: the next stroke
+/// then starts on that key and continues the same tail as a connected slide.
+struct PendingSlide: Equatable { var lane: Int; var time: Double; var from: Int? = nil }
 struct VisualSnapshot { var source: String; var selection: NSRange }
 
 /// Mouse editing. Every action becomes a `ChartEdit` on the simai text; nothing else stores notes.
@@ -21,14 +23,20 @@ extension StudioModel {
     func gridTime(_ time: Double) -> Double { MusicalTimeline(chart).snap(time, divisor: trackDivisor) }
     func gridStep(at time: Double) -> Double { MusicalTimeline(chart).step(at: time, divisor: trackDivisor) }
     /// `[分音:拍数]` used for new slides and touch holds; falls back when the field holds something else.
-    var slideLengthToken: String {
+    var slideLengthToken: String { lengthToken(wait: true) }
+    func lengthToken(wait: Bool) -> String {
         let parts = slideLength.split(separator: ":")
-        return parts.count == 2 && parts.allSatisfy({ Int($0).map { $0 > 0 } ?? false }) ? "[\(slideLength)]" : "[4:1]"
+        let length = parts.count == 2 && parts.allSatisfy({ Int($0).map { $0 > 0 } ?? false }) ? slideLength : "4:1"
+        return "[" + (wait ? "" : "0##") + length + "]"
     }
     private func flags(_ allowed: String) -> String { String(allowed.filter { placementFlags.contains($0) }) }
 
     @discardableResult private func commit(_ edit: ChartEdit?, failure: String = StudioModel.cannotWrite) -> Bool {
         guard let edit else { status = failure; NSSound.beep(); return false }
+        // Last line of defence: an edit must not turn a clean chart into one with errors.
+        if !chart.hasErrors, let issue = SimaiParser.parse(edit.text, offset: document.offset).diagnostics.first(where: { $0.severity == .error }) {
+            status = "没有写入：" + issue.message; NSSound.beep(); return false
+        }
         visualUndo.append(VisualSnapshot(source: source, selection: selectedRange))
         if visualUndo.count > 200 { visualUndo.removeFirst() }
         visualRedo.removeAll()
@@ -76,24 +84,37 @@ extension StudioModel {
     /// Stage click with a Touch tool: the zone comes from the stage, the time from the playhead.
     func placeTouch(zone: String) {
         let time = gridTime(isPlaying ? playbackTime : currentTime), firework = flags("f")
-        let token = trackTool == .touchHold ? zone + "h" + firework + slideLengthToken : zone + firework
+        // The same zone at the same instant is already there: select it rather than stack a copy on top.
+        let area = String(zone.prefix(1)), lane = Int(zone.dropFirst()) ?? 1
+        if let existing = chart.notes.first(where: { ($0.kind == .touch || $0.kind == .touchHold) && $0.area == area && (area == "C" || $0.lane == lane) && abs($0.time - time) < 1e-6 }) {
+            select(existing); status = "\(zone) 在这个时刻已经有一个 Touch 了"; return
+        }
+        let token = trackTool == .touchHold ? zone + "h" + firework + lengthToken(wait: true) : zone + firework
         commit(ChartEditing.insert(token, at: time, in: source, chart: chart))
     }
     /// Stage stroke for the pending star: the zones it crossed choose the shape.
     func finishSlide(zones: Set<String>, end: Int) {
         guard let pending = pendingSlide else { return }
-        let fan = placementFlags.contains("w") && (end - pending.lane + 8) % 8 == 4
-        guard let shape = fan ? "w" : SlideMatching.shape(start: pending.lane, end: end, drawn: zones) else {
-            status = "键 \(pending.lane) 到键 \(end) 没有合法的星星形状"; NSSound.beep(); return
+        let start = pending.from ?? pending.lane, existing = slideHead(lane: pending.lane, at: pending.time)
+        // A fan cannot be part of a connected slide.
+        let fan = pending.from == nil && placementFlags.contains("w") && (end - start + 8) % 8 == 4
+        guard let shape = fan ? "w" : SlideMatching.shape(start: start, end: end, drawn: zones) else {
+            status = "键 \(start) 到键 \(end) 没有合法的星星形状"; NSSound.beep(); return
         }
+        // Only the first segment of a tail carries the wait; later segments follow on directly.
+        let tail = "\(shape)\(end)\(placementFlags.contains("s") ? "b" : "")" + lengthToken(wait: pending.from != nil || slideWaitsOneBeat)
         // A star that is already there gets a second tail on the same head (`*`), which is how overlapping stars are written.
         let edit: ChartEdit?
-        if let existing = slideHead(lane: pending.lane, at: pending.time) {
-            edit = ChartEditing.addTail("\(shape)\(end)\(slideLengthToken)", to: existing, in: source)
+        if let existing {
+            edit = ChartEditing.addTail(tail, to: existing, in: source, joiner: pending.from == nil ? "*" : "")
         } else {
-            edit = ChartEditing.insert("\(pending.lane)\(flags("bx"))\(shape)\(end)\(slideLengthToken)", at: pending.time, in: source, chart: chart)
+            edit = ChartEditing.insert("\(pending.lane)\(flags("bx"))\(placementFlags.contains("h") ? "?" : "")\(tail)", at: pending.time, in: source, chart: chart)
         }
-        if commit(edit) { pendingSlide = nil }
+        // Stay on this star: the next stroke continues the tail from where this one ended.
+        if commit(edit) {
+            pendingSlide = PendingSlide(lane: pending.lane, time: pending.time, from: end)
+            status = "尾巴到键 \(end)：继续画就接成一条连续的星星；按回车或 Esc 结束"
+        }
     }
     /// The slide starting on this key at this instant, if any.
     func slideHead(lane: Int, at time: Double) -> Note? {
@@ -118,8 +139,15 @@ extension StudioModel {
         }
         var text = source, seen: Set<Int> = [], selection = selectedRange
         for note in notes.sorted(by: { range(of: $0).location > range(of: $1).location }) where seen.insert(range(of: note).location).inserted {
-            if flag == "f" && !(note.kind == .touch || note.kind == .touchHold) { continue }
-            if let edit = ChartEditing.toggle(flag, on: note, in: text) { selection.length += (edit.text as NSString).length - (text as NSString).length; text = edit.text }
+            let slide = ChartEditing.isSlide(note, in: text), edit: ChartEdit?
+            switch flag {
+            case "f": edit = note.kind == .touch || note.kind == .touchHold ? ChartEditing.toggle(flag, on: note, in: text) : nil
+            case "h": edit = slide ? ChartEditing.toggle("?", on: note, in: text) : nil   // headless star
+            case "s": edit = slide ? ChartEditing.toggleSlideBreak(on: note, in: text) : nil
+            case "w": edit = nil
+            default: edit = ChartEditing.toggle(flag, on: note, in: text)
+            }
+            if let edit { selection.length += (edit.text as NSString).length - (text as NSString).length; text = edit.text }
         }
         guard text != source else { NSSound.beep(); return }
         commit(ChartEdit(text: text, selection: NSRange(location: selection.location, length: max(0, selection.length))))

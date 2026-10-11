@@ -229,6 +229,10 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         case "x": model.toggleFlag("x")
         case "f": model.toggleFlag("f")
         case "w": model.toggleFlag("w")
+        case "h": model.toggleFlag("h")
+        case "s": model.toggleFlag("s")
+        case "o": model.slideWaitsOneBeat.toggle()
+        case "\r": model.pendingSlide = nil
         case " ": model.togglePlayback()
         case "\u{1B}": model.pendingSlide = nil
         case "\u{7F}", "\u{F728}": model.deleteSelectedNotes()
@@ -369,13 +373,24 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         NSColor.systemPurple.withAlphaComponent(0.55).setFill()
         NSBezierPath(roundedRect: NSRect(x: layout.center(of: note).x - 3, y: top, width: 6, height: max(1, bottom - top)), xRadius: 3, yRadius: 3).fill()
     }
+    /// Each segment runs up its start key for as long as it takes, then steps across to its end key,
+    /// so a connected slide reads as a staircase. The wait before the first segment is drawn fainter.
     private func drawSlideTail(_ note: Note, _ layout: VerticalTrackLayout) {
-        let x = layout.x(lane: note.lane), top = layout.y(note.endTime), bottom = layout.y(note.time)
-        let endX = layout.x(lane: note.segments.last?.end ?? note.lane), color = accent(note)
-        color.withAlphaComponent(0.6).setFill()
-        NSBezierPath(roundedRect: NSRect(x: x - 2, y: top, width: 4, height: max(1, bottom - top)), xRadius: 2, yRadius: 2).fill()
-        NSRect(x: min(x, endX), y: top - 1, width: abs(endX - x), height: 2).fill()
-        color.setFill(); NSBezierPath(ovalIn: NSRect(x: endX - 4.5, y: top - 4.5, width: 9, height: 9)).fill()
+        let color = accent(note)
+        func bar(_ lane: Int, from: Double, to: Double, alpha: Double) {
+            let top = layout.y(to), bottom = layout.y(from)
+            color.withAlphaComponent(alpha).setFill()
+            NSBezierPath(roundedRect: NSRect(x: layout.x(lane: lane) - 2, y: top, width: 4, height: max(1, bottom - top)), xRadius: 2, yRadius: 2).fill()
+        }
+        guard let first = note.segments.first else { bar(note.lane, from: note.time, to: note.endTime, alpha: 0.6); return }
+        bar(note.lane, from: note.time, to: first.startTime, alpha: 0.28)
+        for segment in note.segments {
+            let end = segment.startTime + segment.duration, y = layout.y(end)
+            bar(segment.start, from: segment.startTime, to: end, alpha: 0.6)
+            let a = layout.x(lane: segment.start), b = layout.x(lane: segment.end)
+            color.withAlphaComponent(0.6).setFill(); NSRect(x: min(a, b), y: y - 1, width: abs(b - a), height: 2).fill()
+            color.setFill(); NSBezierPath(ovalIn: NSRect(x: b - 4.5, y: y - 4.5, width: 9, height: 9)).fill()
+        }
     }
     private func drawHead(_ note: Note, _ layout: VerticalTrackLayout, _ context: CGContext) {
         let center = layout.center(of: note), size = layout.headSize
