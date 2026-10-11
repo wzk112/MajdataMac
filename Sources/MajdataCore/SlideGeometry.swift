@@ -9,7 +9,7 @@ public struct Point: Codable, Hashable, Sendable {
 }
 public enum SlideGeometry {
     static let paths: [String: [[Double]]] = {
-        guard let url = Bundle.module.url(forResource: "slide-paths", withExtension: "json"),
+        guard let url = Bundle.majdataCore.url(forResource: "slide-paths", withExtension: "json"),
               let data = try? Data(contentsOf: url), let paths = try? JSONDecoder().decode([String: [[Double]]].self, from: data) else { return [:] }
         return paths
     }()

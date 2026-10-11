@@ -70,7 +70,7 @@ public struct SlideAreaQueue: Sendable {
 
 public struct SlideJudgePlan: Sendable {
     private static let areaSteps: [String: [Int]] = {
-        guard let url = Bundle.module.url(forResource: "slide-area-steps", withExtension: "json"), let data = try? Data(contentsOf: url),
+        guard let url = Bundle.majdataCore.url(forResource: "slide-area-steps", withExtension: "json"), let data = try? Data(contentsOf: url),
               let value = try? JSONDecoder().decode([String: [Int]].self, from: data) else { return [:] }
         return value
     }()

@@ -150,7 +150,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     // .app bundles resolve resourceURL to Contents/Resources (copied folder nested inside);
     // SwiftPM's flat test bundle already resolves to the copied Resources folder itself.
     static var resourceURL: URL {
-        let base = Bundle.module.resourceURL!, nested = base.appendingPathComponent("Resources")
+        let base = (Bundle.packaged("MajdataMac_MajdataMac") ?? .module).resourceURL!, nested = base.appendingPathComponent("Resources")
         return FileManager.default.fileExists(atPath: nested.appendingPathComponent("Original").path) ? nested : base
     }
 
