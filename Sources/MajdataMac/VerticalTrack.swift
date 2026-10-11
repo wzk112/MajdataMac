@@ -373,24 +373,39 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         NSColor.systemPurple.withAlphaComponent(0.55).setFill()
         NSBezierPath(roundedRect: NSRect(x: layout.center(of: note).x - 3, y: top, width: 6, height: max(1, bottom - top)), xRadius: 3, yRadius: 3).fill()
     }
-    /// Each segment runs up its start key for as long as it takes, then steps across to its end key,
-    /// so a connected slide reads as a staircase. The wait before the first segment is drawn fainter.
+    /// The tail follows the star: at every moment it sits over the key the star is nearest to on the stage,
+    /// so a slide that sweeps round the ring is drawn sweeping across the lanes. The wait before it moves is fainter.
     private func drawSlideTail(_ note: Note, _ layout: VerticalTrackLayout) {
-        let color = accent(note)
-        func bar(_ lane: Int, from: Double, to: Double, alpha: Double) {
-            let top = layout.y(to), bottom = layout.y(from)
-            color.withAlphaComponent(alpha).setFill()
-            NSBezierPath(roundedRect: NSRect(x: layout.x(lane: lane) - 2, y: top, width: 4, height: max(1, bottom - top)), xRadius: 2, yRadius: 2).fill()
-        }
-        guard let first = note.segments.first else { bar(note.lane, from: note.time, to: note.endTime, alpha: 0.6); return }
-        bar(note.lane, from: note.time, to: first.startTime, alpha: 0.28)
+        let color = accent(note), head = layout.x(lane: note.lane)
+        guard let first = note.segments.first else { return }
+        color.withAlphaComponent(0.28).setFill()
+        let waitTop = layout.y(first.startTime), waitBottom = layout.y(note.time)
+        NSBezierPath(roundedRect: NSRect(x: head - 2, y: waitTop, width: 4, height: max(1, waitBottom - waitTop)), xRadius: 2, yRadius: 2).fill()
+        let path = NSBezierPath(); path.lineWidth = 4; path.lineJoinStyle = .round; path.lineCapStyle = .round
         for segment in note.segments {
-            let end = segment.startTime + segment.duration, y = layout.y(end)
-            bar(segment.start, from: segment.startTime, to: end, alpha: 0.6)
-            let a = layout.x(lane: segment.start), b = layout.x(lane: segment.end)
-            color.withAlphaComponent(0.6).setFill(); NSRect(x: min(a, b), y: y - 1, width: abs(b - a), height: 2).fill()
-            color.setFill(); NSBezierPath(ovalIn: NSRect(x: b - 4.5, y: y - 4.5, width: 9, height: 9)).fill()
+            for branch in segment.shape == "w" ? [-1, 0, 1] : [0] {
+                let points = SlideGeometry.points(for: segment, branch: branch)
+                guard points.count > 1 else { continue }
+                var previous: Double?
+                for step in 0...32 {
+                    let progress = Double(step) / 32, point = SlideGeometry.position(on: points, progress: progress)
+                    // Key n sits at n * 45 - 112.5 degrees; near the centre the direction means nothing, so hold the last one.
+                    var position = previous ?? Double(segment.start)
+                    if hypot(point.x, point.y) > 0.3 {
+                        position = (atan2(point.y, point.x) * 180 / .pi + 112.5) / 45
+                        position = position - 8 * floor((position - 0.5) / 8)
+                    }
+                    let spot = CGPoint(x: VerticalTrackLayout.gutter + (8.5 - position) * layout.laneWidth,
+                                       y: layout.y(segment.startTime + segment.duration * progress))
+                    // Passing between keys 8 and 1 wraps round the edge of the track: lift the pen instead of crossing it.
+                    if let previous, abs(previous - position) < 4 { path.line(to: spot) } else { path.move(to: spot) }
+                    previous = position
+                }
+                let end = (segment.end - 1 + branch + 8) % 8 + 1, y = layout.y(segment.startTime + segment.duration)
+                color.setFill(); NSBezierPath(ovalIn: NSRect(x: layout.x(lane: end) - 4.5, y: y - 4.5, width: 9, height: 9)).fill()
+            }
         }
+        color.withAlphaComponent(0.7).setStroke(); path.stroke()
     }
     private func drawHead(_ note: Note, _ layout: VerticalTrackLayout, _ context: CGContext) {
         let center = layout.center(of: note), size = layout.headSize
