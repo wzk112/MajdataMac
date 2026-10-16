@@ -22,6 +22,10 @@ import MajdataCore
                 Button("打开谱面…") { model.openPanel() }.keyboardShortcut("o")
                 Button("加载示例") { model.loadDemo() }
             }
+            CommandGroup(replacing: .undoRedo) {
+                Button("撤销") { model.performUndoCommand(redo: false) }.keyboardShortcut("z")
+                Button("重做") { model.performUndoCommand(redo: true) }.keyboardShortcut("z", modifiers: [.command, .shift])
+            }
             CommandGroup(replacing: .saveItem) {
                 Button("保存") { model.save() }.keyboardShortcut("s")
                 Button("另存为…") { model.save(as: true) }.keyboardShortcut("s", modifiers: [.command, .shift])
@@ -51,7 +55,7 @@ import MajdataCore
                 Button("代码编辑") { editorMode = .code }.keyboardShortcut("2")
                 Divider()
             }
-            CommandGroup(after: .textEditing) { Button("查找与替换") { model.showFind = true }.keyboardShortcut("f") }
+            CommandGroup(after: .textEditing) { Button("查找与替换") { editorMode = .code; model.showFind = true }.keyboardShortcut("f") }
         }
         Window("Majdata · 舞台", id: "stage") {
             StandaloneStageWindow(model: model).tint(StudioPalette.accent).preferredColorScheme(appearance.colorScheme).environment(\.controlActiveState, .key).containerBackground(.clear, for: .window)

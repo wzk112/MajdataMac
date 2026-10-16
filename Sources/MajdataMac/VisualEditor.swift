@@ -31,7 +31,7 @@ struct EditorModeSwitcher: View {
                     .help(item == .visual ? "可视化编辑 ⌘1" : "代码编辑 ⌘2")
             }
         }.padding(4).background {
-            Color.clear.glassEffect(.clear.interactive(), in: RoundedRectangle(cornerRadius: 12))
+            Color.clear.glassEffect(.clear, in: RoundedRectangle(cornerRadius: 12))
         }
             .animation(reduceMotion ? nil : StudioMotion.selection, value: mode)
             .accessibilityElement(children: .contain).accessibilityLabel("编辑模式")
@@ -90,6 +90,7 @@ enum TrackTool: String, CaseIterable, Identifiable {
 
 /// 可视化编辑: tools | vertical track | stage and selection. The simai text stays the single source of truth.
 struct VisualWorkspace: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Bindable var model: StudioModel
     var showCode: () -> Void
     @AppStorage("trackPanelWidth") private var trackPanelWidth = 430.0
@@ -104,6 +105,7 @@ struct VisualWorkspace: View {
             let trackWidth = min(max(trackMinimum, trackPanelWidth), trackLimit)
             HStack(spacing: 0) {
                 TrackToolPanel(model: model, compact: compact).frame(width: toolWidth).studioGlass(20)
+                    .animation(reduceMotion ? nil : StudioMotion.panel, value: compact)
                 Color.clear.frame(width: 8)
                 VStack(spacing: 0) {
                     HStack {
@@ -189,7 +191,8 @@ private struct TrackToolPanel: View {
     var compact = false
     @State private var showOptions = false
     var body: some View {
-        if compact { rail } else {
+        ZStack {
+        if compact { rail.transition(.opacity) } else {
             VStack(spacing: 0) {
                 HStack {
                     Label("制谱工具", systemImage: "cursorarrow.and.square.on.square.dashed")
@@ -198,8 +201,9 @@ private struct TrackToolPanel: View {
                 }.padding(.horizontal, 16).frame(height: 40)
                 Divider()
                 full
-            }
+            }.transition(.opacity)
         }
+        }.clipped()
     }
     /// Keys only; the labels live in the tooltips.
     private var rail: some View {
@@ -236,11 +240,11 @@ private struct TrackToolPanel: View {
     }
     private var full: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
                     ForEach(TrackTool.allCases) { tool($0) }
                 }
-                Text(hint).font(.system(size: 11)).foregroundStyle(.secondary)
+                Text(hint).font(.system(size: 11)).foregroundStyle(.secondary).lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
                 if model.pendingSlide != nil {
                     Button(model.pendingSlide?.from == nil ? "取消这颗星星" : "完成这颗星星") { model.pendingSlide = nil }
@@ -294,7 +298,7 @@ private struct TrackToolPanel: View {
     }
     private var hint: String {
         switch model.trackTool {
-        case .select: "点音符选中，右键删除。拖 Hold / TouchHold 的顶端改长度。拖左边的小节号一栏可以定位播放。"
+        case .select: "点选音符 · 右键删除\n拖长押顶端调整时长\n拖小节栏定位播放"
         case .tap: "点一下放一个 Tap，落在最近的分音线上。"
         case .hold: "按住往上拖出长度，松手确认。"
         case .slide:
@@ -316,7 +320,7 @@ private struct TrackToolPanel: View {
                     .background(Color.primary.opacity(selected ? 0.18 : 0.08), in: RoundedRectangle(cornerRadius: 5))
                 Text(tool.title).lineLimit(1).minimumScaleFactor(0.8)
                 Spacer(minLength: 0)
-            }.font(.system(size: 11, weight: .medium)).padding(.horizontal, 7).frame(height: 34)
+            }.font(.system(size: 11, weight: .medium)).padding(.horizontal, 7).frame(height: 36)
                 .foregroundStyle(selected ? AnyShapeStyle(StudioPalette.onAccent) : AnyShapeStyle(.primary))
                 .background(selected ? AnyShapeStyle(.tint) : AnyShapeStyle(Color.primary.opacity(0.05)), in: RoundedRectangle(cornerRadius: 7))
                 .contentShape(Rectangle())

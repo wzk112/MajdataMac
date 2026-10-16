@@ -129,6 +129,12 @@ enum PreviewJudgementMode: String, CaseIterable {
     var pendingSlide: PendingSlide?
     /// Slides wait one beat before moving, as simai does by default; off writes `[0##…]`.
     var slideWaitsOneBeat = true
+    @ObservationIgnored let sourceUndoManager: UndoManager = {
+        let manager = UndoManager(); manager.groupsByEvent = false; manager.levelsOfUndo = 200
+        return manager
+    }()
+    @ObservationIgnored weak var sourceEditor: PlaybackTextView?
+    @ObservationIgnored var lastTypingTime = Date.distantPast
     var visualUndo: [VisualSnapshot] = []
     var visualRedo: [VisualSnapshot] = []
     var showSensorPattern = UserDefaults.standard.object(forKey: "showSensorPattern") as? Bool ?? true {
@@ -138,6 +144,9 @@ enum PreviewJudgementMode: String, CaseIterable {
     private var parseTask: Task<Void, Never>?
     private var prepareTask: Task<Void, Never>?
     private var audioRefreshTask: Task<Void, Never>?
+    @ObservationIgnored private var preparedIdentity: PreviewAudioIdentity?
+    @ObservationIgnored private var preparingIdentity: PreviewAudioIdentity?
+    @ObservationIgnored private var preparationID: UUID?
     /// The chart changed after the current mix was rendered; the mix keeps playing until its replacement is ready.
     private(set) var audioStale = false
     private var timer: Timer?
@@ -225,7 +234,11 @@ enum PreviewJudgementMode: String, CaseIterable {
         audioRefreshTask = Task { [weak self] in
             // Lets a burst of clicks or keystrokes settle, and the debounced parse finish, before rendering once.
             try? await Task.sleep(for: .milliseconds(450))
-            guard let self, !Task.isCancelled, self.audioStale, !self.chart.hasErrors else { return }
+            guard let self, !Task.isCancelled, self.audioStale else { return }
+            // Parse this revision, even if the parsing task was delayed by other UI work.
+            self.parseTask?.cancel()
+            self.chart = SimaiParser.parse(self.source, offset: self.document.offset)
+            guard !self.chart.hasErrors, !self.reusePreparedAudio() else { return }
             self.prepareAudio(thenPlay: self.playWhenReady, quiet: !self.isPreparing)
         }
     }
@@ -239,6 +252,7 @@ enum PreviewJudgementMode: String, CaseIterable {
             try? FileManager.default.removeItem(at: prepared.url.deletingPathExtension().appendingPathExtension("stems"))
         }
         prepared = nil; recording = nil; waveform = []
+        preparedIdentity = nil; preparingIdentity = nil; preparationID = nil
     }
     func parse(immediate: Bool = false) {
         invalidateAnalysis()
@@ -250,13 +264,14 @@ enum PreviewJudgementMode: String, CaseIterable {
             let parsed = await Task.detached(priority: .userInitiated) { SimaiParser.parse(source, offset: offset) }.value
             guard !Task.isCancelled, expectedRevision == revision else { return }
             chart = parsed
+            if !parsed.hasErrors { _ = reusePreparedAudio() }
             status = parsed.hasErrors ? "发现 \(parsed.diagnostics.count) 个语法问题" : "\(parsed.notes.count) 个音符 · \(String(format: "%.2f", parsed.duration)) 秒"
         }
     }
     func selectDifficulty(_ value: Int) {
         parseTask?.cancel(); invalidateAnalysis()
         document.setChart(source, difficulty: difficulty)
-        difficulty = value; source = document.chart(value); selectedRange = NSRange(location: 0, length: 0); visualUndo = []; visualRedo = []; pendingSlide = nil
+        difficulty = value; source = document.chart(value); selectedRange = NSRange(location: 0, length: 0); resetEditHistory(); pendingSlide = nil
         revision += 1; invalidateAudio(); chart = SimaiParser.parse(source, offset: document.offset); currentTime = 0
     }
     func allowReplacing() -> Bool {
@@ -285,7 +300,7 @@ enum PreviewJudgementMode: String, CaseIterable {
             pause(); parseTask?.cancel(); invalidateAnalysis(); revision += 1
             document = ChartDocument(text: text); fileURL = file; sourceEncoding = decoded.encoding
             difficulty = (0..<7).last(where: { !document.chart($0).isEmpty }) ?? 4
-            source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset); visualUndo = []; visualRedo = []; pendingSlide = nil
+            source = document.chart(difficulty); chart = SimaiParser.parse(source, offset: document.offset); resetEditHistory(); pendingSlide = nil
             currentTime = min(0, chart.notes.first?.time ?? 0); isDirty = false
             invalidateAudio(); loadMedia(file.deletingLastPathComponent())
             fileDate = modificationDate(file)
@@ -305,7 +320,7 @@ enum PreviewJudgementMode: String, CaseIterable {
     func newDocument() {
         guard allowReplacing() else { return }
         invalidateAnalysis()
-        pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4; visualUndo = []; visualRedo = []; pendingSlide = nil
+        pause(); revision += 1; parseTask?.cancel(); document = .blank; source = document.chart(4); difficulty = 4; resetEditHistory(); pendingSlide = nil
         fileURL = nil; sourceEncoding = "UTF-8"; musicURL = nil; videoURL = nil; videoPlayer = nil; background = nil; backgroundURL = nil
         invalidateAudio(); chart = SimaiParser.parse(source); currentTime = 0; isDirty = false
     }
@@ -341,14 +356,37 @@ enum PreviewJudgementMode: String, CaseIterable {
         let panel = NSOpenPanel(); panel.allowedContentTypes = [.audio]; panel.message = "选择谱面音乐"
         if panel.runModal() == .OK, let url = panel.url { musicURL = url; invalidateAudio(); prepareAudio(thenPlay: false) }
     }
+    private var audioIdentity: PreviewAudioIdentity {
+        PreviewAudioIdentity(chart: chart, music: musicURL, metronome: mix.metronome,
+                             regionSource: regionJudgement ? source + "|" + inputMode.rawValue : nil)
+    }
+    /// Text layout, metadata and Classic lane transforms do not change the audible schedule.
+    @discardableResult private func reusePreparedAudio() -> Bool {
+        guard audioStale, prepared != nil, playback != nil, preparedIdentity == audioIdentity else { return false }
+        let requested = playWhenReady
+        audioRefreshTask?.cancel(); prepareTask?.cancel()
+        preparingIdentity = nil; preparationID = nil; audioStale = false; isPreparing = false; playWhenReady = false
+        if requested && !isPlaying { play() }
+        return true
+    }
     /// `quiet` renders a replacement mix while the current one stays playable, without the preparing state.
     func prepareAudio(thenPlay: Bool, quiet: Bool = false) {
         guard !chart.hasErrors else { status = "请先修正语法错误后再播放"; return }
+        let identity = audioIdentity
+        // A play click may promote an in-flight background render; do not start it over.
+        if preparationID != nil && preparingIdentity == identity {
+            playWhenReady = thenPlay || playWhenReady
+            if !quiet { isPreparing = true; status = "正在准备音频，完成后播放…" }
+            return
+        }
         prepareTask?.cancel(); playWhenReady = thenPlay
+        let request = UUID(); preparationID = request; preparingIdentity = identity
         if !quiet { isPreparing = true; status = thenPlay ? "正在准备音频，完成后播放…" : "正在准备音频…" }
-        let chart = chart, music = musicURL, settings = mix, resources = Self.resourceURL, rev = revision, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
+        let chart = chart, music = musicURL, settings = mix, resources = Self.resourceURL, ffmpeg = ffmpegPath, regions = regionJudgement, inputMode = inputMode
+        let expectedRevision = revision
         let destination = cacheDirectory.appendingPathComponent(UUID().uuidString + ".wav")
         prepareTask = Task {
+            defer { if preparationID == request { preparingIdentity = nil; preparationID = nil } }
             do {
                 let work = Task.detached(priority: .userInitiated) {
                     let recording = regions ? try RegionRecording.simulate(chart, inputMode: inputMode) : nil
@@ -356,9 +394,17 @@ enum PreviewJudgementMode: String, CaseIterable {
                     return (audio, recording)
                 }
                 let (audio, result) = try await withTaskCancellationHandler { try await work.value } onCancel: { work.cancel() }
-                guard !Task.isCancelled, rev == revision else {
+                if !Task.isCancelled, expectedRevision != revision {
+                    parseTask?.cancel(); self.chart = SimaiParser.parse(source, offset: document.offset)
+                }
+                guard !Task.isCancelled, preparationID == request,
+                      !self.chart.hasErrors, identity == audioIdentity else {
                     try? FileManager.default.removeItem(at: destination)
-                    try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems")); return
+                    try? FileManager.default.removeItem(at: destination.deletingPathExtension().appendingPathExtension("stems"))
+                    if !Task.isCancelled, self.chart.hasErrors {
+                        isPreparing = false; playWhenReady = false; status = "请先修正语法错误后再播放"
+                    }
+                    return
                 }
                 // Publish a complete playable state only after the graph is ready.
                 let player = try AudioPlayback(audio, settings: mix, audioOutputEnabled: audioOutputEnabled, outputUID: audioOutputUID)
@@ -370,7 +416,8 @@ enum PreviewJudgementMode: String, CaseIterable {
                     try? FileManager.default.removeItem(at: old.url)
                     try? FileManager.default.removeItem(at: old.url.deletingPathExtension().appendingPathExtension("stems"))
                 }
-                prepared = audio; recording = result; waveform = audio.waveform; connect(player); audioStale = false
+                prepared = audio; preparedIdentity = identity
+                recording = result; waveform = audio.waveform; connect(player); audioStale = false
                 playback?.rate = Float(rate); isPreparing = false
                 status = "音频已就绪 · 48 kHz · " + (regions ? "区域模拟（实验）" : "Classic 自动播放")
                 let requested = playWhenReady || resume; playWhenReady = false
@@ -411,7 +458,8 @@ enum PreviewJudgementMode: String, CaseIterable {
         pause(); playback?.shutdown(); playback = nil
         audioOutputName = "正在连接…"
         currentTime = position
-        prepareTask?.cancel(); isPreparing = true; playWhenReady = resume
+        prepareTask?.cancel(); preparationID = nil; preparingIdentity = nil
+        isPreparing = true; playWhenReady = resume
         status = "正在连接音频输出…"
         let expectedRevision = revision
         prepareTask = Task {
@@ -454,6 +502,7 @@ enum PreviewJudgementMode: String, CaseIterable {
         // Parse the visible text before starting, including edits made within the debounce interval.
         parseTask?.cancel(); chart = SimaiParser.parse(source, offset: document.offset)
         guard !chart.hasErrors else { status = "请先修正语法错误后再播放"; return }
+        _ = reusePreparedAudio()
         if prepared == nil || playback == nil {
             if prepared != nil { invalidateAudio() }
             prepareAudio(thenPlay: true)
@@ -530,7 +579,13 @@ enum PreviewJudgementMode: String, CaseIterable {
         if range.location == NSNotFound { range = ns.range(of: findText) }
         if range.location != NSNotFound { selectedRange = range }
     }
-    func replaceAll() { guard !findText.isEmpty else { return }; edited(source.replacingOccurrences(of: findText, with: replacement)) }
+    func replaceAll() {
+        guard !findText.isEmpty else { return }
+        undoable {
+            edited(source.replacingOccurrences(of: findText, with: replacement))
+            selectedRange = NSRange(location: min(selectedRange.location, source.utf16.count), length: 0)
+        }
+    }
     func locate(_ diagnostic: Diagnostic) {
         selectedRange = NSRange(location: diagnostic.location.offset, length: diagnostic.location.length)
         if let point = chart.timings.last(where: { $0.location.offset <= diagnostic.location.offset }) { seek(point.time) }

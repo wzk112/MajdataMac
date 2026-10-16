@@ -68,8 +68,8 @@ extension View {
 }
 
 enum StudioMotion {
-    static let panel = Animation.spring(response: 0.38, dampingFraction: 0.9)
-    static let selection = Animation.spring(response: 0.3, dampingFraction: 0.86)
+    static let panel = Animation.timingCurve(0.22, 1, 0.36, 1, duration: 0.30)
+    static let selection = Animation.timingCurve(0.22, 1, 0.36, 1, duration: 0.22)
 }
 
 struct StudioToolbarIcon: View {

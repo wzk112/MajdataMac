@@ -322,7 +322,7 @@ import MajdataCore
         #expect(!FileManager.default.fileExists(atPath: first.path))
         model.pause()
         // Paused edits wait for the new mix when play is pressed straight away.
-        model.place(lane: 2, at: 3.0); model.togglePlayback()
+        model.place(lane: 2, at: 3.25); model.togglePlayback()
         #expect(model.isPreparing && !model.isPlaying)
         try await wait(20) { model.isPlaying }
         #expect(model.isPlaying && !model.audioStale)

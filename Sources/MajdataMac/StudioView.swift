@@ -35,35 +35,36 @@ struct StudioView: View {
                         .frame(width: 38, height: 38).background(.cyan.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
                     VStack(alignment: .leading, spacing: 2) { Text("Majdata").font(.title3.bold()); Text("MAC STUDIO").font(.system(size: 9, weight: .semibold)).tracking(2).foregroundStyle(.secondary) }
                 }.padding(20)
-                List(selection: $selection) {
-                    Section("工作空间") {
-                        Label { Text("谱面工作台") } icon: { Image(systemName: "slider.horizontal.below.rectangle").renderingMode(.original).symbolRenderingMode(.palette).foregroundStyle(StudioPalette.accent) }.tag("studio")
-                        Label { Text("检查与分析") } icon: { Image(systemName: "checkmark.seal").renderingMode(.original).symbolRenderingMode(.palette).foregroundStyle(StudioPalette.accent) }.tag("analysis")
-                        Label { Text("使用指南") } icon: { Image(systemName: "book.closed").renderingMode(.original).symbolRenderingMode(.palette).foregroundStyle(StudioPalette.accent) }.tag("help")
-                    }
-                    Section("当前谱面") {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 6) {
+                        sidebarHeading("工作空间")
+                        sidebarDestination("谱面工作台", symbol: "slider.horizontal.below.rectangle", id: "studio")
+                        sidebarDestination("检查与分析", symbol: "checkmark.seal", id: "analysis")
+                        sidebarDestination("使用指南", symbol: "book.closed", id: "help")
+                        sidebarHeading("当前谱面").padding(.top, 18)
                         ForEach(0..<7, id: \.self) { diff in
                             Button { model.selectDifficulty(diff); selection = "studio" } label: {
-                                HStack {
+                                HStack(spacing: 8) {
                                     Circle().fill(difficultyColor(diff)).frame(width: 6, height: 6)
-                                    Text(ChartDocument.difficultyNames[diff]).font(.system(size: 11, weight: diff == model.difficulty ? .bold : .regular))
-                                    Spacer()
+                                    Text(ChartDocument.difficultyNames[diff]).font(.system(size: 11, weight: diff == model.difficulty ? .semibold : .regular))
+                                    Spacer(minLength: 0)
                                     Text(model.document.level(diff)).font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                                    if diff == model.difficulty { Image(systemName: "checkmark").font(.caption2).foregroundStyle(.cyan) }
-                                }.padding(.vertical, 3)
+                                    if diff == model.difficulty { Image(systemName: "checkmark").font(.caption2).foregroundStyle(StudioPalette.accent) }
+                                }.padding(.horizontal, 10).frame(height: 30).contentShape(Rectangle())
                             }.buttonStyle(.plain)
                         }
-                    }
-                    if !model.recentFiles.isEmpty {
-                        Section("最近打开") {
+                        if !model.recentFiles.isEmpty {
+                            sidebarHeading("最近打开").padding(.top, 18)
                             ForEach(model.recentFiles.prefix(5), id: \.self) { path in
                                 Button { if model.allowReplacing() { model.load(URL(fileURLWithPath: path)) } } label: {
-                                    Label(URL(fileURLWithPath: path).deletingLastPathComponent().lastPathComponent, systemImage: "doc.text").lineLimit(1).font(.caption)
+                                    Label(URL(fileURLWithPath: path).deletingLastPathComponent().lastPathComponent, systemImage: "doc.text")
+                                        .lineLimit(1).font(.caption).frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, 10).frame(height: 30).contentShape(Rectangle())
                                 }.buttonStyle(.plain).help(path)
                             }
                         }
-                    }
-                }.listStyle(.sidebar).scrollContentBackground(.hidden)
+                    }.padding(.horizontal, 10).padding(.vertical, 8)
+                }
                 VStack(alignment: .leading, spacing: 8) {
                     Button("打开谱面…", systemImage: "folder") { model.openPanel() }.buttonStyle(.glass).frame(maxWidth: .infinity)
                     Button("加载示例", systemImage: "play.rectangle") { model.loadDemo() }.buttonStyle(.plain).font(.caption).foregroundStyle(.secondary)
@@ -77,12 +78,12 @@ struct StudioView: View {
             VStack(spacing: 0) {
                 ZStack {
                     if selection == "analysis" {
-                        AnalysisView(model: model) { selection = "studio" }.studioGlass(20)
-                            .transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        AnalysisView(model: model) { selection = "studio"; editorMode = .code }.studioGlass(20)
+                            .transition(.opacity)
                     } else if selection == "help" {
-                        HelpView().studioGlass(20).transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        HelpView().studioGlass(20).transition(.opacity)
                     } else {
-                        editingWorkspace.transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        editingWorkspace.transition(.opacity)
                     }
                 }.animation(reduceMotion ? nil : StudioMotion.panel, value: selection)
                 Color.clear.frame(height: 8)
@@ -118,7 +119,7 @@ struct StudioView: View {
             HStack(spacing: 0) {
                 PanelDivider(axis: .vertical, value: $inspectorPanelWidth, displayedValue: inspectorWidth,
                              limits: 235...inspectorLimit, label: "设置栏宽度分隔线", reverse: true)
-                InspectorView(model: model).frame(width: inspectorWidth).studioGlass(22)
+                InspectorView(model: model, openMixer: { openWindow(id: "mixer") }).frame(width: inspectorWidth).studioGlass(22)
             }
             }.allowsHitTesting(inspectorShown).accessibilityHidden(!inspectorShown)
                 .animation(reduceMotion ? nil : StudioMotion.panel, value: inspectorShown)
@@ -126,6 +127,7 @@ struct StudioView: View {
         }
         }.background { StudioBackdrop().ignoresSafeArea() }
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        .onChange(of: editorMode) { _, _ in selection = "studio" }
         .alert("操作未完成", isPresented: Binding(get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } })) {
             Button("好", role: .cancel) { model.errorMessage = nil }
         } message: { Text(model.errorMessage ?? "") }
@@ -139,14 +141,31 @@ struct StudioView: View {
             }.padding(32)
         }
     }
+    private func sidebarHeading(_ title: String) -> some View {
+        Text(title).font(.system(size: 10, weight: .semibold)).foregroundStyle(.secondary)
+            .padding(.horizontal, 10).padding(.bottom, 4)
+    }
+    private func sidebarDestination(_ title: String, symbol: String, id: String) -> some View {
+        Button { selection = id } label: {
+            Label {
+                Text(title).font(.system(size: 12, weight: selection == id ? .semibold : .regular))
+            } icon: {
+                Image(systemName: symbol).renderingMode(.original).symbolRenderingMode(.palette)
+                    .foregroundStyle(StudioPalette.accent).frame(width: 20)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 10).frame(height: 36)
+            .background(selection == id ? StudioPalette.accent.opacity(0.13) : .clear, in: RoundedRectangle(cornerRadius: 10))
+            .contentShape(RoundedRectangle(cornerRadius: 10))
+        }.buttonStyle(.plain).accessibilityAddTraits(selection == id ? .isSelected : [])
+    }
     var editingWorkspace: some View {
         VStack(spacing: 0) {
             ZStack {
                 if editorMode == .visual {
                     VisualWorkspace(model: model) { editorMode = .code }
-                        .transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        .transition(.opacity)
                 } else {
-                    workspace.transition(.opacity.combined(with: .scale(scale: 0.985)))
+                    workspace.transition(.opacity)
                 }
             }
             .animation(reduceMotion ? nil : StudioMotion.panel, value: editorMode)
@@ -229,26 +248,34 @@ struct TransportBar: View {
             Text("播放进度").font(.caption).foregroundStyle(.secondary)
             PlaybackProgress(model: model).frame(height: 20)
         }
-        HStack(spacing: 18) {
+        ViewThatFits(in: .horizontal) {
+            transportControls(compact: false)
+            transportControls(compact: true)
+        }
+        }
+    }
+    private func transportControls(compact: Bool) -> some View {
+        HStack(spacing: compact ? 10 : 18) {
             HStack(spacing: 14) {
                 Button("停止", systemImage: "stop.fill") { model.stop() }.labelStyle(.iconOnly).buttonStyle(.plain)
                 Button { model.togglePlayback() } label: {
                     if model.isPreparing {
-                        HStack(spacing: 6) {
-                            ProgressView().controlSize(.small).frame(width: 18, height: 18)
-                            Text(model.playWhenReady ? "等待播放 · 点击取消" : "准备中 · 点击后播放").font(.caption)
-                        }
+                        ProgressView().controlSize(.small).frame(width: 18, height: 18)
                     }
                     else { Image(systemName: model.isPlaying ? "pause.fill" : "play.fill").frame(width: 18, height: 18) }
-                }.buttonStyle(.glassProminent).tint(.cyan).controlSize(.large).help("播放 / 暂停 ⇧⌘C；准备音频时可预约或取消播放")
+                }.buttonStyle(.glassProminent).tint(StudioPalette.accent).controlSize(.large)
+                    .accessibilityLabel(model.isPreparing ? (model.playWhenReady ? "等待播放，点击取消" : "准备中，点击后播放") : (model.isPlaying ? "暂停" : "播放"))
+                    .help("播放 / 暂停 ⇧⌘C；准备音频时可预约或取消播放")
                 Button("回到开头", systemImage: "backward.end.fill") { model.seek(model.rangeStart) }.labelStyle(.iconOnly).buttonStyle(.plain)
             }
             TransportTimeLabel(model: model)
             Spacer()
-            Toggle("跟随滚动", isOn: $model.follow).toggleStyle(.checkbox).font(.caption)
+            if compact {
+                Toggle("跟随源码", systemImage: "text.line.first.and.arrowtriangle.forward", isOn: $model.follow)
+                    .labelsHidden().toggleStyle(.button).help("播放时跟随源码")
+            } else { Toggle("跟随滚动", isOn: $model.follow).toggleStyle(.checkbox).font(.caption) }
             Toggle(isOn: $model.loopEnabled) { Image(systemName: "repeat") }.toggleStyle(.button).help("循环 A–B 区间")
-            Picker("速度", selection: $model.rate) { ForEach([0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0], id: \.self) { Text(String(format: "%.2g×", $0)).tag($0) } }.frame(width: 108)
-        }
+            Picker("速度", selection: $model.rate) { ForEach([0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0], id: \.self) { Text(String(format: "%.2g×", $0)).tag($0) } }.frame(width: compact ? 92 : 108)
         }
     }
 }
@@ -264,8 +291,8 @@ struct TransportTimeLabel: View {
 }
 
 struct InspectorView: View {
-    @Environment(\.openWindow) private var openWindow
     @Bindable var model: StudioModel
+    var openMixer: () -> Void
     var body: some View {
         ScrollView {
         VStack(alignment: .leading, spacing: 20) {
@@ -281,8 +308,11 @@ struct InspectorView: View {
                 slider("Touch 速度", value: $model.touchSpeed, range: 1...12)
                 slider("背景遮罩", value: $model.backgroundDim, range: 0...1)
                 Picker("中心显示", selection: $model.centerDisplay) { ForEach(["COMBO", "ACHIEVEMENT", "DX SCORE", "NONE"], id: \.self) { Text($0) } }
+                VStack(alignment: .leading, spacing: 6) {
+                Text("播放判定").foregroundStyle(.secondary)
                 Picker("播放判定", selection: Binding(get: { model.judgementMode }, set: { model.setRegionJudgement($0 == .experimentalRegions) })) {
                     ForEach(PreviewJudgementMode.allCases, id: \.self) { Text($0.title).tag($0) }
+                }.labelsHidden().frame(maxWidth: .infinity, alignment: .leading)
                 }
                 Text(model.regionJudgement ? "按假设的输入轨迹计算成绩，可能产生低判；尚未与原版 DJAuto 对齐。" : "与原版 Classic 一样直接给出最高判定；判定区高亮仅作位置演示。")
                     .font(.caption).foregroundStyle(.secondary)
@@ -333,7 +363,7 @@ struct InspectorView: View {
                     Text("总音量"); Spacer(); Text("\(Int(model.mix.master * 100))%").monospacedDigit()
                 }
                 Slider(value: Binding(get: { Double(model.mix.master) }, set: { model.mix.master = Float($0) }), in: 0...1).accessibilityLabel("总音量")
-                Button("打开 9 路混音器…") { openWindow(id: "mixer") }
+                Button("打开 9 路混音器…", action: openMixer)
                 if !model.mix.muted.isEmpty || !model.mix.solo.isEmpty { Text("已启用静音或独听").font(.caption).foregroundStyle(.orange) }
             }
             inspectorSection("BPM 测量") {

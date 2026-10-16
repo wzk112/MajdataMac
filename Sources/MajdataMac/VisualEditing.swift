@@ -37,9 +37,7 @@ extension StudioModel {
         if !chart.hasErrors, let issue = SimaiParser.parse(edit.text, offset: document.offset).diagnostics.first(where: { $0.severity == .error }) {
             status = "没有写入：" + issue.message; NSSound.beep(); return false
         }
-        visualUndo.append(VisualSnapshot(source: source, selection: selectedRange))
-        if visualUndo.count > 200 { visualUndo.removeFirst() }
-        visualRedo.removeAll()
+        recordSourceUndo(VisualSnapshot(source: source, selection: selectedRange))
         apply(edit.text, selection: edit.selection)
         return true
     }
@@ -48,24 +46,55 @@ extension StudioModel {
         // The next click needs fresh source offsets, so do not wait for the debounced background parse.
         chart = SimaiParser.parse(text, offset: document.offset)
         selectedRange = selection
+        sourceEditor?.synchronizeSource()
     }
     /// For edits that go through the older text commands (mirror, rotate, subdivide) so ⌘Z covers them too.
     func undoable(_ change: () -> Void) {
         let before = VisualSnapshot(source: source, selection: selectedRange)
         change()
         guard source != before.source else { return }
-        visualUndo.append(before); visualRedo.removeAll()
-        if visualUndo.count > 200 { visualUndo.removeFirst() }
+        recordSourceUndo(before)
         chart = SimaiParser.parse(source, offset: document.offset)
+        let start = min(selectedRange.location, source.utf16.count)
+        selectedRange = NSRange(location: start, length: min(selectedRange.length, source.utf16.count - start))
+        sourceEditor?.synchronizeSource()
     }
-    func undoVisualEdit() {
-        guard let last = visualUndo.popLast() else { NSSound.beep(); return }
-        visualRedo.append(VisualSnapshot(source: source, selection: selectedRange)); apply(last.source, selection: last.selection)
+    /// One source history survives editor mode changes and includes typing and menu transforms.
+    func recordSourceUndo(_ before: VisualSnapshot, typing: Bool = false) {
+        let coalesces = typing && Date().timeIntervalSince(lastTypingTime) < 1 && !visualUndo.isEmpty
+            && visualRedo.isEmpty && before.selection.length == 0
+        if !coalesces {
+            visualUndo.append(before); visualRedo.removeAll()
+            if visualUndo.count > 200 { visualUndo.removeFirst() }
+            sourceUndoManager.beginUndoGrouping()
+            sourceUndoManager.registerUndo(withTarget: self) { $0.restoreSource(before) }
+            sourceUndoManager.endUndoGrouping()
+        }
+        lastTypingTime = typing ? Date() : .distantPast
     }
-    func redoVisualEdit() {
-        guard let next = visualRedo.popLast() else { NSSound.beep(); return }
-        visualUndo.append(VisualSnapshot(source: source, selection: selectedRange)); apply(next.source, selection: next.selection)
+    private func restoreSource(_ snapshot: VisualSnapshot) {
+        let current = VisualSnapshot(source: source, selection: selectedRange)
+        if sourceUndoManager.isUndoing {
+            _ = visualUndo.popLast(); visualRedo.append(current)
+        } else {
+            _ = visualRedo.popLast(); visualUndo.append(current)
+        }
+        sourceUndoManager.registerUndo(withTarget: self) { $0.restoreSource(current) }
+        lastTypingTime = .distantPast
+        apply(snapshot.source, selection: snapshot.selection)
     }
+    func resetEditHistory() {
+        visualUndo = []; visualRedo = []; sourceUndoManager.removeAllActions(); lastTypingTime = .distantPast
+        selectedRange = NSRange(location: 0, length: 0)
+    }
+    func performUndoCommand(redo: Bool) {
+        // Metadata, find and settings fields retain their own AppKit editing history.
+        if let text = NSApp.keyWindow?.firstResponder as? NSTextView, !(text is PlaybackTextView) {
+            if redo { text.undoManager?.redo() } else { text.undoManager?.undo() }
+        } else if redo { redoVisualEdit() } else { undoVisualEdit() }
+    }
+    func undoVisualEdit() { sourceUndoManager.undo() }
+    func redoVisualEdit() { sourceUndoManager.redo() }
 
     /// Track click with a placement tool. `until` is where a Hold drag was released.
     func place(lane: Int, at time: Double, until: Double? = nil) {

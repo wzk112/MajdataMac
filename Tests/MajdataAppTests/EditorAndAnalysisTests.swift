@@ -34,30 +34,44 @@ import MajdataCore
         for shown in [false, true, false, true, false, true] {
             defaults.set(shown, forKey: "visualShowSidebar")
             defaults.set(!shown, forKey: "visualShowInspector")
-            // Reverse before the 380 ms spring completes.
+            // Reverse before the 300 ms easing completes.
             try await Task.sleep(for: .milliseconds(55)); host.layoutSubtreeIfNeeded()
             #expect(descendants(host).contains { $0 === track })
             #expect(descendants(host).contains { $0 === sidebar })
         }
         try await Task.sleep(for: .milliseconds(700)); host.layoutSubtreeIfNeeded()
         let shownX = track.convert(track.bounds, to: host).minX
-        let sampleStarted = ContinuousClock.now
+        let shownPanel = try #require(descendants(host).first {
+            $0.identifier?.rawValue == "studio-panel-clip" && $0.bounds.width > 100
+        })
+        let panelPoint = shownPanel.convert(NSPoint(x: 60, y: shownPanel.bounds.midY), to: host)
+        let hit = try #require(host.hitTest(panelPoint))
+        #expect(hit.isDescendant(of: shownPanel))
+        #expect(shownPanel.accessibilityChildren()?.isEmpty == false)
         defaults.set(false, forKey: "visualShowSidebar")
-        try await Task.sleep(for: .milliseconds(100)); host.layoutSubtreeIfNeeded()
-        let sampleDelay = ContinuousClock.now - sampleStarted
-        let middleX = track.convert(track.bounds, to: host).minX
-        try await Task.sleep(for: .milliseconds(600)); host.layoutSubtreeIfNeeded()
+        var positions: [CGFloat] = [shownX]
+        for _ in 0..<25 {
+            try await Task.sleep(for: .milliseconds(20)); host.layoutSubtreeIfNeeded()
+            positions.append(track.convert(track.bounds, to: host).minX)
+        }
+        try await Task.sleep(for: .milliseconds(200)); host.layoutSubtreeIfNeeded()
         let hiddenX = track.convert(track.bounds, to: host).minX
         #expect(abs((shownX - hiddenX) - 212) < 1)
-        print("PANEL REVEAL shown=\(shownX) middle=\(middleX) hidden=\(hiddenX) sampleDelay=\(sampleDelay)")
-        // Parallel video/OCR suites may occupy the main actor past the whole spring.
-        // Only assert an intermediate sample if it actually ran during that interval.
-        if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion && sampleDelay < .milliseconds(250) {
-            #expect(middleX > hiddenX + 1 && middleX < shownX - 1)
-        }
+        // Main-actor export/OCR work can skip frames. Every sampled frame must still
+        // stay within the endpoints and move monotonically, never overshoot/rebound.
+        #expect(positions.allSatisfy { $0 >= hiddenX - 1 && $0 <= shownX + 1 })
+        #expect(zip(positions, positions.dropFirst()).allSatisfy { $1 <= $0 + 1 })
+        print("PANEL REVEAL positions=\(positions) hidden=\(hiddenX)")
         for view in descendants(host).filter({ $0 is VerticalTrackCanvas || $0 is StageInputView }) {
             let rect = view.convert(view.bounds, to: host)
             #expect(rect.minX >= -1 && rect.maxX <= host.bounds.width + 1)
+        }
+        let boundaries = descendants(host).filter { $0.identifier?.rawValue == "studio-panel-clip" }
+        #expect(boundaries.count == 2)
+        for boundary in boundaries {
+            #expect(boundary.clipsToBounds && boundary.layer?.masksToBounds == true)
+            #expect(boundary.bounds.width < 1 && boundary.subviews.first?.isHidden == true)
+            #expect(boundary.accessibilityChildren()?.isEmpty == true)
         }
         #expect(!model.isDirty)
     }
