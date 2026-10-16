@@ -61,6 +61,44 @@ import Foundation
         #expect(ChartEditing.toggle("f", on: try note { $0.area == "B" }, in: source)?.text == "(120){4}1/5b,3-7[4:1],B2f,C,E")
         #expect(ChartEditing.toggle("f", on: try note { $0.area == "C" }, in: source)?.text == "(120){4}1/5b,3-7[4:1],B2,Cf,E")
     }
+    @Test func deletingPseudoChordsPreservesEveryRemainingTimestamp() throws {
+        for source in ["(120){4}1`3`5,7,E", "(120){4}12/4`35/6`7,8,E",
+                       "|| 中文 🎵\n(150){8}1 / 2`3 / 4`5,6h[4:1],E"] {
+            let chart = SimaiParser.parse(source, offset: 1.25)
+            for victim in chart.notes {
+                let edit = try #require(ChartEditing.remove(victim, from: source))
+                let remaining = SimaiParser.parse(edit.text, offset: 1.25)
+                #expect(!remaining.hasErrors)
+                let expected = chart.notes.filter { $0.token != victim.token }
+                #expect(remaining.notes.count == expected.count)
+                for (actual, original) in zip(remaining.notes, expected) {
+                    #expect(actual.lane == original.lane && actual.kind == original.kind)
+                    #expect(actual.time == original.time && actual.endTime == original.endTime)
+                }
+            }
+        }
+    }
+    @Test func compactChordFlagsKeepOtherNotesAndSelectOnlyTheEditedToken() throws {
+        for source in ["(120){4}135,7,E", "|| 中文 🎵\n(120){4}1 3 5,7,E",
+                       "(120){4}1|| comment\n35`7,8,E"] {
+            let chart = SimaiParser.parse(source)
+            for lane in [1, 3, 5] {
+                for flag: Character in ["b", "x"] {
+                    let note = try #require(chart.notes.first { $0.lane == lane })
+                    let edit = try #require(ChartEditing.toggle(flag, on: note, in: source))
+                    let after = SimaiParser.parse(edit.text)
+                    #expect(!after.hasErrors)
+                    #expect(after.notes.count == chart.notes.count)
+                    #expect((edit.text as NSString).substring(with: edit.selection) == "\(lane)\(flag)")
+                    for (actual, original) in zip(after.notes, chart.notes) {
+                        #expect(actual.lane == original.lane && actual.time == original.time)
+                        #expect(actual.isBreak == (original.lane == lane && flag == "b"))
+                        #expect(actual.isEX == (original.lane == lane && flag == "x"))
+                    }
+                }
+            }
+        }
+    }
     @Test func snapsToTheChosenDivisorFromTheTempoStart() {
         let line = MusicalTimeline(SimaiParser.parse("(120){4}1,,,,(60)1,,E"))
         #expect(abs(line.snap(0.26, divisor: 8) - 0.25) < 1e-9)
@@ -76,5 +114,32 @@ import Foundation
             #expect(SlideMatching.shape(start: 1, end: end, drawn: drawn) == shape)
         }
         #expect(SlideMatching.shape(start: 1, end: 1, drawn: ["A1"]) != nil)
+    }
+    @Test func orderedStrokesPreserveEveryLegalPathIncludingFullCircleDirection() throws {
+        var checked = 0
+        for start in 1...8 {
+            for end in 1...8 {
+                for shape in ["-", "^", "v", "<", ">", "p", "q", "s", "z", "pp", "qq"] {
+                    let segment = SlideSegment(shape: shape, start: start, end: end)
+                    guard let expected = SlideGeometry.key(for: segment) else { continue }
+                    let path = SlideGeometry.points(for: segment)
+                    // Uneven sampling and stationary events must not change the result.
+                    var stroke: [Point] = []
+                    for (i, point) in path.enumerated() {
+                        if i > 0 { stroke.append(path[i - 1].interpolated(to: point, at: 0.2)) }
+                        stroke.append(point); stroke.append(point)
+                    }
+                    let picked = try #require(SlideMatching.shape(start: start, end: end, stroke: stroke))
+                    let actual = try #require(SlideGeometry.key(for: SlideSegment(shape: picked, start: start, end: end)))
+                    #expect(actual.name == expected.name && actual.mirror == expected.mirror,
+                            "\(start)\(shape)\(end) became \(picked)")
+                    checked += 1
+                }
+            }
+        }
+        #expect(checked == 544)
+        #expect(SlideMatching.shape(start: 1, end: 1, stroke: []) == nil)
+        #expect(SlideMatching.shape(start: 1, end: 1, stroke: [Point(1, 0), Point(1, 0)]) == nil)
+        #expect(SlideMatching.shape(start: 1, end: 1, stroke: [Point(.nan, 0), Point(1, 0)]) == nil)
     }
 }

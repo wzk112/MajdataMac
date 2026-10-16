@@ -55,6 +55,7 @@ extension StudioModel {
         change()
         guard source != before.source else { return }
         visualUndo.append(before); visualRedo.removeAll()
+        if visualUndo.count > 200 { visualUndo.removeFirst() }
         chart = SimaiParser.parse(source, offset: document.offset)
     }
     func undoVisualEdit() {
@@ -92,14 +93,16 @@ extension StudioModel {
         let token = trackTool == .touchHold ? zone + "h" + firework + lengthToken(wait: true) : zone + firework
         commit(ChartEditing.insert(token, at: time, in: source, chart: chart))
     }
-    /// Stage stroke for the pending star: the zones it crossed choose the shape.
-    func finishSlide(zones: Set<String>, end: Int) {
+    /// Stage input supplies an ordered stroke; zone-only callers retain the older fallback.
+    func finishSlide(zones: Set<String>, end: Int, stroke: [Point]? = nil) {
         guard let pending = pendingSlide else { return }
         let start = pending.from ?? pending.lane, existing = slideHead(lane: pending.lane, at: pending.time)
         // A fan cannot be part of a connected slide.
         let fan = pending.from == nil && placementFlags.contains("w") && (end - start + 8) % 8 == 4
-        guard let shape = fan ? "w" : SlideMatching.shape(start: start, end: end, drawn: zones) else {
-            status = "键 \(start) 到键 \(end) 没有合法的星星形状"; NSSound.beep(); return
+        let matched = stroke.map { SlideMatching.shape(start: start, end: end, stroke: $0) }
+            ?? SlideMatching.shape(start: start, end: end, drawn: zones)
+        guard let shape = fan ? "w" : matched else {
+            status = "请从键 \(start) 画出完整轨迹到键 \(end)，再松手确认"; NSSound.beep(); return
         }
         // Only the first segment of a tail carries the wait; later segments follow on directly.
         let tail = "\(shape)\(end)\(placementFlags.contains("s") ? "b" : "")" + lengthToken(wait: pending.from != nil || slideWaitsOneBeat)

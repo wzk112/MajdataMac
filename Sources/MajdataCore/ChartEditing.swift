@@ -122,13 +122,36 @@ public enum ChartEditing {
         return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: (body as NSString).length))
     }
 
-    /// Removes the note's token and the separator that joined it to its neighbour.
+    /// Bare chord digits share a lexical token even when comments or commands sit between them.
+    /// Editing one digit must not join its new flags to the neighbouring digit.
+    private static func compactNeighbours(of note: Note, in source: String) -> (before: Bool, after: Bool) {
+        guard let token = note.token, token.length == 1, note.kind == .tap else { return (false, false) }
+        let text = source as NSString
+        let notes = SimaiParser.parse(source).notes.filter { $0.kind == .tap && $0.token?.length == 1 }
+        func joined(_ other: Note?, before: Bool) -> Bool {
+            guard let span = other?.token else { return false }
+            let lower = before ? span.offset + span.length : token.offset + token.length
+            let upper = before ? token.offset : span.offset
+            guard lower <= upper else { return false }
+            let gap = text.substring(with: NSRange(location: lower, length: upper - lower))
+                .replacingOccurrences(of: #"\|\|[^\n]*"#, with: "", options: .regularExpression)
+                .replacingOccurrences(of: #"\([^)]*\)|\{[^}]*\}|<HS\*[^>]*>"#, with: "", options: .regularExpression)
+            return gap.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        let previous = notes.filter { $0.token!.offset < token.offset }.max { $0.token!.offset < $1.token!.offset }
+        let next = notes.filter { $0.token!.offset > token.offset }.min { $0.token!.offset < $1.token!.offset }
+        return (joined(previous, before: true), joined(next, before: false))
+    }
+
+    /// Removes a token without changing the millisecond offsets carried by backticks.
     public static func remove(_ note: Note, from source: String) -> ChartEdit? {
         let text = NSMutableString(string: source)
         guard let token = note.token, NSMaxRange(NSRange(location: token.offset, length: token.length)) <= text.length else { return nil }
         var range = NSRange(location: token.offset, length: token.length)
-        func separator(_ index: Int) -> Bool { index >= 0 && index < text.length && (text.character(at: index) == 0x2F || text.character(at: index) == 0x60) }
-        if separator(NSMaxRange(range)) { range.length += 1 } else if separator(range.location - 1) { range.location -= 1; range.length += 1 }
+        let neighbours = compactNeighbours(of: note, in: source)
+        func separator(_ index: Int) -> Bool { index >= 0 && index < text.length && text.character(at: index) == 0x2F }
+        if !neighbours.before && separator(NSMaxRange(range)) { range.length += 1 }
+        else if !neighbours.after && separator(range.location - 1) { range.location -= 1; range.length += 1 }
         text.deleteCharacters(in: range)
         return ChartEdit(text: text as String, selection: NSRange(location: min(range.location, text.length), length: 0))
     }
@@ -147,14 +170,51 @@ public enum ChartEditing {
         var result = characters
         if let found = characters[position..<end].firstIndex(of: flag) { result.remove(at: found) } else { result.insert(flag, at: position) }
         let replacement = String(result)
-        text.replaceCharacters(in: NSRange(location: token.offset, length: token.length), with: replacement)
-        return ChartEdit(text: text as String, selection: NSRange(location: token.offset, length: (replacement as NSString).length))
+        let neighbours = compactNeighbours(of: note, in: source)
+        let prefix = neighbours.before ? "/" : "", suffix = neighbours.after ? "/" : ""
+        text.replaceCharacters(in: NSRange(location: token.offset, length: token.length), with: prefix + replacement + suffix)
+        return ChartEdit(text: text as String, selection: NSRange(location: token.offset + prefix.utf16.count, length: replacement.utf16.count))
     }
 }
 
 /// Turns a stroke drawn across the judgement zones into the simai slide shape that covers the same zones.
 public enum SlideMatching {
     static let shapes = ["-", "^", "v", "<", ">", "p", "q", "s", "z", "pp", "qq"]
+    /// Compare ordered strokes in judgement-ring coordinates (radius 1). Equal arc-length
+    /// samples make the result independent of mouse-event frequency while retaining direction
+    /// and repeated visits to a region, which a set of sensor names cannot represent.
+    public static func shape(start: Int, end: Int, stroke: [Point]) -> String? {
+        guard (1...8).contains(start), (1...8).contains(end), let drawn = resample(stroke) else { return nil }
+        var best: (shape: String, error: Double)?
+        for shape in shapes {
+            let segment = SlideSegment(shape: shape, start: start, end: end)
+            guard SlideGeometry.key(for: segment) != nil,
+                  let path = resample(SlideGeometry.points(for: segment)) else { continue }
+            let error = zip(drawn, path).reduce(0.0) { sum, pair in
+                let distance = pair.0.distance(to: pair.1)
+                return sum + distance * distance
+            } / Double(drawn.count)
+            if best == nil || error < best!.error - 1e-9 { best = (shape, error) }
+        }
+        return best?.shape
+    }
+    private static func resample(_ points: [Point], count: Int = 65) -> [Point]? {
+        guard points.allSatisfy({ $0.x.isFinite && $0.y.isFinite }), let first = points.first else { return nil }
+        var path = [first], lengths = [0.0]
+        for point in points.dropFirst() {
+            let distance = path.last!.distance(to: point)
+            guard distance > 1e-8 else { continue }
+            path.append(point); lengths.append(lengths.last! + distance)
+        }
+        guard path.count > 1, let total = lengths.last, total.isFinite, total > 0.05 else { return nil }
+        var index = 1
+        return (0..<count).map { sample in
+            let distance = total * Double(sample) / Double(count - 1)
+            while index < path.count - 1 && lengths[index] < distance { index += 1 }
+            let fraction = (distance - lengths[index - 1]) / (lengths[index] - lengths[index - 1])
+            return path[index - 1].interpolated(to: path[index], at: fraction)
+        }
+    }
     /// Zones a slide passes, sampled along its real path.
     public static func zones(shape: String, start: Int, end: Int) -> Set<String> {
         let segment = SlideSegment(shape: shape, start: start, end: end)

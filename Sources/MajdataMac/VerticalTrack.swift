@@ -102,6 +102,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     private var musical: MusicalTimeline
     private var chartRevision: UUID
     private var touchSlots: [Int: VerticalTrackLayout.TouchSlot]
+    private var noteIndex: TrackNoteIndex
     private var scrubbing = false
     private var resumeAfterScrub = false
     private var displayTime = 0.0
@@ -130,12 +131,14 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         if chartRevision != model.chart.renderRevision {
             chartRevision = model.chart.renderRevision; musical = MusicalTimeline(model.chart)
             touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
+            noteIndex = TrackNoteIndex(model.chart.notes)
         }
         return VerticalTrackLayout(size: bounds.size, viewport: viewport, touchSlots: touchSlots)
     }
     init(model: StudioModel) {
         self.model = model; musical = MusicalTimeline(model.chart); chartRevision = model.chart.renderRevision
         touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
+        noteIndex = TrackNoteIndex(model.chart.notes)
         super.init(frame: .zero)
         // AppKit views draw outside their bounds unless asked not to; long notes would spill over the transport bar.
         clipsToBounds = true
@@ -147,6 +150,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         if chartRevision != model.chart.renderRevision {
             chartRevision = model.chart.renderRevision; musical = MusicalTimeline(model.chart)
             touchSlots = VerticalTrackLayout.touchSlots(for: model.chart.notes)
+            noteIndex = TrackNoteIndex(model.chart.notes)
         }
         displayTime = model.playbackTime
         if !scrubbing { follow(displayTime) }
@@ -188,8 +192,8 @@ private struct VerticalTrackSurface: NSViewRepresentable {
         displayTime = model.currentTime; needsDisplay = true
     }
     private func note(at point: CGPoint) -> Note? {
-        let view = viewport
-        return layout.note(at: point, in: model.chart.notes.filter { $0.endTime >= view.start && $0.time <= view.start + view.span })
+        let layout = layout, view = layout.viewport
+        return layout.note(at: point, in: noteIndex.visible(from: view.start, through: view.start + view.span))
     }
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
@@ -222,7 +226,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
     /// The far end of a hold or touch hold, away from its head so a short note can still be clicked whole.
     private func endHandle(at point: CGPoint, _ layout: VerticalTrackLayout) -> Note? {
         let view = layout.viewport
-        return model.chart.notes.first { note in
+        return noteIndex.visible(from: view.start, through: view.start + view.span).first { note in
             guard note.kind == .hold || note.kind == .touchHold, !layout.inCluster(note), note.token != nil,
                   note.endTime >= view.start, note.time <= view.start + view.span else { return false }
             let head = layout.center(of: note), end = layout.y(note.endTime), size = layout.isTouch(note) ? layout.touchSize(note) : layout.headSize
@@ -304,7 +308,8 @@ private struct VerticalTrackSurface: NSViewRepresentable {
               let context = NSGraphicsContext.current?.cgContext else { return }
         let layout = layout, view = layout.viewport, width = bounds.width, height = bounds.height
         let gutter = VerticalTrackLayout.gutter, lane = layout.laneWidth, keysEnd = layout.keysEnd
-        NSColor.textBackgroundColor.setFill(); bounds.fill()
+        context.clear(bounds)
+        NSColor.textBackgroundColor.withAlphaComponent(0.4).setFill(); bounds.fill()
         NSColor.labelColor.withAlphaComponent(0.045).setFill()
         NSRect(x: 0, y: 0, width: gutter, height: height).fill()
         NSRect(x: keysEnd, y: 0, width: width - keysEnd, height: height).fill()
@@ -344,7 +349,7 @@ private struct VerticalTrackSurface: NSViewRepresentable {
                           color: bpmChanged ? .labelColor : .systemTeal, in: context)
             lastY = y
         }
-        let notes = model.chart.notes.filter { $0.endTime >= view.start && $0.time <= view.start + view.span }
+        let notes = noteIndex.visible(from: view.start, through: view.start + view.span)
         for note in notes where note.kind == .hold { drawHold(note, layout) }
         for note in notes where note.kind == .touchHold { drawTouchHoldBody(note, layout) }
         for note in notes where note.kind == .slide { drawSlideTail(note, layout) }

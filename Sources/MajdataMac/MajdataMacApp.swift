@@ -11,7 +11,8 @@ import MajdataCore
     var body: some Scene {
         WindowGroup("Majdata Mac") {
             StudioView(model: model).frame(minWidth: 1100, minHeight: 720)
-                .tint(.cyan).preferredColorScheme(appearance.colorScheme)
+                .tint(StudioPalette.accent).preferredColorScheme(appearance.colorScheme).environment(\.controlActiveState, .key)
+                .containerBackground(.clear, for: .window)
                 .onAppear { delegate.model = model; NSApp.setActivationPolicy(.regular); NSApp.activate(ignoringOtherApps: true) }
                 .onOpenURL { if model.allowReplacing() { model.load($0) } }
         }.defaultSize(width: 1440, height: 920)
@@ -53,21 +54,13 @@ import MajdataCore
             CommandGroup(after: .textEditing) { Button("查找与替换") { model.showFind = true }.keyboardShortcut("f") }
         }
         Window("Majdata · 舞台", id: "stage") {
-            StandaloneStageWindow(model: model).preferredColorScheme(appearance.colorScheme)
+            StandaloneStageWindow(model: model).tint(StudioPalette.accent).preferredColorScheme(appearance.colorScheme).environment(\.controlActiveState, .key).containerBackground(.clear, for: .window)
         }.defaultSize(width: 900, height: 960)
-        Window("音量混音器", id: "mixer") { MixerWindow(model: model).preferredColorScheme(appearance.colorScheme) }.defaultSize(width: 660, height: 850)
+        Window("音量混音器", id: "mixer") { MixerWindow(model: model).tint(StudioPalette.accent).preferredColorScheme(appearance.colorScheme).environment(\.controlActiveState, .key).containerBackground(.clear, for: .window) }.defaultSize(width: 660, height: 850)
         Settings {
-            Form {
-                Section("外观") {
-                    Picker("界面外观", selection: $appearance) { ForEach(AppAppearance.allCases, id: \.self) { Text($0.title).tag($0) } }.pickerStyle(.segmented)
-                    Text("舞台预览始终是深色，和游戏里一样。").font(.caption).foregroundStyle(.secondary)
-                }
-                Section("编辑器") { Slider(value: $model.fontSize, in: 11...26) { Text("字号 \(Int(model.fontSize))") }; Toggle("播放时跟随源码", isOn: $model.follow) }
-                Section("画面特效 · 播放与导出") { StageEffectsControls(model: model) }
-                Section("资源") { Button("选择自定义皮肤…") { model.chooseSkin() }; Button("恢复默认皮肤") { model.loadSkin(nil) } }
-                Section("编码工具") { TextField("FFmpeg 路径", text: $model.ffmpegPath).onChange(of: model.ffmpegPath) { _, value in UserDefaults.standard.set(value, forKey: "ffmpegPath") } }
-                Section { Text("Majdata Mac · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "本地构建")\n基于 MajdataView / MajdataEdit · GPL-3.0").font(.caption).foregroundStyle(.secondary) }
-            }.formStyle(.grouped).frame(width: 480, height: 600).preferredColorScheme(appearance.colorScheme)
+            StudioSettingsView(model: model, appearance: $appearance)
+                .tint(StudioPalette.accent).preferredColorScheme(appearance.colorScheme).environment(\.controlActiveState, .key)
+                .containerBackground(.clear, for: .window)
         }
     }
 }

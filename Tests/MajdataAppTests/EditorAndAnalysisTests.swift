@@ -5,6 +5,74 @@ import MajdataCore
 @testable import MajdataMac
 
 @Suite(.serialized) struct EditorAndAnalysisTests {
+    @Test @MainActor func switchingModesKeepsThePlayableMixSourceAndSelection() async throws {
+        let defaults = UserDefaults.standard, previous = defaults.object(forKey: "editorMode")
+        defaults.set(EditorMode.visual.rawValue, forKey: "editorMode")
+        let model = StudioModel(audioOutputEnabled: false)
+        model.source = "(120){4}1,,3,,5,,7,,1,,3,,5,,7,,E"
+        model.chart = SimaiParser.parse(model.source)
+        model.selectedRange = NSRange(location: 7, length: 1)
+        let source = model.source, selection = model.selectedRange
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        let host = NSHostingView(rootView: StudioView(model: model))
+        window.contentView = host
+        // A visible host advances AppKit-backed opacity transitions and their teardown.
+        window.orderFront(nil)
+        defer {
+            model.invalidateAudio(); window.close()
+            if let previous { defaults.set(previous, forKey: "editorMode") } else { defaults.removeObject(forKey: "editorMode") }
+        }
+        model.prepareAudio(thenPlay: true)
+        let deadline = Date().addingTimeInterval(20)
+        while !model.isPlaying && Date() < deadline { try await Task.sleep(for: .milliseconds(30)) }
+        #expect(model.isPlaying)
+        let mix = try #require(model.prepared?.url), start = model.playbackTime
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        for mode in [EditorMode.code, .visual, .code, .visual] {
+            defaults.set(mode.rawValue, forKey: "editorMode")
+            let transitionDeadline = Date().addingTimeInterval(2)
+            var views = descendants(host)
+            repeat {
+                host.layoutSubtreeIfNeeded()
+                try await Task.sleep(for: .milliseconds(30))
+                views = descendants(host)
+                if views.filter({ $0 is VerticalTrackCanvas }).count == (mode == .visual ? 1 : 0)
+                    && views.filter({ $0 is PlaybackTextView }).count == (mode == .code ? 1 : 0) { break }
+            } while Date() < transitionDeadline
+            #expect(views.filter { $0 is VerticalTrackCanvas }.count == (mode == .visual ? 1 : 0))
+            #expect(views.filter { $0 is PlaybackTextView }.count == (mode == .code ? 1 : 0))
+            #expect(model.source == source && model.selectedRange == selection && !model.isDirty)
+            #expect(model.isPlaying && model.prepared?.url == mix && !model.isPreparing)
+        }
+        #expect(model.playbackTime > start)
+    }
+    @Test @MainActor func visualWorkspaceKeepsTrackAndSquareStageInsideNarrowLayouts() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        let host = NSHostingView(rootView: VisualWorkspace(model: model, showCode: {}))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 800),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false; window.contentView = host
+        defer { window.close(); model.invalidateAudio() }
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        for size in [NSSize(width: 600, height: 560), NSSize(width: 850, height: 650),
+                     NSSize(width: 1100, height: 650), NSSize(width: 1440, height: 800)] {
+            window.setContentSize(size); host.layoutSubtreeIfNeeded()
+            try await Task.sleep(for: .milliseconds(100)); host.layoutSubtreeIfNeeded()
+            let views = descendants(host)
+            let track = try #require(views.first { $0 is VerticalTrackCanvas })
+            let input = try #require(views.first { $0 is StageInputView })
+            for view in [track, input] {
+                let rect = view.convert(view.bounds, to: host)
+                #expect(rect.minX >= -1 && rect.maxX <= size.width + 1)
+                #expect(rect.minY >= -1 && rect.maxY <= size.height + 1)
+                #expect(rect.width > 100 && rect.height > 100)
+            }
+            #expect(abs(input.bounds.width - input.bounds.height) < 1)
+            #expect(!model.isDirty)
+        }
+    }
     @Test @MainActor func completeWorkspaceSurvivesWindowResizing() async {
         let model = StudioModel(audioOutputEnabled: false)
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),

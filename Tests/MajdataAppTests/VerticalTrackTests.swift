@@ -243,6 +243,67 @@ import MajdataCore
         let deadline = Date().addingTimeInterval(seconds)
         while !done() && Date() < deadline { try await Task.sleep(for: .milliseconds(30)) }
     }
+    @Test @MainActor func menuTransformsAndSubdivisionUndoOneOperationAtATime() throws {
+        for transform in ChartTransform.allCases {
+            let model = model("(120){4}1,,5,,E")
+            defer { model.invalidateAudio() }
+            model.trackTool = .tap; model.place(lane: 3, at: 0.5)
+            let placed = model.source, selection = model.selectedRange
+            model.transform(transform) // The menu and tool panel call this same entry point.
+            let transformed = model.source
+            #expect(transformed != placed && model.visualUndo.count == 2)
+            model.undoVisualEdit()
+            #expect(model.source == placed && model.selectedRange == selection)
+            model.redoVisualEdit(); #expect(model.source == transformed)
+            model.undoVisualEdit(); model.undoVisualEdit()
+            #expect(model.source == "(120){4}1,,5,,E")
+        }
+        let model = model("(120){4}1,,5,,E")
+        defer { model.invalidateAudio() }
+        model.trackTool = .tap; model.place(lane: 3, at: 0.5)
+        model.selectedRange = NSRange(location: 0, length: model.source.utf16.count)
+        let placed = model.source
+        model.subdivide(); let subdivided = model.source
+        #expect(subdivided != placed && model.visualUndo.count == 2)
+        model.undoVisualEdit(); #expect(model.source == placed)
+        model.redoVisualEdit(); #expect(model.source == subdivided)
+    }
+    @Test @MainActor func compactChordFlagsAndPseudoDeletionWorkThroughVisualHistory() throws {
+        let model = model("(120){4}15`3,,E")
+        defer { model.invalidateAudio() }
+        let one = try #require(model.chart.notes.first { $0.lane == 1 })
+        model.select(one); model.toggleFlag("b")
+        #expect(model.source == "(120){4}1b/5`3,,E")
+        #expect(model.selectedNotes.count == 1 && model.selectedNotes[0].isBreak)
+        model.undoVisualEdit(); #expect(model.source == "(120){4}15`3,,E")
+        model.delete(try #require(model.chart.notes.first { $0.lane == 5 }))
+        #expect(model.chart.notes.first { $0.lane == 3 }?.time == 0.001)
+        model.undoVisualEdit(); #expect(model.source == "(120){4}15`3,,E")
+    }
+    @Test @MainActor func stageMouseStrokeKeepsFullCircleAndLoopDirection() throws {
+        for shape in ["<", ">", "p", "q"] {
+            let model = model("(120){4},,,,E")
+            defer { model.invalidateAudio() }
+            model.trackTool = .slide; model.place(lane: 1, at: 0)
+            let view = StageInputView(model: model)
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 600),
+                                  styleMask: .borderless, backing: .buffered, defer: false)
+            window.contentView = view; view.frame = NSRect(x: 0, y: 0, width: 600, height: 600)
+            let points = SlideGeometry.points(for: SlideSegment(shape: shape, start: 1, end: 1))
+            func event(_ type: NSEvent.EventType, _ point: Point) throws -> NSEvent {
+                let unit = 600.0 / 11.465929
+                let location = CGPoint(x: 300 + point.x * 4.8 * unit, y: 300 - point.y * 4.8 * unit)
+                return try #require(NSEvent.mouseEvent(with: type, location: location, modifierFlags: [], timestamp: 0,
+                    windowNumber: window.windowNumber, context: nil, eventNumber: 0, clickCount: 1, pressure: 1))
+            }
+            view.mouseDown(with: try event(.leftMouseDown, points[0]))
+            for point in points.dropFirst() { view.mouseDragged(with: try event(.leftMouseDragged, point)) }
+            view.mouseUp(with: try event(.leftMouseUp, points.last!))
+            let slide = try #require(model.chart.notes.first { $0.kind == .slide })
+            #expect(slide.segments.first?.shape == shape && slide.segments.first?.end == 1)
+            #expect(!model.chart.hasErrors)
+        }
+    }
     @Test @MainActor func placingANoteKeepsPlaybackRunningAndSwapsTheMix() async throws {
         let model = StudioModel(audioOutputEnabled: false)
         model.source = "(120){4}1,,5,,3,,7,,1,,5,,3,,7,,E"; model.chart = SimaiParser.parse(model.source)

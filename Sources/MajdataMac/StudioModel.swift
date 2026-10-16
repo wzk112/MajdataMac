@@ -508,16 +508,20 @@ enum PreviewJudgementMode: String, CaseIterable {
         if isDirty && Date().timeIntervalSince(lastRecovery) > 15 { writeRecovery() }
     }
     func transform(_ transform: ChartTransform) {
-        let ns = source as NSString, selected = selectedRange
-        let valid = selected.length > 0 && NSMaxRange(selected) <= ns.length
-        let text = valid ? ns.substring(with: selected) : source
-        edited(valid ? ns.replacingCharacters(in: selected, with: transform.apply(to: text)) : transform.apply(to: text))
+        undoable {
+            let ns = source as NSString, selected = selectedRange
+            let valid = selected.length > 0 && NSMaxRange(selected) <= ns.length
+            let text = valid ? ns.substring(with: selected) : source
+            edited(valid ? ns.replacingCharacters(in: selected, with: transform.apply(to: text)) : transform.apply(to: text))
+        }
     }
     func subdivide() {
-        let ns = source as NSString
-        let valid = selectedRange.length > 0 && NSMaxRange(selectedRange) <= ns.length
-        let text = valid ? ns.substring(with: selectedRange) : source
-        edited(valid ? ns.replacingCharacters(in: selectedRange, with: ChartTransform.subdivide(text, factor: 2)) : ChartTransform.subdivide(text, factor: 2))
+        undoable {
+            let ns = source as NSString
+            let valid = selectedRange.length > 0 && NSMaxRange(selectedRange) <= ns.length
+            let text = valid ? ns.substring(with: selectedRange) : source
+            edited(valid ? ns.replacingCharacters(in: selectedRange, with: ChartTransform.subdivide(text, factor: 2)) : ChartTransform.subdivide(text, factor: 2))
+        }
     }
     func findNext() {
         guard !findText.isEmpty else { return }

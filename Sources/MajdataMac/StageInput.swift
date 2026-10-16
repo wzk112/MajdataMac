@@ -52,7 +52,11 @@ struct StageInputSurface: NSViewRepresentable {
         let point = convert(event.locationInWindow, from: nil); extend(point)
         // The tail ends on the last outer key the stroke reached; otherwise on the key it was heading for.
         let end = crossed.last(where: { $0.hasPrefix("A") }).flatMap { Int($0.dropFirst()) } ?? key(toward: point)
-        model.finishSlide(zones: Set(crossed), end: end)
+        let points = stroke.map { point in
+            let p = world(point)
+            return Point(p.x / 4.8, p.y / 4.8)
+        }
+        model.finishSlide(zones: Set(crossed), end: end, stroke: points)
         crossed = []; stroke = []; needsDisplay = true
     }
     override func draw(_ dirtyRect: NSRect) {

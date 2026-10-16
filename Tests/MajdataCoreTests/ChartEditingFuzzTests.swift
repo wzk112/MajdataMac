@@ -34,7 +34,12 @@ import Foundation
                         guard let edit = ChartEditing.remove(victim, from: source) else { failures.append("REMOVE nil \(source)"); continue }
                         let after = SimaiParser.parse(edit.text, offset: offset)
                         let gone = chart.notes.filter { $0.token == victim.token }.count
-                        if !after.diagnostics.isEmpty || after.notes.count != chart.notes.count - gone { failures.append("REMOVE bad: \(source) -> \(edit.text) victim \(victim.lane)@\(victim.time) \(after.diagnostics.map(\.message))") }
+                        let expected = chart.notes.filter { $0.token != victim.token }
+                        let unchanged = zip(after.notes, expected).allSatisfy { actual, original in
+                            actual.lane == original.lane && actual.kind == original.kind && actual.time == original.time
+                                && actual.endTime == original.endTime && actual.speed == original.speed
+                        }
+                        if !after.diagnostics.isEmpty || after.notes.count != chart.notes.count - gone || !unchanged { failures.append("REMOVE bad: \(source) -> \(edit.text) victim \(victim.lane)@\(victim.time) \(after.diagnostics.map(\.message))") }
                         else { source = edit.text; done += 1 }
                         continue
                     }
