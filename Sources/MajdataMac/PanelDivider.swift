@@ -51,10 +51,10 @@ private struct DividerSurface: NSViewRepresentable {
     override func accessibilityPerformIncrement() -> Bool { change?(min(limits.upperBound, value + 20)); return true }
     override func accessibilityPerformDecrement() -> Bool { change?(max(limits.lowerBound, value - 20)); return true }
     override func draw(_ dirtyRect: NSRect) {
-        NSColor.separatorColor.withAlphaComponent(0.2).setFill(); bounds.fill()
-        (origin == nil ? NSColor.separatorColor : NSColor.systemCyan).setFill()
-        let line = axis == .vertical ? NSRect(x: bounds.midX - 0.5, y: 0, width: 1, height: bounds.height)
-            : NSRect(x: 0, y: bounds.midY - 0.5, width: bounds.width, height: 1)
-        line.fill()
+        NSGraphicsContext.current?.cgContext.clear(bounds)
+        (origin == nil ? NSColor.secondaryLabelColor.withAlphaComponent(0.3) : NSColor.systemCyan).setFill()
+        let handle = axis == .vertical ? NSRect(x: bounds.midX - 1, y: bounds.midY - 16, width: 2, height: 32)
+            : NSRect(x: bounds.midX - 16, y: bounds.midY - 1, width: 32, height: 2)
+        NSBezierPath(roundedRect: handle, xRadius: 1, yRadius: 1).fill()
     }
 }

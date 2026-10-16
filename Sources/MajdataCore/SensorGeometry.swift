@@ -36,12 +36,12 @@ public struct SensorRegion: Codable, Sendable, Identifiable {
 public enum SensorGeometry {
     public static let starRadius = 0.763736616
     public static let polygons: [SensorPolygon] = {
-        guard let url = Bundle.module.url(forResource: "sensor-polygons", withExtension: "json"),
+        guard let url = Bundle.majdataCore.url(forResource: "sensor-polygons", withExtension: "json"),
               let data = try? Data(contentsOf: url), let result = try? JSONDecoder().decode([SensorPolygon].self, from: data) else { return [] }
         return result
     }()
     public static let regions: [SensorRegion] = {
-        guard let url = Bundle.module.url(forResource: "sensors", withExtension: "json"),
+        guard let url = Bundle.majdataCore.url(forResource: "sensors", withExtension: "json"),
               let data = try? Data(contentsOf: url), let result = try? JSONDecoder().decode([SensorRegion].self, from: data) else { return [] }
         return result
     }()

@@ -97,6 +97,8 @@ public struct Note: Codable, Identifiable, Hashable, Sendable {
     public var isEach: Bool
     public var segments: [SlideSegment]
     public var location: SourceLocation
+    /// Source span of this note's own token inside its cell; `location` covers the whole cell.
+    public var token: SourceLocation? = nil
     public var endTime: Double { segments.last.map { $0.startTime + $0.duration } ?? (time + duration) }
     public var judgeTime: Double { kind == .slide || kind == .hold || kind == .touchHold ? endTime : time }
     public var weight: Int { isBreak ? 2500 : (kind == .slide ? 1500 : ((kind == .hold || kind == .touchHold) ? 1000 : 500)) }

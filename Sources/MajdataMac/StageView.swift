@@ -10,6 +10,8 @@ struct StageStyle {
     var skin: [String: NSImage] = [:]
     var background: NSImage?
     var showSensors = false
+    /// Thin neutral outline of the judgement zones, drawn as the stage's base when the coloured overlay is off.
+    var sensorPattern = false
     var sensorLabels = true
     var sensorOpacity = 0.45
     var recording: RegionRecording?

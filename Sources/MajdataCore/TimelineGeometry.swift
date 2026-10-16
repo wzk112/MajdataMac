@@ -63,6 +63,32 @@ public struct MusicalTimeline: Sendable {
         if lo == timings.count, offset >= (point.sourceEnd ?? point.location.offset + point.location.length) { return end }
         return point.time
     }
+    private func tempo(at time: Double) -> Tempo? { tempos.last(where: { $0.time <= time + 1e-9 }) ?? tempos.first }
+    /// Nearest point of a 1/`divisor` grid. The grid restarts wherever the BPM changes, like a new `(bpm)` in simai.
+    public func snap(_ time: Double, divisor: Int) -> Double {
+        guard let tempo = tempo(at: time), divisor > 0 else { return time }
+        let step = 240 / tempo.bpm / Double(divisor)
+        return max(tempo.time, tempo.time + ((time - tempo.time) / step).rounded() * step)
+    }
+    /// Seconds between two neighbouring points of the 1/`divisor` grid at `time`.
+    public func step(at time: Double, divisor: Int) -> Double {
+        guard let tempo = tempo(at: time), divisor > 0 else { return 0 }
+        return 240 / tempo.bpm / Double(divisor)
+    }
+    /// Lines of the 1/`divisor` grid inside the viewport, capped so a zoomed-out view stays cheap.
+    public func divisions(in viewport: TimelineViewport, divisor: Int) -> [Double] {
+        guard divisor > 0 else { return [] }
+        var result: [Double] = []
+        let endTime = viewport.start + viewport.span
+        for (i, tempo) in tempos.enumerated() {
+            let a = max(tempo.time, viewport.start), b = min(i + 1 < tempos.count ? tempos[i + 1].time : endTime, endTime)
+            guard a < b else { continue }
+            let step = 240 / tempo.bpm / Double(divisor)
+            var n = ceil((a - tempo.time) / step - 1e-9)
+            while tempo.time + n * step < b - 1e-9 && result.count < 2000 { result.append(tempo.time + n * step); n += 1 }
+        }
+        return result
+    }
     public func nearestCell(to time: Double) -> Double {
         var lo = 0, hi = timings.count
         while lo < hi { let mid = (lo + hi) / 2; if timings[mid].time < time { lo = mid + 1 } else { hi = mid } }

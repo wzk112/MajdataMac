@@ -32,7 +32,7 @@ import MajdataCore
     func draw() {
         painter.sprite("outline")
         let visible = timeline.visible(at: time)
-        if style.showSensors { drawSensors(visible) }
+        if style.showSensors { drawSensors(visible) } else if style.sensorPattern { drawSensorPattern() }
         drawCenter()
         for note in visible.reversed() where note.kind == .slide { drawSlide(note) }
         drawGuides(visible)
@@ -41,6 +41,15 @@ import MajdataCore
             else { drawRingNote(note, visible: visible) }
         }
         for note in visible { drawJudgement(note) }
+    }
+    func drawSensorPattern() {
+        let assets = SensorRenderCache.prepared(scale: worldScale, context: painter.context)
+        for item in assets.items {
+            // The outer A and D zones share their edges with the ring, so they stay dotted and quieter.
+            let outer = "AD".contains(item.region.name.prefix(1))
+            painter.context.stroke(item.path, with: .color(.white.opacity(outer ? 0.26 : 0.45)),
+                                   style: StrokeStyle(lineWidth: outer ? 0.04 : 0.03, lineCap: .round, lineJoin: .round, dash: outer ? [0.02, 0.1] : []))
+        }
     }
     func drawSensors(_ visible: [Note]) {
         let active: Set<Int> = style.showSensorPresses ? (style.recording?.highlightedSensors(at: time) ?? SensorGeometry.active(notes: visible, at: time)) : []

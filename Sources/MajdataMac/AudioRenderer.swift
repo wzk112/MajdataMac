@@ -1,4 +1,5 @@
 @preconcurrency import AVFoundation
+import Accelerate
 import Foundation
 import MajdataCore
 
@@ -19,6 +20,29 @@ enum AudioRenderError: LocalizedError {
         case .conversion: return "音频格式转换失败。"
         case .noEncoder: return "此音频格式需要 FFmpeg。请在设置中指定 ffmpeg 可执行文件。"
         }
+    }
+}
+/// Decoded PCM of the files a render reads. Every edit re-renders the mix, and decoding a
+/// four-minute MP3 each time costs more than mixing it; the effects are tiny and never change.
+private final class DecodedAudioCache: @unchecked Sendable {
+    static let shared = DecodedAudioCache()
+    private struct Entry { var modified: Date?; var size: Int; var samples: [[Float]] }
+    private let lock = NSLock()
+    private var effects: [String: Entry] = [:]
+    private var music: (path: String, entry: Entry)?
+    private func stamp(_ url: URL) -> (Date?, Int) {
+        // Not URL.resourceValues: a URL value caches them, so a file rewritten at the same path would look unchanged.
+        let values = try? FileManager.default.attributesOfItem(atPath: url.path)
+        return (values?[.modificationDate] as? Date, (values?[.size] as? NSNumber)?.intValue ?? -1)
+    }
+    /// Only the most recent long file is kept: a decoded song is about 100 MB.
+    func samples(_ url: URL, long: Bool, decode: () throws -> [[Float]]) rethrows -> [[Float]] {
+        let (modified, size) = stamp(url), path = url.path
+        let cached: Entry? = lock.withLock { long ? (music?.path == path ? music?.entry : nil) : effects[path] }
+        if let cached, cached.modified == modified, cached.size == size { return cached.samples }
+        let entry = Entry(modified: modified, size: size, samples: try decode())
+        lock.withLock { if long { music = (path, entry) } else { effects[path] = entry } }
+        return entry.samples
     }
 }
 enum AudioRenderer {
@@ -71,7 +95,7 @@ enum AudioRenderer {
         let start = opening?.startTime ?? min(0, (chart.notes.first?.time ?? 0) - 1)
         // Allocate for the decoded music, not just E / the last note. BGM starts at
         // chart time zero; negative pre-roll is additional time, never a music trim.
-        let musicSamples = try music.map { try decode($0, ffmpeg: ffmpeg) }
+        let musicSamples = try music.map { url in try DecodedAudioCache.shared.samples(url, long: true) { try decode(url, ffmpeg: ffmpeg) } }
         try Task.checkCancellation()
         let end = max(chart.duration + 2, Double(musicSamples?[0].count ?? 0) / rate,
                       AllPerfectOutro(chart: chart, recording: recording)?.endTime ?? 0)
@@ -85,6 +109,9 @@ enum AudioRenderer {
         let schedule = SoundSchedule.events(chart, metronome: settings.metronome, recording: recording, opening: opening)
         var mixed = [[Float]](repeating: [Float](repeating: 0, count: frames), count: 2)
         var bound = mixed
+        // Whole-song loops go through vDSP: per-sample Swift loops made a four-minute chart take about a minute to prepare.
+        var magnitude = [Float](repeating: 0, count: frames)
+        let length = vDSP_Length(frames)
         var stems: [AudioChannel: URL] = [:]
         for channel in AudioChannel.allCases {
             try Task.checkCancellation()
@@ -96,14 +123,21 @@ enum AudioRenderer {
                 let count = min(input[0].count, limit.flatMap { $0.isFinite ? max(0, Int(($0 * rate).rounded())) : nil } ?? input[0].count)
                 let lo = max(0, -offset), hi = min(count, frames - offset)
                 guard hi > lo else { return }
-                for ch in 0..<2 { for i in lo..<hi { samples[ch][offset + i] += input[ch][i] } }
+                for ch in 0..<2 {
+                    input[ch].withUnsafeBufferPointer { source in
+                        samples[ch].withUnsafeMutableBufferPointer { target in
+                            let out = target.baseAddress! + offset + lo
+                            vDSP_vadd(source.baseAddress! + lo, 1, out, 1, out, 1, vDSP_Length(hi - lo))
+                        }
+                    }
+                }
             }
             if channel == .bgm, let musicSamples { mix(musicSamples, at: 0) }
             // Restarting the same sample truncates its previous tail, as in the source BASS streams.
             for (sound, group) in Dictionary(grouping: events, by: \.sound) {
                 let file = resources.appendingPathComponent("SFX").appendingPathComponent(sound + ".wav")
                 guard FileManager.default.fileExists(atPath: file.path) else { throw AudioRenderError.unreadable(file.lastPathComponent) }
-                let input = try decode(file)
+                let input = try DecodedAudioCache.shared.samples(file, long: false) { try decode(file) }
                 let sorted = group.sorted { $0.time < $1.time }
                 for (i, event) in sorted.enumerated() {
                     let next = i + 1 < sorted.count ? sorted[i + 1].time - event.time : .infinity
@@ -113,22 +147,36 @@ enum AudioRenderer {
             let url = stemDirectory.appendingPathComponent(channel.rawValue + ".wav")
             try write(samples, to: url, floatingPoint: true)
             stems[channel] = url
-            for ch in 0..<2 { for i in 0..<frames {
-                mixed[ch][i] += samples[ch][i] * settings.gain(channel)
-                bound[ch][i] += abs(samples[ch][i])
-            } }
+            var gain = settings.gain(channel)
+            for ch in 0..<2 {
+                samples[ch].withUnsafeBufferPointer { source in
+                    mixed[ch].withUnsafeMutableBufferPointer { vDSP_vsma(source.baseAddress!, 1, &gain, $0.baseAddress!, 1, $0.baseAddress!, 1, length) }
+                    magnitude.withUnsafeMutableBufferPointer { scratch in
+                        vDSP_vabs(source.baseAddress!, 1, scratch.baseAddress!, 1, length)
+                        bound[ch].withUnsafeMutableBufferPointer { vDSP_vadd(scratch.baseAddress!, 1, $0.baseAddress!, 1, $0.baseAddress!, 1, length) }
+                    }
+                }
+            }
         }
         // A fixed bound over every channel at 100% keeps live volume changes and exports consistent.
         // It never renormalizes a quiet or muted mix back to full volume.
-        let maximum = max(bound[0].max() ?? 1, bound[1].max() ?? 1, 1)
-        let headroom: Float = 0.98 / maximum
-        var waveform: [Float] = [], bucketPeak: Float = 0
+        var peaks: [Float] = [0, 0]
+        for ch in 0..<2 { bound[ch].withUnsafeBufferPointer { vDSP_maxv($0.baseAddress!, 1, &peaks[ch], length) } }
+        let maximum = max(peaks[0], peaks[1], 1)
+        var headroom: Float = 0.98 / maximum
+        for ch in 0..<2 { mixed[ch].withUnsafeMutableBufferPointer { vDSP_vsmul($0.baseAddress!, 1, &headroom, $0.baseAddress!, 1, length) } }
+        var waveform: [Float] = []
         let bucketSize = max(1, frames / 4096)
-        for i in 0..<frames {
-            for ch in 0..<2 { mixed[ch][i] *= headroom }
-            bucketPeak = max(bucketPeak, abs(mixed[0][i]), abs(mixed[1][i]))
-            if (i + 1) % bucketSize == 0 { waveform.append(bucketPeak); bucketPeak = 0 }
-        }
+        waveform.reserveCapacity(frames / bucketSize)
+        mixed[0].withUnsafeBufferPointer { left in mixed[1].withUnsafeBufferPointer { right in
+            var first = 0
+            while first + bucketSize <= frames {
+                var l: Float = 0, r: Float = 0
+                vDSP_maxmgv(left.baseAddress! + first, 1, &l, vDSP_Length(bucketSize))
+                vDSP_maxmgv(right.baseAddress! + first, 1, &r, vDSP_Length(bucketSize))
+                waveform.append(max(l, r)); first += bucketSize
+            }
+        } }
         try write(mixed, to: destination, floatingPoint: false)
         completed = true
         return PreparedAudio(url: destination, waveform: waveform, startTime: start, duration: duration,

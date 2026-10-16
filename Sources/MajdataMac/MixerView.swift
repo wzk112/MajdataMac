@@ -55,9 +55,11 @@ private struct AudioMeter: View {
 struct MixerWindow: View {
     @Bindable var model: StudioModel
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView { MixerControls(model: model).padding(24) }
-            TransportBar(model: model).padding(16).background(.bar)
-        }.frame(minWidth: 640, minHeight: 680)
+        GlassEffectContainer(spacing: 4) {
+            VStack(spacing: 10) {
+                ScrollView { MixerControls(model: model).padding(24) }.studioGlass(22)
+                TransportBar(model: model).padding(16).studioGlass(20)
+            }.padding(12)
+        }.background { StudioBackdrop().ignoresSafeArea() }.frame(minWidth: 640, minHeight: 680)
     }
 }

@@ -5,6 +5,144 @@ import MajdataCore
 @testable import MajdataMac
 
 @Suite(.serialized) struct EditorAndAnalysisTests {
+    @Test @MainActor func rapidPanelReversalKeepsCanvasAndSettlesInsideWindow() async throws {
+        let defaults = UserDefaults.standard
+        let keys = ["editorMode", "visualShowSidebar", "visualShowInspector", "sidebarPanelWidth", "inspectorPanelWidth"]
+        let previous = keys.map { defaults.object(forKey: $0) }
+        defaults.set(EditorMode.visual.rawValue, forKey: "editorMode")
+        defaults.set(true, forKey: "visualShowSidebar")
+        defaults.set(false, forKey: "visualShowInspector")
+        defaults.set(205.0, forKey: "sidebarPanelWidth")
+        defaults.set(255.0, forKey: "inspectorPanelWidth")
+        let model = StudioModel(audioOutputEnabled: false)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        let host = NSHostingView(rootView: StudioView(model: model))
+        window.contentView = host; window.orderFront(nil)
+        defer {
+            model.invalidateAudio(); window.close()
+            for (key, value) in zip(keys, previous) {
+                if let value { defaults.set(value, forKey: key) } else { defaults.removeObject(forKey: key) }
+            }
+        }
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        host.layoutSubtreeIfNeeded()
+        try await Task.sleep(for: .milliseconds(150))
+        let track = try #require(descendants(host).first { $0 is VerticalTrackCanvas })
+        let sidebar = try #require(descendants(host).first { $0 is NSScrollView })
+        for shown in [false, true, false, true, false, true] {
+            defaults.set(shown, forKey: "visualShowSidebar")
+            defaults.set(!shown, forKey: "visualShowInspector")
+            // Reverse before the 300 ms easing completes.
+            try await Task.sleep(for: .milliseconds(55)); host.layoutSubtreeIfNeeded()
+            #expect(descendants(host).contains { $0 === track })
+            #expect(descendants(host).contains { $0 === sidebar })
+        }
+        try await Task.sleep(for: .milliseconds(700)); host.layoutSubtreeIfNeeded()
+        let shownX = track.convert(track.bounds, to: host).minX
+        let shownPanel = try #require(descendants(host).first {
+            $0.identifier?.rawValue == "studio-panel-clip" && $0.bounds.width > 100
+        })
+        let panelPoint = shownPanel.convert(NSPoint(x: 60, y: shownPanel.bounds.midY), to: host)
+        let hit = try #require(host.hitTest(panelPoint))
+        #expect(hit.isDescendant(of: shownPanel))
+        #expect(shownPanel.accessibilityChildren()?.isEmpty == false)
+        defaults.set(false, forKey: "visualShowSidebar")
+        var positions: [CGFloat] = [shownX]
+        for _ in 0..<25 {
+            try await Task.sleep(for: .milliseconds(20)); host.layoutSubtreeIfNeeded()
+            positions.append(track.convert(track.bounds, to: host).minX)
+        }
+        try await Task.sleep(for: .milliseconds(200)); host.layoutSubtreeIfNeeded()
+        let hiddenX = track.convert(track.bounds, to: host).minX
+        #expect(abs((shownX - hiddenX) - 212) < 1)
+        // Main-actor export/OCR work can skip frames. Every sampled frame must still
+        // stay within the endpoints and move monotonically, never overshoot/rebound.
+        #expect(positions.allSatisfy { $0 >= hiddenX - 1 && $0 <= shownX + 1 })
+        #expect(zip(positions, positions.dropFirst()).allSatisfy { $1 <= $0 + 1 })
+        print("PANEL REVEAL positions=\(positions) hidden=\(hiddenX)")
+        for view in descendants(host).filter({ $0 is VerticalTrackCanvas || $0 is StageInputView }) {
+            let rect = view.convert(view.bounds, to: host)
+            #expect(rect.minX >= -1 && rect.maxX <= host.bounds.width + 1)
+        }
+        let boundaries = descendants(host).filter { $0.identifier?.rawValue == "studio-panel-clip" }
+        #expect(boundaries.count == 2)
+        for boundary in boundaries {
+            #expect(boundary.clipsToBounds && boundary.layer?.masksToBounds == true)
+            #expect(boundary.bounds.width < 1 && boundary.subviews.first?.isHidden == true)
+            #expect(boundary.accessibilityChildren()?.isEmpty == true)
+        }
+        #expect(!model.isDirty)
+    }
+    @Test @MainActor func switchingModesKeepsThePlayableMixSourceAndSelection() async throws {
+        let defaults = UserDefaults.standard, previous = defaults.object(forKey: "editorMode")
+        defaults.set(EditorMode.visual.rawValue, forKey: "editorMode")
+        let model = StudioModel(audioOutputEnabled: false)
+        model.source = "(120){4}1,,3,,5,,7,,1,,3,,5,,7,,E"
+        model.chart = SimaiParser.parse(model.source)
+        model.selectedRange = NSRange(location: 7, length: 1)
+        let source = model.source, selection = model.selectedRange
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        let host = NSHostingView(rootView: StudioView(model: model))
+        window.contentView = host
+        // A visible host advances AppKit-backed opacity transitions and their teardown.
+        window.orderFront(nil)
+        defer {
+            model.invalidateAudio(); window.close()
+            if let previous { defaults.set(previous, forKey: "editorMode") } else { defaults.removeObject(forKey: "editorMode") }
+        }
+        model.prepareAudio(thenPlay: true)
+        let deadline = Date().addingTimeInterval(20)
+        while !model.isPlaying && Date() < deadline { try await Task.sleep(for: .milliseconds(30)) }
+        #expect(model.isPlaying)
+        let mix = try #require(model.prepared?.url), start = model.playbackTime
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        for mode in [EditorMode.code, .visual, .code, .visual] {
+            defaults.set(mode.rawValue, forKey: "editorMode")
+            let transitionDeadline = Date().addingTimeInterval(2)
+            var views = descendants(host)
+            repeat {
+                host.layoutSubtreeIfNeeded()
+                try await Task.sleep(for: .milliseconds(30))
+                views = descendants(host)
+                if views.filter({ $0 is VerticalTrackCanvas }).count == (mode == .visual ? 1 : 0)
+                    && views.filter({ $0 is PlaybackTextView }).count == (mode == .code ? 1 : 0) { break }
+            } while Date() < transitionDeadline
+            #expect(views.filter { $0 is VerticalTrackCanvas }.count == (mode == .visual ? 1 : 0))
+            #expect(views.filter { $0 is PlaybackTextView }.count == (mode == .code ? 1 : 0))
+            #expect(model.source == source && model.selectedRange == selection && !model.isDirty)
+            #expect(model.isPlaying && model.prepared?.url == mix && !model.isPreparing)
+        }
+        #expect(model.playbackTime > start)
+    }
+    @Test @MainActor func visualWorkspaceKeepsTrackAndSquareStageInsideNarrowLayouts() async throws {
+        let model = StudioModel(audioOutputEnabled: false)
+        let host = NSHostingView(rootView: VisualWorkspace(model: model, showCode: {}))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 800),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false; window.contentView = host
+        defer { window.close(); model.invalidateAudio() }
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        for size in [NSSize(width: 600, height: 560), NSSize(width: 850, height: 650),
+                     NSSize(width: 1100, height: 650), NSSize(width: 1440, height: 800)] {
+            window.setContentSize(size); host.layoutSubtreeIfNeeded()
+            try await Task.sleep(for: .milliseconds(100)); host.layoutSubtreeIfNeeded()
+            let views = descendants(host)
+            let track = try #require(views.first { $0 is VerticalTrackCanvas })
+            let input = try #require(views.first { $0 is StageInputView })
+            for view in [track, input] {
+                let rect = view.convert(view.bounds, to: host)
+                #expect(rect.minX >= -1 && rect.maxX <= size.width + 1)
+                #expect(rect.minY >= -1 && rect.maxY <= size.height + 1)
+                #expect(rect.width > 100 && rect.height > 100)
+            }
+            #expect(abs(input.bounds.width - input.bounds.height) < 1)
+            #expect(!model.isDirty)
+        }
+    }
     @Test @MainActor func completeWorkspaceSurvivesWindowResizing() async {
         let model = StudioModel(audioOutputEnabled: false)
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),

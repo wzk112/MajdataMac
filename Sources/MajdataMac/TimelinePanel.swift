@@ -212,6 +212,7 @@ private struct TimelineSurface: NSViewRepresentable {
             image.lockFocusFlipped(true); drawBackground(view); image.unlockFocus()
             cached = image; cacheKey = key; backgroundRenderCount += 1
         }
+        NSGraphicsContext.current?.cgContext.clear(bounds)
         cached?.draw(in: bounds, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
         if let time = musical.sourceTime(at: model.selectedRange.location) { cursor(time, viewport: view, color: .systemPurple, dashed: true) }
         cursor(model.isPlaying ? displayTime : model.currentTime, viewport: view, color: .systemCyan, dashed: false)
@@ -238,7 +239,7 @@ private struct TimelineSurface: NSViewRepresentable {
         }
     }
     private func drawBackground(_ view: TimelineViewport) {
-        NSColor.controlBackgroundColor.setFill(); bounds.fill()
+        NSColor.controlBackgroundColor.withAlphaComponent(0.6).setFill(); bounds.fill()
         let width = bounds.width, height = bounds.height
         let lanesHeight = max(24, height - 84), rowHeight = lanesHeight / 8
         for lane in 0..<8 {

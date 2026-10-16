@@ -6,7 +6,7 @@ struct StandaloneStageWindow: View {
     var body: some View {
         VStack(spacing: 0) {
             LiveStagePresentation(model: model).frame(maxWidth: .infinity, maxHeight: .infinity)
-            TransportBar(model: model).padding(16).background(.bar)
+            TransportBar(model: model).padding(16).studioGlass(20).padding(12)
         }
         .background(Color.black).frame(minWidth: 660, minHeight: 700)
         .toolbar {

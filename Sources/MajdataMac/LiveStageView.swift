@@ -80,7 +80,7 @@ private struct StageAnimationContent: View {
     @State private var clock = StageFrameClock()
     var body: some View {
         StageView(chart: model.chart, time: model.isPlaying ? clock.time : model.currentTime,
-                  style: model.stageStyle, videoPlayer: model.videoPlayer)
+                  style: model.previewStageStyle, videoPlayer: model.videoPlayer)
             .background(DisplayLinkSurface(running: model.isPlaying, frameRate: standalone ? model.frameRate : model.previewFrameRate) { timestamp, interval in
                 clock.update(time: model.playbackTime, timestamp: timestamp, interval: interval)
             })

@@ -19,6 +19,9 @@ private struct Parser {
     var result = ParsedChart()
     var ended = false
     var cell: [Character] = []
+    /// Source index of every character kept in `cell` (whitespace and inline commands are skipped).
+    var cellIndices: [Int] = []
+    var tokenLocation: SourceLocation?
     var cellStart = 0
     var cellEnd = 0
     var cellSourceStart = 0
@@ -81,7 +84,7 @@ private struct Parser {
                 cursor += 1; cellStart = cursor; continue
             }
             if cell.isEmpty { cellStart = cursor }
-            cell.append(c); cellEnd = cursor; cursor += 1
+            cell.append(c); cellIndices.append(cursor); cellEnd = cursor; cursor += 1
         }
         if !cell.isEmpty && !ended {
             let span = cellLocation()
@@ -118,17 +121,29 @@ private struct Parser {
     }
     mutating func flush() {
         flushingLocation = cellLocation()
-        let raw = String(cell); cell.removeAll(keepingCapacity: true)
+        let raw = String(cell), indices = cellIndices
+        cell.removeAll(keepingCapacity: true); cellIndices.removeAll(keepingCapacity: true)
+        defer { tokenLocation = nil }
         if raw.isEmpty { return }
         if raw == "E" { ended = true; return }
         guard bpm > 0 else { error("缺少 BPM：请先输入 (120) 等速度指令", cellStart); return }
-        for (pseudo, group) in raw.components(separatedBy: "`").enumerated() {
+        func span(_ a: Int, _ b: Int) -> SourceLocation {
+            var span = location(indices[a]); let last = location(indices[b - 1])
+            span.length = max(1, last.offset + last.length - span.offset); return span
+        }
+        let characters = Array(raw)
+        var pseudo = 0, start = 0
+        for i in 0...characters.count {
+            guard i == characters.count || characters[i] == "/" || characters[i] == "`" else { continue }
             let t = time + Double(pseudo) * 0.001 // Official simai: 1 ms, independent of BPM.
-            for token in group.components(separatedBy: "/") where !token.isEmpty {
+            if i > start {
+                let token = String(characters[start..<i])
                 if token.count >= 2 && token.allSatisfy({ "12345678".contains($0) }) {
-                    for c in token { parseNote(String(c), time: t) }
-                } else { parseNote(token, time: t) }
+                    for (k, c) in token.enumerated() { tokenLocation = span(start + k, start + k + 1); parseNote(String(c), time: t) }
+                } else { tokenLocation = span(start, i); parseNote(token, time: t) }
             }
+            if i < characters.count && characters[i] == "`" { pseudo += 1 }
+            start = i + 1
         }
     }
     mutating func parseNote(_ token: String, time t: Double) {
@@ -152,6 +167,7 @@ private struct Parser {
                  isBreak: flags.contains("b"), isEX: flags.contains("x"), isStar: flags.contains("$"),
                  isFirework: flags.contains("f"), location: loc)
             note.starSpin = flags.contains("$$") ? 2 : 0
+            note.token = tokenLocation
             return note
         }
         if !isSlide {
