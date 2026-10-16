@@ -5,6 +5,62 @@ import MajdataCore
 @testable import MajdataMac
 
 @Suite(.serialized) struct EditorAndAnalysisTests {
+    @Test @MainActor func rapidPanelReversalKeepsCanvasAndSettlesInsideWindow() async throws {
+        let defaults = UserDefaults.standard
+        let keys = ["editorMode", "visualShowSidebar", "visualShowInspector", "sidebarPanelWidth", "inspectorPanelWidth"]
+        let previous = keys.map { defaults.object(forKey: $0) }
+        defaults.set(EditorMode.visual.rawValue, forKey: "editorMode")
+        defaults.set(true, forKey: "visualShowSidebar")
+        defaults.set(false, forKey: "visualShowInspector")
+        defaults.set(205.0, forKey: "sidebarPanelWidth")
+        defaults.set(255.0, forKey: "inspectorPanelWidth")
+        let model = StudioModel(audioOutputEnabled: false)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1440, height: 920),
+                              styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        let host = NSHostingView(rootView: StudioView(model: model))
+        window.contentView = host; window.orderFront(nil)
+        defer {
+            model.invalidateAudio(); window.close()
+            for (key, value) in zip(keys, previous) {
+                if let value { defaults.set(value, forKey: key) } else { defaults.removeObject(forKey: key) }
+            }
+        }
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        host.layoutSubtreeIfNeeded()
+        try await Task.sleep(for: .milliseconds(150))
+        let track = try #require(descendants(host).first { $0 is VerticalTrackCanvas })
+        let sidebar = try #require(descendants(host).first { $0 is NSScrollView })
+        for shown in [false, true, false, true, false, true] {
+            defaults.set(shown, forKey: "visualShowSidebar")
+            defaults.set(!shown, forKey: "visualShowInspector")
+            // Reverse before the 380 ms spring completes.
+            try await Task.sleep(for: .milliseconds(55)); host.layoutSubtreeIfNeeded()
+            #expect(descendants(host).contains { $0 === track })
+            #expect(descendants(host).contains { $0 === sidebar })
+        }
+        try await Task.sleep(for: .milliseconds(700)); host.layoutSubtreeIfNeeded()
+        let shownX = track.convert(track.bounds, to: host).minX
+        let sampleStarted = ContinuousClock.now
+        defaults.set(false, forKey: "visualShowSidebar")
+        try await Task.sleep(for: .milliseconds(100)); host.layoutSubtreeIfNeeded()
+        let sampleDelay = ContinuousClock.now - sampleStarted
+        let middleX = track.convert(track.bounds, to: host).minX
+        try await Task.sleep(for: .milliseconds(600)); host.layoutSubtreeIfNeeded()
+        let hiddenX = track.convert(track.bounds, to: host).minX
+        #expect(abs((shownX - hiddenX) - 212) < 1)
+        print("PANEL REVEAL shown=\(shownX) middle=\(middleX) hidden=\(hiddenX) sampleDelay=\(sampleDelay)")
+        // Parallel video/OCR suites may occupy the main actor past the whole spring.
+        // Only assert an intermediate sample if it actually ran during that interval.
+        if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion && sampleDelay < .milliseconds(250) {
+            #expect(middleX > hiddenX + 1 && middleX < shownX - 1)
+        }
+        for view in descendants(host).filter({ $0 is VerticalTrackCanvas || $0 is StageInputView }) {
+            let rect = view.convert(view.bounds, to: host)
+            #expect(rect.minX >= -1 && rect.maxX <= host.bounds.width + 1)
+        }
+        #expect(!model.isDirty)
+    }
     @Test @MainActor func switchingModesKeepsThePlayableMixSourceAndSelection() async throws {
         let defaults = UserDefaults.standard, previous = defaults.object(forKey: "editorMode")
         defaults.set(EditorMode.visual.rawValue, forKey: "editorMode")

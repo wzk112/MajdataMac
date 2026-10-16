@@ -27,7 +27,8 @@ struct StudioView: View {
         let inspectorWidth = min(inspectorLimit, max(235, inspectorPanelWidth))
         GlassEffectContainer(spacing: 4) {
         HStack(spacing: 0) {
-        if sidebarShown {
+        StudioPanelReveal(progress: sidebarShown ? 1 : 0, fullWidth: sidebarWidth + 7, alignment: .leading) {
+        HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 10) {
                     Image(systemName: "waveform.path").font(.title2).foregroundStyle(.cyan)
@@ -68,10 +69,11 @@ struct StudioView: View {
                     Button("加载示例", systemImage: "play.rectangle") { model.loadDemo() }.buttonStyle(.plain).font(.caption).foregroundStyle(.secondary)
                 }.padding(16)
             }.frame(width: sidebarWidth).studioGlass(22)
-                .transition(.move(edge: .leading).combined(with: .opacity))
             PanelDivider(axis: .vertical, value: $sidebarPanelWidth, displayedValue: sidebarWidth,
                          limits: 185...sidebarLimit, label: "侧栏宽度分隔线")
         }
+        }.allowsHitTesting(sidebarShown).accessibilityHidden(!sidebarShown)
+            .animation(reduceMotion ? nil : StudioMotion.panel, value: sidebarShown)
             VStack(spacing: 0) {
                 ZStack {
                     if selection == "analysis" {
@@ -112,15 +114,15 @@ struct StudioView: View {
                     StudioToolbarButton(title: "检查器", symbol: "sidebar.right") { if visual { visualShowInspector.toggle() } else { model.showInspector.toggle() } }
                 }
             }
-            if inspectorShown {
+            StudioPanelReveal(progress: inspectorShown ? 1 : 0, fullWidth: inspectorWidth + 7, alignment: .trailing) {
+            HStack(spacing: 0) {
                 PanelDivider(axis: .vertical, value: $inspectorPanelWidth, displayedValue: inspectorWidth,
                              limits: 235...inspectorLimit, label: "设置栏宽度分隔线", reverse: true)
                 InspectorView(model: model).frame(width: inspectorWidth).studioGlass(22)
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
             }
+            }.allowsHitTesting(inspectorShown).accessibilityHidden(!inspectorShown)
+                .animation(reduceMotion ? nil : StudioMotion.panel, value: inspectorShown)
         }.padding(12)
-            .animation(reduceMotion ? nil : StudioMotion.panel, value: sidebarShown)
-            .animation(reduceMotion ? nil : StudioMotion.panel, value: inspectorShown)
         }
         }.background { StudioBackdrop().ignoresSafeArea() }
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
